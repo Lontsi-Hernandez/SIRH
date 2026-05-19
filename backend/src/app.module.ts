@@ -94,8 +94,7 @@ import { Housing, HousingAssignment } from './domain/entities/housing.entity';
       isGlobal: true,
       inject: [ConfigService],
       useFactory: async (config: ConfigService): Promise<any> => {
-        const nodeEnv = config.get('NODE_ENV', 'development');
-        const useRedis = config.get('USE_REDIS', 'false') === 'true' || nodeEnv === 'production';
+        const useRedis = config.get('USE_REDIS', 'false') === 'true';
 
         if (useRedis) {
           const { redisStore } = await import('cache-manager-redis-yet');
