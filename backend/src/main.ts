@@ -20,12 +20,31 @@ async function bootstrap() {
   app.use(helmet());
   app.use(compression());
 
-  // ── CORS ──────────────────────────────────────────────────────────────────
+  // ── CORS (Dynamic resolver supporting dev and production Vercel) ──────────
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3001',
+  ];
+  const frontendUrl = configService.get<string>('FRONTEND_URL');
+  if (frontendUrl) {
+    allowedOrigins.push(frontendUrl);
+  }
+
   app.enableCors({
-    origin: [
-      'http://localhost:5173', // Frontend Vite dev
-      'http://localhost:3001', // WebSocket
-    ],
+    origin: (origin, callback) => {
+      // Autoriser les requêtes sans origine (comme les apps mobiles ou postman/curl)
+      if (!origin) return callback(null, true);
+      
+      const isAllowed = allowedOrigins.includes(origin) || 
+        origin.endsWith('.vercel.app') || 
+        origin.startsWith('http://localhost:');
+        
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-ID'],
     credentials: true,
