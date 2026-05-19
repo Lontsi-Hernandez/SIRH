@@ -15,6 +15,7 @@ import {
   UserX,
   Archive,
   Play,
+  Pause,
   FileText,
   Trash2,
   X,
@@ -157,9 +158,8 @@ export default function EmployeesPage() {
     try {
       await dispatch(onboardEmployee(id)).unwrap();
       toast.success('Employé activé et onboardé avec succès ! 🎉');
-      if (selected?.id === id) {
-        dispatch(fetchEmployees({ page }));
-      }
+      dispatch(fetchEmployees({ page }));
+      dispatch(setSelected(null)); // Refresh drawer
     } catch (err: any) {
       toast.error(err || 'Erreur d\'onboarding');
     }
@@ -189,7 +189,7 @@ export default function EmployeesPage() {
         terminationDate: new Date().toISOString().split('T')[0],
         reason: ''
       });
-      // Refresh list
+      dispatch(setSelected(null)); // Refresh drawer
       dispatch(fetchEmployees({ page }));
     } catch (err: any) {
       toast.error(err || 'Erreur d\'offboarding');
@@ -207,6 +207,8 @@ export default function EmployeesPage() {
         })
       ).unwrap();
       toast.success('Contrat suspendu avec succès. ⏸️');
+      dispatch(setSelected(null)); // Refresh drawer
+      dispatch(fetchEmployees({ page }));
     } catch (err: any) {
       toast.error(err || 'Erreur lors de la suspension');
     }
@@ -223,6 +225,8 @@ export default function EmployeesPage() {
         })
       ).unwrap();
       toast.success('Contrat réactivé avec succès ! ▶️');
+      dispatch(setSelected(null)); // Refresh drawer
+      dispatch(fetchEmployees({ page }));
     } catch (err: any) {
       toast.error(err || 'Erreur lors de la réactivation');
     }
@@ -239,6 +243,8 @@ export default function EmployeesPage() {
         })
       ).unwrap();
       toast.success('Fiche archivée avec succès. 📁');
+      dispatch(setSelected(null)); // Refresh drawer
+      dispatch(fetchEmployees({ page }));
     } catch (err: any) {
       toast.error(err || 'Erreur lors de l\'archivage');
     }
@@ -250,7 +256,8 @@ export default function EmployeesPage() {
     try {
       await dispatch(deleteEmployee(id)).unwrap();
       toast.success('Employé supprimé avec succès.');
-      if (selected?.id === id) dispatch(setSelected(null));
+      dispatch(setSelected(null));
+      dispatch(fetchEmployees({ page }));
     } catch (err: any) {
       toast.error(err || 'Erreur de suppression');
     }
@@ -277,13 +284,75 @@ export default function EmployeesPage() {
     }
   };
 
+  // Generate Interactive Contract Timeline Milestones (Phase 3 Step 3)
+  const getTimelineEvents = (emp: Employee) => {
+    const events = [];
+
+    // 1. Brouillon
+    if (emp.createdAt) {
+      events.push({
+        title: 'Création de la fiche',
+        description: 'Fiche collaborateur initialisée en statut DRAFT (Brouillon RH).',
+        date: new Date(emp.createdAt).toLocaleDateString('fr-CA'),
+        icon: <Clock size={12} />,
+        color: '#f59e0b'
+      });
+    }
+
+    // 2. Onboarding (Entrée en service)
+    if (emp.status !== 'DRAFT') {
+      events.push({
+        title: 'Validation & Onboarding',
+        description: 'Contrat validé et actif. Droits applicatifs ouverts.',
+        date: new Date(emp.hireDate || emp.createdAt).toLocaleDateString('fr-CA'),
+        icon: <UserCheck size={12} />,
+        color: '#10b981'
+      });
+    }
+
+    // 3. Pause (Suspension temporaire)
+    if (emp.status === 'SUSPENDED') {
+      events.push({
+        title: 'Suspension de contrat',
+        description: 'Contrat temporairement suspendu (Absence, congé sabbatique).',
+        date: new Date().toLocaleDateString('fr-CA'),
+        icon: <Pause size={12} />,
+        color: '#f97316'
+      });
+    }
+
+    // 4. Fin de contrat (Offboarding)
+    if (emp.status === 'TERMINATED' || emp.status === 'ARCHIVED') {
+      events.push({
+        title: 'Rupture de contrat (Offboarding)',
+        description: `Procédure de départ finalisée. Motif : ${emp.customAttributes?.offboardingReason || 'Départ standard/Autre'}`,
+        date: new Date().toLocaleDateString('fr-CA'),
+        icon: <UserX size={12} />,
+        color: '#ef4444'
+      });
+    }
+
+    // 5. Archivage (Soft delete)
+    if (emp.status === 'ARCHIVED') {
+      events.push({
+        title: 'Archivage RGPD',
+        description: 'Dossier archivé et sécurisé. Données masquées des listes actives.',
+        date: new Date().toLocaleDateString('fr-CA'),
+        icon: <Archive size={12} />,
+        color: '#64748b'
+      });
+    }
+
+    return events;
+  };
+
   return (
     <div className="page animate-fade-in">
       {/* Page Header */}
       <div className="page-header">
         <div>
           <h1>👥 Employee Hub</h1>
-          <p className="text-muted">Gérez le cycle de vie, les statuts contractuels, et la traçabilité des profils collaborateurs.</p>
+          <p className="text-muted">Gerez le cycle de vie, les statuts contractuels, et la traçabilité des profils collaborateurs.</p>
         </div>
         <div className="flex gap-3">
           <button className="btn btn-primary" onClick={() => setShowAddDrawer(true)}>
@@ -548,7 +617,7 @@ export default function EmployeesPage() {
 
         {/* 360° Profile Side Drawer (Rule 1: Progressive Disclosure) */}
         {selected && (
-          <div className="card flex flex-col gap-6 animate-fade-in position-relative">
+          <div className="card flex flex-col gap-6 animate-fade-in relative" style={{ overflowY: 'auto', maxHeight: '100vh' }}>
             <button
               style={{
                 position: 'absolute',
@@ -557,7 +626,8 @@ export default function EmployeesPage() {
                 background: 'transparent',
                 border: 'none',
                 color: 'var(--text)',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                zIndex: 10
               }}
               onClick={() => dispatch(setSelected(null))}
             >
@@ -671,6 +741,56 @@ export default function EmployeesPage() {
               ) : (
                 <span className="text-xs text-muted italic">Aucun attribut personnalisé défini.</span>
               )}
+            </div>
+
+            {/* Interactive Timeline of Events (Rule 1: progressive disclosure / 360 profile) */}
+            <div className="flex flex-col gap-3" style={{ borderTop: '1px solid var(--surface0)', paddingTop: '1rem' }}>
+              <h4 className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-2">
+                <Clock size={14} />
+                Historique des Contrats (Timeline)
+              </h4>
+              <div className="flex flex-col gap-4 mt-2">
+                {getTimelineEvents(selected).map((evt, idx) => (
+                  <div key={idx} className="flex gap-3 items-start relative">
+                    {/* Line separator between points */}
+                    {idx < getTimelineEvents(selected).length - 1 && (
+                      <div
+                        className="absolute"
+                        style={{
+                          left: '12px',
+                          top: '24px',
+                          bottom: '-20px',
+                          width: '2px',
+                          backgroundColor: 'var(--surface0)',
+                          zIndex: 0
+                        }}
+                      />
+                    )}
+                    
+                    {/* Event Circle Indicator */}
+                    <div
+                      className="flex items-center justify-center text-white font-bold"
+                      style={{
+                        width: '26px',
+                        height: '26px',
+                        borderRadius: '50%',
+                        backgroundColor: evt.color || 'var(--primary)',
+                        zIndex: 1,
+                        flexShrink: 0
+                      }}
+                    >
+                      {evt.icon}
+                    </div>
+                    
+                    {/* Event Content */}
+                    <div className="flex flex-col text-xs" style={{ zIndex: 1 }}>
+                      <span className="font-bold text-text">{evt.title}</span>
+                      <span className="text-muted mt-0.5">{evt.description}</span>
+                      <span className="text-[10px] text-primary mt-1 font-semibold">{evt.date}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
 
             {/* Danger Zone */}

@@ -57,12 +57,13 @@ gantt
     section Phase 3 : Frontend
     Slice Redux RTK & API Client    :done, fe1, after be2, 2d
     Vue Liste (Table Virtualisée)   :done, fe2, after fe1, 2d
-    Profil 360° & Timeline          :active, fe3, after fe2, 2d
+    Profil 360° & Timeline          :done, fe3, after fe2, 2d
 ```
 
-### 1️⃣ Prochaine étape immédiate : Profil 360° & Historique des Événements (Frontend React)
-- **Cible** : Finaliser l'historique interactif (Timeline des transitions) dans la fiche détaillée de l'employé pour visualiser tous les changements de statuts passés (embauche, suspension, offboarding) et les dates associées.
-- **Vérification** : Valider l'affichage clair et ordonné de l'historique d'un employé ayant subi au moins deux transitions d'états (ex: DRAFT -> ACTIVE -> SUSPENDED).
+### 1️⃣ Prochaine étape immédiate : Démo & Showcase Complet du Module Employees
+- **Cible** : Effectuer une démonstration de bout en bout du module avec création de brouillons (`DRAFT`), validation (`ACTIVE`), suspension temporaire (`SUSPENDED`), procédure de départ avec motif (`TERMINATED`), et archivage RGPD (`ARCHIVED`).
+- **Vérification** : Valider l'intégrité globale et la réactivité du système pour le client final.
+
 
 
 
