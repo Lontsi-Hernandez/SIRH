@@ -87,7 +87,9 @@ export class AuthService {
         );
 
         // En production, si Keycloak échoue, on bloque la connexion pour des raisons de sécurité
-        if (isProduction) {
+        // Sauf si KEYCLOAK_URL n'est pas configuré ou si BYPASS_KEYCLOAK est activé
+        const bypassKeycloak = this.configService.get('BYPASS_KEYCLOAK') === 'true' || !keycloakUrl;
+        if (isProduction && !bypassKeycloak) {
           throw new UnauthorizedException('Serveur d\'authentification SSO indisponible.');
         }
       }
