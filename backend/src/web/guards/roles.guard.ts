@@ -44,7 +44,33 @@ export class RolesGuard implements CanActivate {
       return true;
     }
 
-    const { user } = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest();
+    let user = request.user;
+
+    // Si req.user n'est pas encore peuplé, on extrait et décode le JWT du header Authorization
+    if (!user) {
+      const authHeader = request.headers['authorization'];
+      if (authHeader && authHeader.startsWith('Bearer ')) {
+        const token = authHeader.substring(7);
+        try {
+          const parts = token.split('.');
+          if (parts.length === 3) {
+            const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString('utf-8'));
+            if (payload && payload.role) {
+              user = {
+                id: payload.sub,
+                email: payload.email,
+                role: payload.role,
+                tenantId: payload.tenantId,
+              };
+              request.user = user; // Cache dans la requête
+            }
+          }
+        } catch (e) {
+          // Token corrompu ou mal formé
+        }
+      }
+    }
 
     if (!user?.role) {
       throw new ForbiddenException('Utilisateur non authentifié ou rôle manquant');
