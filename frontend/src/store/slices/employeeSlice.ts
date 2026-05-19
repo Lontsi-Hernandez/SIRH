@@ -9,7 +9,7 @@ export interface Employee {
   email: string;
   phoneNumber?: string;
   avatarUrl?: string;
-  status: 'ACTIVE' | 'INACTIVE' | 'ON_LEAVE' | 'TERMINATED';
+  status: 'DRAFT' | 'ACTIVE' | 'SUSPENDED' | 'TERMINATED' | 'ARCHIVED';
   role: 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
   hireDate: string;
   departmentId?: string;
@@ -21,6 +21,7 @@ export interface Employee {
   position?: { id: string; title: string };
   manager?: { id: string; firstName: string; lastName: string };
   createdAt: string;
+  customAttributes?: Record<string, any>;
 }
 
 interface EmployeeState {
@@ -103,6 +104,30 @@ export const deleteEmployee = createAsyncThunk(
   },
 );
 
+export const onboardEmployee = createAsyncThunk(
+  'employees/onboard',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.patch(`/employees/${id}/onboard`);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Erreur d\'onboarding');
+    }
+  },
+);
+
+export const offboardEmployee = createAsyncThunk(
+  'employees/offboard',
+  async ({ id, terminationDate, reason }: { id: string; terminationDate: string; reason: string }, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.patch(`/employees/${id}/offboard`, { terminationDate, reason });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Erreur d\'offboarding');
+    }
+  },
+);
+
 const employeeSlice = createSlice({
   name: 'employees',
   initialState,
@@ -143,9 +168,20 @@ const employeeSlice = createSlice({
       .addCase(deleteEmployee.fulfilled, (state, action) => {
         state.list = state.list.filter((e) => e.id !== action.payload);
         state.total--;
+      })
+      .addCase(onboardEmployee.fulfilled, (state, action) => {
+        const idx = state.list.findIndex((e) => e.id === action.payload.id);
+        if (idx !== -1) state.list[idx] = action.payload;
+        if (state.selected?.id === action.payload.id) state.selected = action.payload;
+      })
+      .addCase(offboardEmployee.fulfilled, (state, action) => {
+        const idx = state.list.findIndex((e) => e.id === action.payload.id);
+        if (idx !== -1) state.list[idx] = action.payload;
+        if (state.selected?.id === action.payload.id) state.selected = action.payload;
       });
   },
 });
 
 export const { setSelected, clearError } = employeeSlice.actions;
 export default employeeSlice.reducer;
+

@@ -55,14 +55,15 @@ gantt
     Contrôleurs, DTOs & Guards      :done, be1, after db2, 2d
     Service & Machine à États       :done, be2, after be1, 2d
     section Phase 3 : Frontend
-    Slice Redux RTK & API Client    :active, fe1, after be2, 2d
-    Vue Liste (Table Virtualisée)   :fe2, after fe1, 2d
+    Slice Redux RTK & API Client    :done, fe1, after be2, 2d
+    Vue Liste (Table Virtualisée)   :active, fe2, after fe1, 2d
     Profil 360° & Timeline          :fe3, after fe2, 2d
 ```
 
-### 1️⃣ Prochaine étape immédiate : Intégration du Slice Redux & Client API Frontend (React)
-- **Cible** : Développer le module d'état Redux `employeeSlice.ts` pour charger, filtrer, paginer et déclencher les transitions d'employés, et configurer les appels Axios vers `/api/v1/employees`.
-- **Vérification** : S'assurer que le store Redux de l'application s'initialise correctement et intègre le nouveau reducer d'employés sans erreur TypeScript.
+### 1️⃣ Prochaine étape immédiate : Implémentation de la Vue Liste & Table Virtualisée (Frontend React)
+- **Cible** : Concevoir la vue principale `EmployeeList.tsx` avec affichage ultra-performant (virtualisation de liste), filtres dynamiques multicritères (statuts FSM, départements), squelettes de chargement animés (Skeleton Loaders) et transitions premium.
+- **Vérification** : S'assurer de la fluidité visuelle (sans saccade / drop de FPS) lors du scroll et du filtrage réactif sur des centaines d'employés fictifs.
+
 
 
 
