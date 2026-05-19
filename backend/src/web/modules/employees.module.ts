@@ -9,12 +9,20 @@ import { EmployeesController } from '../controllers/employees.controller';
 import { CreateEmployeeHandler } from '../../application/employees/commands/create-employee/create-employee.handler';
 import { UpdateEmployeeHandler } from '../../application/employees/commands/update-employee/update-employee.handler';
 import { DeleteEmployeeHandler } from '../../application/employees/commands/delete-employee/delete-employee.handler';
+import { OnboardEmployeeHandler } from '../../application/employees/commands/onboard-employee/onboard-employee.handler';
+import { OffboardEmployeeHandler } from '../../application/employees/commands/offboard-employee/offboard-employee.handler';
 
 // Queries
 import { GetAllEmployeesHandler } from '../../application/employees/queries/get-all-employees/get-all-employees.handler';
 import { GetEmployeeByIdHandler } from '../../application/employees/queries/get-employee-by-id/get-employee-by-id.handler';
 
-const CommandHandlers = [CreateEmployeeHandler, UpdateEmployeeHandler, DeleteEmployeeHandler];
+const CommandHandlers = [
+  CreateEmployeeHandler,
+  UpdateEmployeeHandler,
+  DeleteEmployeeHandler,
+  OnboardEmployeeHandler,
+  OffboardEmployeeHandler,
+];
 const QueryHandlers = [GetAllEmployeesHandler, GetEmployeeByIdHandler];
 
 @Module({
@@ -27,3 +35,4 @@ const QueryHandlers = [GetAllEmployeesHandler, GetEmployeeByIdHandler];
   exports: [TypeOrmModule],
 })
 export class EmployeesModule {}
+

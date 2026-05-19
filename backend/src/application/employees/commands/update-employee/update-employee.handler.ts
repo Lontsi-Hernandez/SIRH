@@ -1,9 +1,25 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { UpdateEmployeeCommand } from './update-employee.command';
-import { Employee } from '../../../../domain/entities/employee.entity';
+import { Employee, EmployeeStatus } from '../../../../domain/entities/employee.entity';
+
+export function validateStateTransition(current: EmployeeStatus, target: EmployeeStatus): void {
+  const allowed: Record<EmployeeStatus, EmployeeStatus[]> = {
+    [EmployeeStatus.DRAFT]: [EmployeeStatus.ACTIVE],
+    [EmployeeStatus.ACTIVE]: [EmployeeStatus.SUSPENDED, EmployeeStatus.TERMINATED],
+    [EmployeeStatus.SUSPENDED]: [EmployeeStatus.ACTIVE, EmployeeStatus.TERMINATED],
+    [EmployeeStatus.TERMINATED]: [EmployeeStatus.ARCHIVED],
+    [EmployeeStatus.ARCHIVED]: [],
+  };
+
+  if (!allowed[current].includes(target)) {
+    throw new BadRequestException(
+      `Transition de statut invalide : Impossible de passer de ${current} à ${target}`,
+    );
+  }
+}
 
 @CommandHandler(UpdateEmployeeCommand)
 export class UpdateEmployeeHandler implements ICommandHandler<UpdateEmployeeCommand> {
@@ -18,7 +34,12 @@ export class UpdateEmployeeHandler implements ICommandHandler<UpdateEmployeeComm
 
     if (!employee) throw new NotFoundException(`Employé ${id} introuvable`);
 
+    if (dto.status && dto.status !== employee.status) {
+      validateStateTransition(employee.status, dto.status);
+    }
+
     Object.assign(employee, dto);
     return this.employeeRepository.save(employee);
   }
 }
+

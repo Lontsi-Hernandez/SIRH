@@ -53,15 +53,16 @@ gantt
     Migration Postgres Neon          :active, db2, after db1, 1d
     section Phase 2 : Backend
     Contrôleurs, DTOs & Guards      :done, be1, after db2, 2d
-    Service & Machine à États       :active, be2, after be1, 2d
+    Service & Machine à États       :done, be2, after be1, 2d
     section Phase 3 : Frontend
-    Slice Redux RTK & API Client    :fe1, after be2, 2d
+    Slice Redux RTK & API Client    :active, fe1, after be2, 2d
     Vue Liste (Table Virtualisée)   :fe2, after fe1, 2d
     Profil 360° & Timeline          :fe3, after fe2, 2d
 ```
 
-### 1️⃣ Prochaine étape immédiate : Implémentation de la Logique Service & Machine à États (Backend)
-- **Cible** : Développer et consolider les services, commandes et requêtes (CQRS Handlers) gérant la transition d'états d'employés (`onboard`, `offboard`), l'archivage avec Soft Delete et l'émission d'événements applicatifs (`EMPLOYEE_CREATED`, etc.).
-- **Vérification** : S'assurer que les transitions d'états illicites (ex: `ARCHIVED` -> `ACTIVE`) lèvent une erreur HTTP `400` et émettent les événements correspondants.
+### 1️⃣ Prochaine étape immédiate : Intégration du Slice Redux & Client API Frontend (React)
+- **Cible** : Développer le module d'état Redux `employeeSlice.ts` pour charger, filtrer, paginer et déclencher les transitions d'employés, et configurer les appels Axios vers `/api/v1/employees`.
+- **Vérification** : S'assurer que le store Redux de l'application s'initialise correctement et intègre le nouveau reducer d'employés sans erreur TypeScript.
+
 
 

@@ -12,6 +12,8 @@ import { UserRole } from '../../domain/entities/employee.entity';
 import { CreateEmployeeCommand } from '../../application/employees/commands/create-employee/create-employee.command';
 import { UpdateEmployeeCommand } from '../../application/employees/commands/update-employee/update-employee.command';
 import { DeleteEmployeeCommand } from '../../application/employees/commands/delete-employee/delete-employee.command';
+import { OnboardEmployeeCommand } from '../../application/employees/commands/onboard-employee/onboard-employee.command';
+import { OffboardEmployeeCommand } from '../../application/employees/commands/offboard-employee/offboard-employee.command';
 
 // Queries
 import { GetAllEmployeesQuery } from '../../application/employees/queries/get-all-employees/get-all-employees.query';
@@ -116,9 +118,13 @@ export class EmployeesController {
   @Patch(':id/onboard')
   @Roles(UserRole.ADMIN, UserRole.HR)
   @ApiOperation({ summary: 'Onboarding — Activer et configurer un nouvel employé' })
-  async onboard(@Param('id', ParseUUIDPipe) id: string) {
-    // TODO: Implémenter l'onboarding
-    return { message: 'Onboarding initié', employeeId: id };
+  async onboard(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Req() req: any,
+    @Headers('x-tenant-id') tenantIdHeader?: string,
+  ) {
+    const tenantId = this.resolveTenantId(req, tenantIdHeader);
+    return this.commandBus.execute(new OnboardEmployeeCommand(id, tenantId));
   }
 
   @Patch(':id/offboard')
@@ -127,9 +133,13 @@ export class EmployeesController {
   async offboard(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: { terminationDate: string; reason: string },
+    @Req() req: any,
+    @Headers('x-tenant-id') tenantIdHeader?: string,
   ) {
-    // TODO: Implémenter l'offboarding
-    return { message: 'Offboarding initié', employeeId: id };
+    const tenantId = this.resolveTenantId(req, tenantIdHeader);
+    return this.commandBus.execute(
+      new OffboardEmployeeCommand(id, tenantId, body.terminationDate, body.reason),
+    );
   }
 
   @Get(':id/org-chart')
@@ -139,4 +149,5 @@ export class EmployeesController {
     return { employeeId: id, subordinates: [] };
   }
 }
+
 

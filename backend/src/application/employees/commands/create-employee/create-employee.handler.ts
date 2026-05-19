@@ -32,7 +32,7 @@ export class CreateEmployeeHandler implements ICommandHandler<CreateEmployeeComm
       ...dto,
       employeeNumber,
       tenantId,
-      status: EmployeeStatus.ACTIVE,
+      status: EmployeeStatus.DRAFT,
       role: dto.role ?? UserRole.EMPLOYEE,
       hireDate: new Date(dto.hireDate),
     });
