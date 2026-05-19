@@ -461,7 +461,7 @@ export default function HousingsPage() {
                     </table>
                   </div>
                 ) : (
-                  <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--overlay0)' }} className="bg-surface0" style={{ borderRadius: 'var(--radius-md)', padding: '2rem', textAlign: 'center' }}>
+                  <div className="bg-surface0" style={{ borderRadius: 'var(--radius-md)', padding: '2rem', textAlign: 'center', color: 'var(--overlay0)' }}>
                     <AlertCircle size={32} style={{ margin: '0 auto 0.5rem', color: 'var(--overlay1)' }} />
                     <p className="text-sm">Aucun occupant dans cette résidence actuellement.</p>
                   </div>
