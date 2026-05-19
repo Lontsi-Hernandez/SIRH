@@ -4,9 +4,11 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   ManyToOne,
   OneToMany,
   JoinColumn,
+  Index,
 } from 'typeorm';
 import { Department } from './department.entity';
 import { Position } from './position.entity';
@@ -15,10 +17,11 @@ import { Leave } from './leave.entity';
 import { Tenant } from './tenant.entity';
 
 export enum EmployeeStatus {
+  DRAFT = 'DRAFT',
   ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-  ON_LEAVE = 'ON_LEAVE',
+  SUSPENDED = 'SUSPENDED',
   TERMINATED = 'TERMINATED',
+  ARCHIVED = 'ARCHIVED',
 }
 
 export enum UserRole {
@@ -29,12 +32,15 @@ export enum UserRole {
 }
 
 @Entity('employees')
+@Index('idx_employees_tenant_email', ['tenantId', 'email'], { unique: true })
+@Index('idx_employees_tenant_number', ['tenantId', 'employeeNumber'], { unique: true })
+@Index('idx_employees_tenant_status', ['tenantId', 'status'])
 export class Employee {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   // ── Identité ──────────────────────────────────────────────────────────────
-  @Column({ name: 'employee_number', unique: true })
+  @Column({ name: 'employee_number' })
   employeeNumber: string;
 
   @Column({ name: 'first_name' })
@@ -43,7 +49,7 @@ export class Employee {
   @Column({ name: 'last_name' })
   lastName: string;
 
-  @Column({ unique: true })
+  @Column()
   email: string;
 
   @Column({ name: 'phone_number', nullable: true })
@@ -108,6 +114,10 @@ export class Employee {
   @Column({ name: 'keycloak_id', nullable: true, unique: true })
   keycloakId?: string;
 
+  // ── Attributs Dynamiques ──────────────────────────────────────────────────
+  @Column({ name: 'custom_attributes', type: 'jsonb', default: {} })
+  customAttributes: Record<string, any>;
+
   // ── Relations ─────────────────────────────────────────────────────────────
   @ManyToOne(() => Department, { nullable: true, eager: false })
   @JoinColumn({ name: 'department_id' })
@@ -147,15 +157,25 @@ export class Employee {
   @Column({ name: 'tenant_id' })
   tenantId: string;
 
-  // ── Timestamps ────────────────────────────────────────────────────────────
+  // ── Timestamps & Audit ────────────────────────────────────────────────────
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
+  deletedAt?: Date;
+
+  @Column({ name: 'created_by', type: 'uuid', nullable: true })
+  createdBy?: string;
+
+  @Column({ name: 'updated_by', type: 'uuid', nullable: true })
+  updatedBy?: string;
+
   // ── Getters calculés ──────────────────────────────────────────────────────
   get fullName(): string {
     return `${this.firstName} ${this.lastName}`;
   }
 }
+

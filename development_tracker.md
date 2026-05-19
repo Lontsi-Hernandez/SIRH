@@ -49,8 +49,8 @@ gantt
     title Plan d'Action Prochaines Étapes
     dateFormat  YYYY-MM-DD
     section Phase 1 : Database
-    Entités & Index TypeORM         :active, db1, 2026-05-19, 1d
-    Migration Postgres Neon          :db2, after db1, 1d
+    Entités & Index TypeORM         :done, db1, 2026-05-19, 1d
+    Migration Postgres Neon          :active, db2, after db1, 1d
     section Phase 2 : Backend
     Contrôleurs, DTOs & Guards      :be1, after db2, 2d
     Service & Machine à États       :be2, after be1, 2d
@@ -60,6 +60,7 @@ gantt
     Profil 360° & Timeline          :fe3, after fe2, 2d
 ```
 
-### 1️⃣ Prochaine étape immédiate : Création de la table `Employee` dans le Code
-- **Cible** : Développer l'entité TypeORM `Employee` dans le backend en y ajoutant les index multi-tenant et la colonne `custom_attributes` au format JSONB.
-- **Vérification** : S'assurer que le script de build passe et génère proprement les tables correspondantes sur Neon.
+### 1️⃣ Prochaine étape immédiate : Implémentation du Contrôleur, DTOs & Guards Employees (Backend)
+- **Cible** : Développer le contrôleur `/api/v1/employees`, les validations de formulaires via DTOs et sécuriser les endpoints avec les Gardes multi-tenant et rôles RBAC.
+- **Vérification** : S'assurer que les routes de base répondent avec un statut `200` lors des requêtes HTTP.
+
