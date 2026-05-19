@@ -81,7 +81,7 @@ import { Housing, HousingAssignment } from './domain/entities/housing.entity';
           HousingAssignment,
         ],
         migrations: ['dist/persistence/migrations/*.js'],
-        synchronize: config.get('NODE_ENV') === 'development', // DESACTIVER en production!
+        synchronize: config.get('DB_SYNCHRONIZE', 'false') === 'true' || config.get('NODE_ENV') === 'development', // Activable via variable d'env
         logging: config.get('NODE_ENV') === 'development',
         ssl: config.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
         retryAttempts: 3,
