@@ -55,9 +55,9 @@ export class AuthService {
       // 3. Authentification Keycloak (Solution propre de production)
       let keycloakToken: string | null = null;
       const isProduction = this.configService.get('NODE_ENV') === 'production';
+      const keycloakUrl = this.configService.get('KEYCLOAK_URL');
 
       try {
-        const keycloakUrl = this.configService.get('KEYCLOAK_URL');
         const realm = this.configService.get('KEYCLOAK_REALM', 'hrms');
         const clientId = this.configService.get('KEYCLOAK_CLIENT_ID', 'hrms-backend');
         const clientSecret = this.configService.get('KEYCLOAK_CLIENT_SECRET');
