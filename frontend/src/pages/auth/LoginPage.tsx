@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/useStore';
 import { login } from '../../store/slices/authSlice';
+import { useApp } from '../../context/AppContext';
+import LanguageThemeToggle from '../../components/ui/LanguageThemeToggle';
 import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { isLoading, error } = useAppSelector((s) => s.auth);
+  const { t } = useApp();
   const [form, setForm] = useState({ email: '', password: '', tenantId: '' });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,17 +21,22 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
+      {/* Top right language/theme widget */}
+      <div className={styles.toggleWrapper}>
+        <LanguageThemeToggle />
+      </div>
+
       <div className={styles.card}>
         {/* Logo */}
         <div className={styles.logo}>
           <div className={styles.logoIcon}>HR</div>
           <h1 className={styles.title}>HRMS</h1>
-          <p className={styles.subtitle}>Système d'Information des Ressources Humaines</p>
+          <p className={styles.subtitle}>{t('auth.loginSubtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
           <div className={styles.field}>
-            <label htmlFor="tenantId" className={styles.label}>Identifiant de l'entreprise</label>
+            <label htmlFor="tenantId" className={styles.label}>{t('auth.companyCode')}</label>
             <input
               id="tenantId"
               type="text"
@@ -41,7 +49,7 @@ export default function LoginPage() {
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="email" className={styles.label}>Courriel</label>
+            <label htmlFor="email" className={styles.label}>{t('auth.email')}</label>
             <input
               id="email"
               type="email"
@@ -55,7 +63,7 @@ export default function LoginPage() {
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="password" className={styles.label}>Mot de passe</label>
+            <label htmlFor="password" className={styles.label}>{t('auth.password')}</label>
             <input
               id="password"
               type="password"
@@ -81,12 +89,12 @@ export default function LoginPage() {
           >
             {isLoading ? (
               <span className="animate-spin" style={{ display: 'inline-block' }}>⏳</span>
-            ) : '🔐 Se connecter'}
+            ) : `🔐 ${t('auth.loginButton')}`}
           </button>
         </form>
 
         <p className={styles.footer}>
-          © 2026 HRMS — Conformité québécoise/canadienne native
+          © 2026 HRMS — {t('common.success')}
         </p>
       </div>
 
@@ -99,3 +107,4 @@ export default function LoginPage() {
     </div>
   );
 }
+
