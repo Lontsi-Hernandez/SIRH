@@ -1,0 +1,5806 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.cursorrules
+.env.example
+.gitignore
+backend/Dockerfile
+backend/package.json
+backend/src/app.module.ts
+backend/src/application/employees/commands/create-employee/create-employee.command.ts
+backend/src/application/employees/commands/create-employee/create-employee.handler.ts
+backend/src/application/employees/commands/delete-employee/delete-employee.command.ts
+backend/src/application/employees/commands/delete-employee/delete-employee.handler.ts
+backend/src/application/employees/commands/update-employee/update-employee.command.ts
+backend/src/application/employees/commands/update-employee/update-employee.handler.ts
+backend/src/application/employees/queries/get-all-employees/get-all-employees.handler.ts
+backend/src/application/employees/queries/get-all-employees/get-all-employees.query.ts
+backend/src/application/employees/queries/get-employee-by-id/get-employee-by-id.handler.ts
+backend/src/application/employees/queries/get-employee-by-id/get-employee-by-id.query.ts
+backend/src/domain/entities/department.entity.ts
+backend/src/domain/entities/employee.entity.ts
+backend/src/domain/entities/job-application.entity.ts
+backend/src/domain/entities/job-posting.entity.ts
+backend/src/domain/entities/leave.entity.ts
+backend/src/domain/entities/notification.entity.ts
+backend/src/domain/entities/payroll.entity.ts
+backend/src/domain/entities/position.entity.ts
+backend/src/domain/entities/review.entity.ts
+backend/src/domain/entities/shift.entity.ts
+backend/src/domain/entities/tenant.entity.ts
+backend/src/domain/entities/training.entity.ts
+backend/src/domain/entities/user.entity.ts
+backend/src/infrastructure/realtime/websocket.gateway.ts
+backend/src/infrastructure/realtime/websocket.module.ts
+backend/src/main.ts
+backend/src/web/controllers/employees.controller.ts
+backend/src/web/dtos/employees/create-employee.dto.ts
+backend/src/web/dtos/employees/employee-filter.dto.ts
+backend/src/web/dtos/employees/update-employee.dto.ts
+backend/src/web/guards/roles.guard.ts
+backend/src/web/middleware/tenant.middleware.ts
+backend/src/web/modules/analytics.module.ts
+backend/src/web/modules/auth.module.ts
+backend/src/web/modules/departments.module.ts
+backend/src/web/modules/employees.module.ts
+backend/src/web/modules/leaves.module.ts
+backend/src/web/modules/notifications.module.ts
+backend/src/web/modules/payroll.module.ts
+backend/src/web/modules/performance.module.ts
+backend/src/web/modules/recruitment.module.ts
+backend/src/web/modules/shifts.module.ts
+backend/src/web/modules/tenants.module.ts
+backend/src/web/modules/training.module.ts
+backend/tsconfig.json
+docker-compose.yml
+frontend/index.html
+frontend/package.json
+frontend/src/App.tsx
+frontend/src/components/layout/AppLayout.module.css
+frontend/src/components/layout/AppLayout.tsx
+frontend/src/components/layout/Header.module.css
+frontend/src/components/layout/Header.tsx
+frontend/src/components/layout/Sidebar.module.css
+frontend/src/components/layout/Sidebar.tsx
+frontend/src/hooks/useStore.ts
+frontend/src/index.css
+frontend/src/main.tsx
+frontend/src/pages/analytics/AnalyticsPage.tsx
+frontend/src/pages/auth/LoginPage.module.css
+frontend/src/pages/auth/LoginPage.tsx
+frontend/src/pages/Dashboard.tsx
+frontend/src/pages/employees/EmployeesPage.tsx
+frontend/src/pages/leaves/LeavesPage.tsx
+frontend/src/pages/messages/MessagesPage.tsx
+frontend/src/pages/NotFoundPage.tsx
+frontend/src/pages/payroll/PayrollPage.tsx
+frontend/src/pages/performance/PerformancePage.tsx
+frontend/src/pages/profile/ProfilePage.tsx
+frontend/src/pages/recruitment/RecruitmentPage.tsx
+frontend/src/pages/settings/SettingsPage.tsx
+frontend/src/pages/shifts/ShiftsPage.tsx
+frontend/src/pages/training/TrainingPage.tsx
+frontend/src/services/api.service.ts
+frontend/src/store/index.ts
+frontend/src/store/slices/authSlice.ts
+frontend/src/store/slices/employeeSlice.ts
+frontend/src/store/slices/leaveSlice.ts
+frontend/src/store/slices/notificationSlice.ts
+frontend/src/store/slices/shiftSlice.ts
+frontend/src/store/slices/uiSlice.ts
+frontend/tsconfig.json
+frontend/tsconfig.node.json
+frontend/vite.config.ts
+mobile/package.json
+package.json
+README.md
+scripts/create-db.ps1
+scripts/init.sql
+scripts/setup.ps1
+shared/constants/api.constants.ts
+shared/types/index.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".cursorrules">
+# 🏢 Instructions de Contexte pour IA (HRMS Project)
+
+Ce fichier sert de guide et de règles de référence pour toutes les IA (ChatGPT, Claude, Cursor, Antigravity) travaillant sur ce projet.
+
+## 📋 Présentation du Projet
+* **Nom** : SIRH / HRMS (Human Resource Management System)
+* **Description** : Système d'Information des Ressources Humaines multi-tenant avec conformité canadienne/québécoise native.
+* **Type** : Monorépertoire (Monorepo)
+
+## 📁 Structure du Projet
+```text
+SIRH/
+├── backend/          # API NestJS (TypeORM, PostgreSQL)
+├── frontend/         # Application Web React + Vite (Redux Toolkit, TailwindCSS)
+├── mobile/           # Application Mobile Expo / React Native (Expo Router)
+├── shared/           # Types, validations et DTOs partagés
+└── scripts/          # Scripts SQL et Powershell d'initialisation/déploiement
+```
+
+## 🛠️ Stack Technique & Règles Clés par Service
+
+### 1. Backend (NestJS + TypeORM)
+* **Architecture** : Clean Architecture / DDD (Domain-Driven Design).
+  * `domain/` : Entités, interfaces de repositories, logique métier pure (sans dépendance externe).
+  * `infrastructure/` : Implémentations concrètes (TypeORM repositories, services externes).
+  * `persistence/` : Configurations de bases de données et migrations.
+  * `web/` : Contrôleurs, DTOs, guards, middlewares.
+* **Sécurité & Auth** : Intégration Keycloak pour la gestion d'identité et de rôles.
+* **Base de données** : PostgreSQL (`hrms_db` sur localhost:5432, utilisateur `hrms_user`).
+
+### 2. Frontend (React + Vite)
+* **Gestion d'état** : Redux Toolkit (`@reduxjs/toolkit` et `react-redux`).
+* **Design** : Interface soignée, moderne, CSS premium/Tailwind.
+* **Routes** : React Router DOM.
+* **Outils spéciaux** : Utilise le compilateur ultra-rapide Oxc (`vite:oxc`).
+
+### 3. Mobile (Expo + React Native)
+* **Framework** : Expo SDK 51.
+* **Version de Node recommandée** : Node 22/24. Note de compatibilité importante :
+  * Pour contourner les bugs d'exports CJS/ESM stricts de Node 24 avec Metro, des exports génériques `"./src/*": "./src/*.js"` ont été configurés dans les packages Metro dans `node_modules`.
+  * Le script de démarrage d'Expo en environnement réseau restreint se fait avec `npx expo start --offline`.
+
+## 📜 Règles de Développement pour l'IA
+1. **Toujours conserver les docstrings et commentaires existants** à moins d'une demande explicite de refactorisation.
+2. **Architecture Propre** : Respecter scrupuleusement la séparation des dossiers `domain/`, `infrastructure/` et `web/` dans le backend.
+3. **DRY & Types Partagés** : Ne pas recréer de types côté frontend ou mobile s'ils peuvent être définis dans `shared/` et importés de manière centralisée.
+4. **Design Premium** : Les interfaces web et mobiles doivent offrir un rendu moderne (effets de survol, micro-animations, palettes harmonieuses).
+</file>
+
+<file path=".env.example">
+# ─────────────────────────────────────────────────────────────────────────────
+# HRMS — Variables d'environnement
+# Copiez ce fichier en .env et remplissez les valeurs
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Application ──────────────────────────────────────────────────────────────
+NODE_ENV=development
+APP_NAME=HRMS
+
+# ── Base de données PostgreSQL ───────────────────────────────────────────────
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=hrms_user
+DB_PASSWORD=hrms_password
+DB_NAME=hrms_db
+
+# ── Redis ────────────────────────────────────────────────────────────────────
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=redis_password
+
+# ── JWT & Sécurité ───────────────────────────────────────────────────────────
+JWT_SECRET=change_me_in_production_super_secret_key_32_chars
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7d
+
+# ── Keycloak (Auth SSO) ──────────────────────────────────────────────────────
+KEYCLOAK_URL=http://localhost:8080
+KEYCLOAK_REALM=hrms
+KEYCLOAK_CLIENT_ID=hrms-backend
+KEYCLOAK_CLIENT_SECRET=change_me_keycloak_secret
+KEYCLOAK_ADMIN=admin
+KEYCLOAK_ADMIN_PASSWORD=admin123
+
+# ── AWS S3 (ou MinIO en développement) ──────────────────────────────────────
+AWS_ACCESS_KEY_ID=minioadmin
+AWS_SECRET_ACCESS_KEY=minioadmin123
+AWS_S3_BUCKET=hrms-files
+AWS_REGION=ca-central-1
+AWS_S3_ENDPOINT=http://localhost:9000   # Retirer en production
+
+# ── SendGrid (Email) ─────────────────────────────────────────────────────────
+SENDGRID_API_KEY=your_sendgrid_api_key
+EMAIL_FROM=noreply@hrms.com
+EMAIL_FROM_NAME=HRMS Système RH
+
+# ── WebSockets ───────────────────────────────────────────────────────────────
+WS_PORT=3001
+
+# ── Multi-tenant ─────────────────────────────────────────────────────────────
+DEFAULT_TENANT_ID=default
+
+# ── Intégrations externes ────────────────────────────────────────────────────
+NETHRIS_API_URL=https://api.nethris.com
+NETHRIS_API_KEY=your_nethris_api_key
+ADP_API_URL=https://api.adp.com
+ADP_CLIENT_ID=your_adp_client_id
+ADP_CLIENT_SECRET=your_adp_client_secret
+LINKEDIN_CLIENT_ID=your_linkedin_client_id
+LINKEDIN_CLIENT_SECRET=your_linkedin_client_secret
+INDEED_API_KEY=your_indeed_api_key
+
+# ── Frontend (Vite) ──────────────────────────────────────────────────────────
+VITE_API_URL=http://localhost:3000
+VITE_WS_URL=ws://localhost:3001
+VITE_KEYCLOAK_URL=http://localhost:8080
+VITE_KEYCLOAK_REALM=hrms
+VITE_KEYCLOAK_CLIENT_ID=hrms-frontend
+</file>
+
+<file path=".gitignore">
+# ─── Dependencies ────────────────────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+
+# ─── Build outputs ────────────────────────────────────────────────────────────
+dist/
+build/
+.next/
+out/
+.expo/
+*.tsbuildinfo
+
+# ─── Environment ─────────────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── IDE ──────────────────────────────────────────────────────────────────────
+.vscode/
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ─── Testing ──────────────────────────────────────────────────────────────────
+coverage/
+.nyc_output/
+
+# ─── Docker ───────────────────────────────────────────────────────────────────
+.dockerignore
+
+# ─── Uploads temporaires ──────────────────────────────────────────────────────
+uploads/
+tmp/
+
+# ─── TypeORM migrations générées ─────────────────────────────────────────────
+backend/src/persistence/migrations/*.js
+</file>
+
+<file path="backend/Dockerfile">
+# ─── Étape 1: Développement ───────────────────────────────────────────────────
+FROM node:20-alpine AS development
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "run", "start:dev"]
+
+# ─── Étape 2: Build ───────────────────────────────────────────────────────────
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+RUN npm run build
+
+# ─── Étape 3: Production ──────────────────────────────────────────────────────
+FROM node:20-alpine AS production
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+
+EXPOSE 3000
+
+CMD ["node", "dist/main"]
+</file>
+
+<file path="backend/package.json">
+{
+  "name": "hrms-backend",
+  "version": "1.0.0",
+  "description": "HRMS Backend — NestJS + Clean Architecture + CQRS",
+  "private": true,
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch",
+    "start:prod": "node dist/main",
+    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:cov": "jest --coverage",
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/persistence/data-source.ts",
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d src/persistence/data-source.ts",
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/persistence/data-source.ts",
+    "seed": "ts-node src/persistence/seeds/run-seeds.ts"
+  },
+  "dependencies": {
+    "@nestjs/common": "^10.3.0",
+    "@nestjs/core": "^10.3.0",
+    "@nestjs/platform-express": "^10.3.0",
+    "@nestjs/platform-socket.io": "^10.3.0",
+    "@nestjs/websockets": "^10.3.0",
+    "@nestjs/cqrs": "^10.2.7",
+    "@nestjs/typeorm": "^10.0.2",
+    "@nestjs/config": "^3.2.0",
+    "@nestjs/jwt": "^10.2.0",
+    "@nestjs/passport": "^10.0.3",
+    "@nestjs/swagger": "^7.3.0",
+    "@nestjs/throttler": "^5.1.2",
+    "@nestjs/cache-manager": "^2.2.1",
+    "@nestjs/schedule": "^4.0.1",
+    "@nestjs/bull": "^10.1.1",
+    "typeorm": "^0.3.20",
+    "pg": "^8.11.5",
+    "redis": "^4.6.13",
+    "cache-manager": "^5.4.0",
+    "cache-manager-redis-yet": "^5.1.3",
+    "bull": "^4.12.2",
+    "passport": "^0.7.0",
+    "passport-jwt": "^4.0.1",
+    "passport-keycloak-bearer": "^1.1.0",
+    "keycloak-connect": "^23.0.7",
+    "bcryptjs": "^2.4.3",
+    "class-validator": "^0.14.1",
+    "class-transformer": "^0.5.1",
+    "uuid": "^9.0.1",
+    "@aws-sdk/client-s3": "^3.550.0",
+    "@aws-sdk/s3-request-presigner": "^3.550.0",
+    "@sendgrid/mail": "^8.1.3",
+    "nodemailer": "^6.9.13",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.3",
+    "xlsx": "^0.18.5",
+    "pdfkit": "^0.15.0",
+    "axios": "^1.6.8",
+    "dayjs": "^1.11.10",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1",
+    "socket.io": "^4.7.5",
+    "helmet": "^7.1.0",
+    "compression": "^1.7.4"
+  },
+  "devDependencies": {
+    "@nestjs/cli": "^10.3.2",
+    "@nestjs/schematics": "^10.1.1",
+    "@nestjs/testing": "^10.3.0",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.12",
+    "@types/multer": "^1.4.11",
+    "@types/node": "^20.12.7",
+    "@types/nodemailer": "^6.4.14",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^6.0.2",
+    "@types/uuid": "^9.0.8",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.5",
+    "supertest": "^7.0.0",
+    "ts-jest": "^29.1.2",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typeorm-ts-node-commonjs": "^0.3.20",
+    "typescript": "^5.4.5"
+  },
+  "jest": {
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": "src",
+    "testRegex": ".*\\.spec\\.ts$",
+    "transform": {
+      "^.+\\.(t|j)s$": "ts-jest"
+    },
+    "collectCoverageFrom": ["**/*.(t|j)s"],
+    "coverageDirectory": "../coverage",
+    "testEnvironment": "node",
+    "moduleNameMapper": {
+      "^@domain/(.*)$": "<rootDir>/domain/$1",
+      "^@application/(.*)$": "<rootDir>/application/$1",
+      "^@infrastructure/(.*)$": "<rootDir>/infrastructure/$1",
+      "^@persistence/(.*)$": "<rootDir>/persistence/$1",
+      "^@web/(.*)$": "<rootDir>/web/$1",
+      "^@shared/(.*)$": "<rootDir>/../shared/$1"
+    }
+  }
+}
+</file>
+
+<file path="backend/src/app.module.ts">
+import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ScheduleModule } from '@nestjs/schedule';
+import { CacheModule } from '@nestjs/cache-manager';
+
+// ── Feature Modules ────────────────────────────────────────────────────────
+import { AuthModule } from './web/modules/auth.module';
+import { EmployeesModule } from './web/modules/employees.module';
+import { DepartmentsModule } from './web/modules/departments.module';
+import { ShiftsModule } from './web/modules/shifts.module';
+import { LeavesModule } from './web/modules/leaves.module';
+import { PayrollModule } from './web/modules/payroll.module';
+import { RecruitmentModule } from './web/modules/recruitment.module';
+import { PerformanceModule } from './web/modules/performance.module';
+import { TrainingModule } from './web/modules/training.module';
+import { NotificationsModule } from './web/modules/notifications.module';
+import { AnalyticsModule } from './web/modules/analytics.module';
+import { TenantsModule } from './web/modules/tenants.module';
+
+// ── Infrastructure ─────────────────────────────────────────────────────────
+import { WebSocketGatewayModule } from './infrastructure/realtime/websocket.module';
+
+// ── Domain Entities ────────────────────────────────────────────────────────
+import { Employee } from './domain/entities/employee.entity';
+import { Department } from './domain/entities/department.entity';
+import { Position } from './domain/entities/position.entity';
+import { Shift } from './domain/entities/shift.entity';
+import { Leave } from './domain/entities/leave.entity';
+import { Payroll } from './domain/entities/payroll.entity';
+import { JobPosting } from './domain/entities/job-posting.entity';
+import { JobApplication } from './domain/entities/job-application.entity';
+import { Review, Goal } from './domain/entities/review.entity';
+import { Training } from './domain/entities/training.entity';
+import { Notification } from './domain/entities/notification.entity';
+import { Tenant } from './domain/entities/tenant.entity';
+import { User, TimeEntry, Message, Announcement } from './domain/entities/user.entity';
+
+@Module({
+  imports: [
+    // ── Configuration ──────────────────────────────────────────────────────
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', '.env'],
+    }),
+
+    // ── Base de données TypeORM ────────────────────────────────────────────
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.get('DB_HOST', 'localhost'),
+        port: config.get<number>('DB_PORT', 5432),
+        username: config.get('DB_USER', 'hrms_user'),
+        password: config.get('DB_PASSWORD', 'hrms_password'),
+        database: config.get('DB_NAME', 'hrms_db'),
+        entities: [
+          Employee,
+          Department,
+          Position,
+          Shift,
+          Leave,
+          Payroll,
+          JobPosting,
+          JobApplication,
+          Review,
+          Goal,
+          Training,
+          Notification,
+          Tenant,
+          User,
+          TimeEntry,
+          Message,
+          Announcement,
+        ],
+        migrations: ['dist/persistence/migrations/*.js'],
+        synchronize: config.get('NODE_ENV') === 'development', // DESACTIVER en production!
+        logging: config.get('NODE_ENV') === 'development',
+        ssl: config.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
+        retryAttempts: 3,
+        retryDelay: 3000,
+      }),
+    }),
+
+    // ── Cache (mémoire en dev, Redis en production) ────────────────────────
+    CacheModule.registerAsync({
+      isGlobal: true,
+      inject: [ConfigService],
+      useFactory: async (config: ConfigService): Promise<any> => {
+        const nodeEnv = config.get('NODE_ENV', 'development');
+        const useRedis = config.get('USE_REDIS', 'false') === 'true' || nodeEnv === 'production';
+
+        if (useRedis) {
+          const { redisStore } = await import('cache-manager-redis-yet');
+          return {
+            store: await redisStore({
+              socket: {
+                host: config.get('REDIS_HOST', 'localhost'),
+                port: config.get<number>('REDIS_PORT', 6379),
+              },
+              password: config.get('REDIS_PASSWORD'),
+            }),
+            ttl: 60 * 5,
+          };
+        }
+
+        // Cache en mémoire pour le développement sans Redis
+        return { ttl: 60 * 5, max: 1000 };
+      },
+    }),
+
+    // ── Rate limiting ──────────────────────────────────────────────────────
+    ThrottlerModule.forRoot([
+      { name: 'short', ttl: 1000, limit: 10 },
+      { name: 'medium', ttl: 10000, limit: 100 },
+      { name: 'long', ttl: 60000, limit: 1000 },
+    ]),
+
+    // ── Scheduler ─────────────────────────────────────────────────────────
+    ScheduleModule.forRoot(),
+
+    // ── Modules fonctionnels ───────────────────────────────────────────────
+    TenantsModule,
+    AuthModule,
+    EmployeesModule,
+    DepartmentsModule,
+    ShiftsModule,
+    LeavesModule,
+    PayrollModule,
+    RecruitmentModule,
+    PerformanceModule,
+    TrainingModule,
+    NotificationsModule,
+    AnalyticsModule,
+
+    // ── Infrastructure ─────────────────────────────────────────────────────
+    WebSocketGatewayModule,
+  ],
+})
+export class AppModule {}
+</file>
+
+<file path="backend/src/application/employees/commands/create-employee/create-employee.command.ts">
+import { CreateEmployeeDto } from '../../../../web/dtos/employees/create-employee.dto';
+
+export class CreateEmployeeCommand {
+  constructor(
+    public readonly dto: CreateEmployeeDto,
+    public readonly tenantId: string,
+  ) {}
+}
+</file>
+
+<file path="backend/src/application/employees/commands/create-employee/create-employee.handler.ts">
+import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ConflictException } from '@nestjs/common';
+import { CreateEmployeeCommand } from './create-employee.command';
+import { Employee, EmployeeStatus, UserRole } from '../../../../domain/entities/employee.entity';
+
+@CommandHandler(CreateEmployeeCommand)
+export class CreateEmployeeHandler implements ICommandHandler<CreateEmployeeCommand> {
+  constructor(
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
+  ) {}
+
+  async execute(command: CreateEmployeeCommand): Promise<Employee> {
+    const { dto, tenantId } = command;
+
+    // Vérifier l'unicité de l'email dans ce tenant
+    const existing = await this.employeeRepository.findOne({
+      where: { email: dto.email, tenantId },
+    });
+
+    if (existing) {
+      throw new ConflictException(`Un employé avec l'email ${dto.email} existe déjà`);
+    }
+
+    // Générer le numéro d'employé
+    const count = await this.employeeRepository.count({ where: { tenantId } });
+    const employeeNumber = `EMP-${String(count + 1).padStart(4, '0')}`;
+
+    const employee = this.employeeRepository.create({
+      ...dto,
+      employeeNumber,
+      tenantId,
+      status: EmployeeStatus.ACTIVE,
+      role: dto.role ?? UserRole.EMPLOYEE,
+      hireDate: new Date(dto.hireDate),
+    });
+
+    return this.employeeRepository.save(employee);
+  }
+}
+</file>
+
+<file path="backend/src/application/employees/commands/delete-employee/delete-employee.command.ts">
+export class DeleteEmployeeCommand {
+  constructor(
+    public readonly id: string,
+    public readonly tenantId: string,
+  ) {}
+}
+</file>
+
+<file path="backend/src/application/employees/commands/delete-employee/delete-employee.handler.ts">
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NotFoundException } from '@nestjs/common';
+import { DeleteEmployeeCommand } from './delete-employee.command';
+import { Employee, EmployeeStatus } from '../../../../domain/entities/employee.entity';
+
+@CommandHandler(DeleteEmployeeCommand)
+export class DeleteEmployeeHandler implements ICommandHandler<DeleteEmployeeCommand> {
+  constructor(
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
+  ) {}
+
+  async execute(command: DeleteEmployeeCommand): Promise<void> {
+    const { id, tenantId } = command;
+    const employee = await this.employeeRepository.findOne({ where: { id, tenantId } });
+
+    if (!employee) throw new NotFoundException(`Employé ${id} introuvable`);
+
+    // Soft delete — changer le statut
+    employee.status = EmployeeStatus.TERMINATED;
+    employee.terminationDate = new Date();
+    await this.employeeRepository.save(employee);
+  }
+}
+</file>
+
+<file path="backend/src/application/employees/commands/update-employee/update-employee.command.ts">
+import { UpdateEmployeeDto } from '../../../../web/dtos/employees/create-employee.dto';
+
+export class UpdateEmployeeCommand {
+  constructor(
+    public readonly id: string,
+    public readonly dto: UpdateEmployeeDto,
+    public readonly tenantId: string,
+  ) {}
+}
+</file>
+
+<file path="backend/src/application/employees/commands/update-employee/update-employee.handler.ts">
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NotFoundException } from '@nestjs/common';
+import { UpdateEmployeeCommand } from './update-employee.command';
+import { Employee } from '../../../../domain/entities/employee.entity';
+
+@CommandHandler(UpdateEmployeeCommand)
+export class UpdateEmployeeHandler implements ICommandHandler<UpdateEmployeeCommand> {
+  constructor(
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
+  ) {}
+
+  async execute(command: UpdateEmployeeCommand): Promise<Employee> {
+    const { id, dto, tenantId } = command;
+    const employee = await this.employeeRepository.findOne({ where: { id, tenantId } });
+
+    if (!employee) throw new NotFoundException(`Employé ${id} introuvable`);
+
+    Object.assign(employee, dto);
+    return this.employeeRepository.save(employee);
+  }
+}
+</file>
+
+<file path="backend/src/application/employees/queries/get-all-employees/get-all-employees.handler.ts">
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Like, FindManyOptions } from 'typeorm';
+import { GetAllEmployeesQuery } from './get-all-employees.query';
+import { Employee } from '../../../../domain/entities/employee.entity';
+
+@QueryHandler(GetAllEmployeesQuery)
+export class GetAllEmployeesHandler implements IQueryHandler<GetAllEmployeesQuery> {
+  constructor(
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
+  ) {}
+
+  async execute(query: GetAllEmployeesQuery) {
+    const { tenantId, filters } = query;
+    const { page = 1, limit = 20, search, departmentId, status, role } = filters;
+
+    const where: any = { tenantId };
+
+    if (status) where.status = status;
+    if (role) where.role = role;
+    if (departmentId) where.departmentId = departmentId;
+
+    const options: FindManyOptions<Employee> = {
+      where: search
+        ? [
+            { ...where, firstName: Like(`%${search}%`) },
+            { ...where, lastName: Like(`%${search}%`) },
+            { ...where, email: Like(`%${search}%`) },
+            { ...where, employeeNumber: Like(`%${search}%`) },
+          ]
+        : where,
+      relations: ['department', 'position', 'manager'],
+      order: { lastName: 'ASC', firstName: 'ASC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    };
+
+    const [employees, total] = await this.employeeRepository.findAndCount(options);
+
+    return {
+      data: employees,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
+  }
+}
+</file>
+
+<file path="backend/src/application/employees/queries/get-all-employees/get-all-employees.query.ts">
+import { EmployeeFilterDto } from '../../../../web/dtos/employees/create-employee.dto';
+
+export class GetAllEmployeesQuery {
+  constructor(
+    public readonly tenantId: string,
+    public readonly filters: EmployeeFilterDto,
+  ) {}
+}
+</file>
+
+<file path="backend/src/application/employees/queries/get-employee-by-id/get-employee-by-id.handler.ts">
+import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { NotFoundException } from '@nestjs/common';
+import { GetEmployeeByIdQuery } from './get-employee-by-id.query';
+import { Employee } from '../../../../domain/entities/employee.entity';
+
+@QueryHandler(GetEmployeeByIdQuery)
+export class GetEmployeeByIdHandler implements IQueryHandler<GetEmployeeByIdQuery> {
+  constructor(
+    @InjectRepository(Employee)
+    private readonly employeeRepository: Repository<Employee>,
+  ) {}
+
+  async execute(query: GetEmployeeByIdQuery): Promise<Employee> {
+    const employee = await this.employeeRepository.findOne({
+      where: { id: query.id, tenantId: query.tenantId },
+      relations: ['department', 'position', 'manager', 'subordinates'],
+    });
+
+    if (!employee) {
+      throw new NotFoundException(`Employé ${query.id} introuvable`);
+    }
+
+    return employee;
+  }
+}
+</file>
+
+<file path="backend/src/application/employees/queries/get-employee-by-id/get-employee-by-id.query.ts">
+export class GetEmployeeByIdQuery {
+  constructor(
+    public readonly id: string,
+    public readonly tenantId: string,
+  ) {}
+}
+</file>
+
+<file path="backend/src/domain/entities/department.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
+  UpdateDateColumn, ManyToOne, OneToMany, JoinColumn,
+} from 'typeorm';
+import { Tenant } from './tenant.entity';
+import { Employee } from './employee.entity';
+
+@Entity('departments')
+export class Department {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column({ nullable: true })
+  code?: string;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'manager_id' })
+  manager?: Employee;
+
+  @Column({ name: 'manager_id', nullable: true })
+  managerId?: string;
+
+  @ManyToOne(() => Department, { nullable: true })
+  @JoinColumn({ name: 'parent_department_id' })
+  parentDepartment?: Department;
+
+  @Column({ name: 'parent_department_id', nullable: true })
+  parentDepartmentId?: string;
+
+  @OneToMany(() => Department, (dept) => dept.parentDepartment)
+  subDepartments?: Department[];
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/employee.entity.ts">
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
+import { Department } from './department.entity';
+import { Position } from './position.entity';
+import { Shift } from './shift.entity';
+import { Leave } from './leave.entity';
+import { Tenant } from './tenant.entity';
+
+export enum EmployeeStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  ON_LEAVE = 'ON_LEAVE',
+  TERMINATED = 'TERMINATED',
+}
+
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  HR = 'HR',
+  MANAGER = 'MANAGER',
+  EMPLOYEE = 'EMPLOYEE',
+}
+
+@Entity('employees')
+export class Employee {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  // ── Identité ──────────────────────────────────────────────────────────────
+  @Column({ name: 'employee_number', unique: true })
+  employeeNumber: string;
+
+  @Column({ name: 'first_name' })
+  firstName: string;
+
+  @Column({ name: 'last_name' })
+  lastName: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ name: 'phone_number', nullable: true })
+  phoneNumber?: string;
+
+  @Column({ name: 'avatar_url', nullable: true })
+  avatarUrl?: string;
+
+  @Column({ name: 'date_of_birth', type: 'date', nullable: true })
+  dateOfBirth?: Date;
+
+  @Column({ name: 'sin_number', nullable: true, select: false }) // SIN (NAS) — sélection explicite requise
+  sinNumber?: string;
+
+  // ── Adresse ───────────────────────────────────────────────────────────────
+  @Column({ nullable: true })
+  address?: string;
+
+  @Column({ nullable: true })
+  city?: string;
+
+  @Column({ nullable: true })
+  province?: string;
+
+  @Column({ name: 'postal_code', nullable: true })
+  postalCode?: string;
+
+  // ── Emploi ────────────────────────────────────────────────────────────────
+  @Column({
+    type: 'enum',
+    enum: EmployeeStatus,
+    default: EmployeeStatus.ACTIVE,
+  })
+  status: EmployeeStatus;
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.EMPLOYEE,
+  })
+  role: UserRole;
+
+  @Column({ name: 'hire_date', type: 'date' })
+  hireDate: Date;
+
+  @Column({ name: 'termination_date', type: 'date', nullable: true })
+  terminationDate?: Date;
+
+  @Column({ name: 'hourly_rate', type: 'decimal', precision: 10, scale: 2, nullable: true })
+  hourlyRate?: number;
+
+  @Column({ name: 'annual_salary', type: 'decimal', precision: 12, scale: 2, nullable: true })
+  annualSalary?: number;
+
+  @Column({ name: 'vacation_days_per_year', default: 15 })
+  vacationDaysPerYear: number;
+
+  @Column({ name: 'sick_days_per_year', default: 5 })
+  sickDaysPerYear: number;
+
+  // ── Keycloak ──────────────────────────────────────────────────────────────
+  @Column({ name: 'keycloak_id', nullable: true, unique: true })
+  keycloakId?: string;
+
+  // ── Relations ─────────────────────────────────────────────────────────────
+  @ManyToOne(() => Department, { nullable: true, eager: false })
+  @JoinColumn({ name: 'department_id' })
+  department?: Department;
+
+  @Column({ name: 'department_id', nullable: true })
+  departmentId?: string;
+
+  @ManyToOne(() => Position, { nullable: true, eager: false })
+  @JoinColumn({ name: 'position_id' })
+  position?: Position;
+
+  @Column({ name: 'position_id', nullable: true })
+  positionId?: string;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'manager_id' })
+  manager?: Employee;
+
+  @Column({ name: 'manager_id', nullable: true })
+  managerId?: string;
+
+  @OneToMany(() => Employee, (employee) => employee.manager)
+  subordinates?: Employee[];
+
+  @OneToMany(() => Shift, (shift) => shift.employee)
+  shifts?: Shift[];
+
+  @OneToMany(() => Leave, (leave) => leave.employee)
+  leaves?: Leave[];
+
+  // ── Multi-tenant ──────────────────────────────────────────────────────────
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  // ── Timestamps ────────────────────────────────────────────────────────────
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  // ── Getters calculés ──────────────────────────────────────────────────────
+  get fullName(): string {
+    return `${this.firstName} ${this.lastName}`;
+  }
+}
+</file>
+
+<file path="backend/src/domain/entities/job-application.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, JoinColumn,
+} from 'typeorm';
+import { JobPosting } from './job-posting.entity';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+export enum ApplicationStatus {
+  APPLIED = 'APPLIED',
+  SCREENING = 'SCREENING',
+  INTERVIEW = 'INTERVIEW',
+  ASSESSMENT = 'ASSESSMENT',
+  OFFER = 'OFFER',
+  HIRED = 'HIRED',
+  REJECTED = 'REJECTED',
+}
+
+@Entity('job_applications')
+export class JobApplication {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'applicant_name' })
+  applicantName: string;
+
+  @Column({ name: 'applicant_email' })
+  applicantEmail: string;
+
+  @Column({ name: 'applicant_phone', nullable: true })
+  applicantPhone?: string;
+
+  @Column({ name: 'resume_url', nullable: true })
+  resumeUrl?: string;
+
+  @Column({ name: 'cover_letter', type: 'text', nullable: true })
+  coverLetter?: string;
+
+  @Column({ name: 'linkedin_profile', nullable: true })
+  linkedinProfile?: string;
+
+  @Column({ type: 'enum', enum: ApplicationStatus, default: ApplicationStatus.APPLIED })
+  status: ApplicationStatus;
+
+  @Column({ name: 'interview_date', type: 'timestamptz', nullable: true })
+  interviewDate?: Date;
+
+  @Column({ name: 'interview_notes', type: 'text', nullable: true })
+  interviewNotes?: string;
+
+  @Column({ name: 'score', type: 'decimal', precision: 5, scale: 2, nullable: true })
+  score?: number;
+
+  @Column({ name: 'rejection_reason', nullable: true })
+  rejectionReason?: string;
+
+  @ManyToOne(() => JobPosting, (posting) => posting.applications)
+  @JoinColumn({ name: 'job_posting_id' })
+  jobPosting: JobPosting;
+
+  @Column({ name: 'job_posting_id' })
+  jobPostingId: string;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'assigned_to_id' })
+  assignedTo?: Employee;
+
+  @Column({ name: 'assigned_to_id', nullable: true })
+  assignedToId?: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/job-posting.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, OneToMany, JoinColumn,
+} from 'typeorm';
+import { Tenant } from './tenant.entity';
+import { Employee } from './employee.entity';
+import { Department } from './department.entity';
+import { JobApplication } from './job-application.entity';
+
+export enum RecruitmentStatus {
+  OPEN = 'OPEN',
+  IN_REVIEW = 'IN_REVIEW',
+  INTERVIEWING = 'INTERVIEWING',
+  OFFER_SENT = 'OFFER_SENT',
+  HIRED = 'HIRED',
+  CLOSED = 'CLOSED',
+}
+
+export enum EmploymentType {
+  FULL_TIME = 'FULL_TIME',
+  PART_TIME = 'PART_TIME',
+  CONTRACT = 'CONTRACT',
+  TEMPORARY = 'TEMPORARY',
+  INTERNSHIP = 'INTERNSHIP',
+}
+
+@Entity('job_postings')
+export class JobPosting {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  title: string;
+
+  @Column({ type: 'text' })
+  description: string;
+
+  @Column({ type: 'text', nullable: true })
+  requirements?: string;
+
+  @Column({ nullable: true })
+  location?: string;
+
+  @Column({ name: 'is_remote', default: false })
+  isRemote: boolean;
+
+  @Column({ name: 'employment_type', type: 'enum', enum: EmploymentType, default: EmploymentType.FULL_TIME })
+  employmentType: EmploymentType;
+
+  @Column({ name: 'salary_min', type: 'decimal', precision: 12, scale: 2, nullable: true })
+  salaryMin?: number;
+
+  @Column({ name: 'salary_max', type: 'decimal', precision: 12, scale: 2, nullable: true })
+  salaryMax?: number;
+
+  @Column({ type: 'enum', enum: RecruitmentStatus, default: RecruitmentStatus.OPEN })
+  status: RecruitmentStatus;
+
+  @Column({ name: 'published_at', type: 'timestamptz', nullable: true })
+  publishedAt?: Date;
+
+  @Column({ name: 'closing_date', type: 'date', nullable: true })
+  closingDate?: Date;
+
+  @Column({ name: 'linkedin_job_id', nullable: true })
+  linkedinJobId?: string;
+
+  @Column({ name: 'indeed_job_id', nullable: true })
+  indeedJobId?: string;
+
+  @ManyToOne(() => Department, { nullable: true })
+  @JoinColumn({ name: 'department_id' })
+  department?: Department;
+
+  @Column({ name: 'department_id', nullable: true })
+  departmentId?: string;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'recruiter_id' })
+  recruiter?: Employee;
+
+  @Column({ name: 'recruiter_id', nullable: true })
+  recruiterId?: string;
+
+  @OneToMany(() => JobApplication, (app) => app.jobPosting)
+  applications?: JobApplication[];
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/leave.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, JoinColumn,
+} from 'typeorm';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+export enum LeaveType {
+  VACATION = 'VACATION',
+  SICK = 'SICK',
+  PERSONAL = 'PERSONAL',
+  MATERNITY = 'MATERNITY',
+  PATERNITY = 'PATERNITY',
+  BEREAVEMENT = 'BEREAVEMENT',
+  UNPAID = 'UNPAID',
+  PARENTAL = 'PARENTAL',       // Loi québécoise RQAP
+  JURY_DUTY = 'JURY_DUTY',
+  COMPASSIONATE = 'COMPASSIONATE',
+}
+
+export enum LeaveStatus {
+  PENDING = 'PENDING',
+  APPROVED = 'APPROVED',
+  REJECTED = 'REJECTED',
+  CANCELLED = 'CANCELLED',
+}
+
+@Entity('leaves')
+export class Leave {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'enum', enum: LeaveType })
+  type: LeaveType;
+
+  @Column({ type: 'enum', enum: LeaveStatus, default: LeaveStatus.PENDING })
+  status: LeaveStatus;
+
+  @Column({ name: 'start_date', type: 'date' })
+  startDate: Date;
+
+  @Column({ name: 'end_date', type: 'date' })
+  endDate: Date;
+
+  @Column({ name: 'total_days', type: 'decimal', precision: 5, scale: 1 })
+  totalDays: number;
+
+  @Column({ nullable: true })
+  reason?: string;
+
+  @Column({ name: 'rejection_reason', nullable: true })
+  rejectionReason?: string;
+
+  @Column({ name: 'approved_at', type: 'timestamptz', nullable: true })
+  approvedAt?: Date;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'approved_by_id' })
+  approvedBy?: Employee;
+
+  @Column({ name: 'approved_by_id', nullable: true })
+  approvedById?: string;
+
+  @Column({ name: 'medical_certificate_url', nullable: true })
+  medicalCertificateUrl?: string;
+
+  @ManyToOne(() => Employee, (emp) => emp.leaves)
+  @JoinColumn({ name: 'employee_id' })
+  employee: Employee;
+
+  @Column({ name: 'employee_id' })
+  employeeId: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/notification.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, JoinColumn,
+} from 'typeorm';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+export enum NotificationType {
+  SHIFT_CHANGE = 'SHIFT_CHANGE',
+  LEAVE_APPROVED = 'LEAVE_APPROVED',
+  LEAVE_REJECTED = 'LEAVE_REJECTED',
+  PAYROLL_READY = 'PAYROLL_READY',
+  ANNOUNCEMENT = 'ANNOUNCEMENT',
+  TASK_ASSIGNED = 'TASK_ASSIGNED',
+  REVIEW_DUE = 'REVIEW_DUE',
+  DOCUMENT_SHARED = 'DOCUMENT_SHARED',
+}
+
+@Entity('notifications')
+export class Notification {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'enum', enum: NotificationType })
+  type: NotificationType;
+
+  @Column()
+  title: string;
+
+  @Column({ type: 'text' })
+  body: string;
+
+  @Column({ name: 'is_read', default: false })
+  isRead: boolean;
+
+  @Column({ name: 'read_at', type: 'timestamptz', nullable: true })
+  readAt?: Date;
+
+  @Column({ name: 'action_url', nullable: true })
+  actionUrl?: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  metadata?: Record<string, any>;
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'recipient_id' })
+  recipient: Employee;
+
+  @Column({ name: 'recipient_id' })
+  recipientId: string;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'sender_id' })
+  sender?: Employee;
+
+  @Column({ name: 'sender_id', nullable: true })
+  senderId?: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/payroll.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, JoinColumn,
+} from 'typeorm';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+export enum PayrollStatus {
+  DRAFT = 'DRAFT',
+  PROCESSING = 'PROCESSING',
+  APPROVED = 'APPROVED',
+  PAID = 'PAID',
+  ERROR = 'ERROR',
+}
+
+@Entity('payrolls')
+export class Payroll {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'period_start', type: 'date' })
+  periodStart: Date;
+
+  @Column({ name: 'period_end', type: 'date' })
+  periodEnd: Date;
+
+  // ── Heures ────────────────────────────────────────────────────────────────
+  @Column({ name: 'regular_hours', type: 'decimal', precision: 8, scale: 2, default: 0 })
+  regularHours: number;
+
+  @Column({ name: 'overtime_hours', type: 'decimal', precision: 8, scale: 2, default: 0 })
+  overtimeHours: number;
+
+  @Column({ name: 'holiday_hours', type: 'decimal', precision: 8, scale: 2, default: 0 })
+  holidayHours: number;
+
+  // ── Salaire brut ──────────────────────────────────────────────────────────
+  @Column({ name: 'regular_pay', type: 'decimal', precision: 12, scale: 2, default: 0 })
+  regularPay: number;
+
+  @Column({ name: 'overtime_pay', type: 'decimal', precision: 12, scale: 2, default: 0 })
+  overtimePay: number;
+
+  @Column({ name: 'bonus', type: 'decimal', precision: 12, scale: 2, default: 0 })
+  bonus: number;
+
+  @Column({ name: 'gross_pay', type: 'decimal', precision: 12, scale: 2 })
+  grossPay: number;
+
+  // ── Déductions (Conformité québécoise) ────────────────────────────────────
+  @Column({ name: 'federal_tax', type: 'decimal', precision: 12, scale: 2, default: 0 })
+  federalTax: number;
+
+  @Column({ name: 'provincial_tax', type: 'decimal', precision: 12, scale: 2, default: 0 })
+  provincialTax: number;
+
+  @Column({ name: 'ei_employee', type: 'decimal', precision: 10, scale: 2, default: 0, comment: 'Assurance-emploi employé' })
+  eiEmployee: number;
+
+  @Column({ name: 'ei_employer', type: 'decimal', precision: 10, scale: 2, default: 0, comment: 'Assurance-emploi employeur' })
+  eiEmployer: number;
+
+  @Column({ name: 'cpp_employee', type: 'decimal', precision: 10, scale: 2, default: 0, comment: 'RRQ employé' })
+  cppEmployee: number;
+
+  @Column({ name: 'cpp_employer', type: 'decimal', precision: 10, scale: 2, default: 0, comment: 'RRQ employeur' })
+  cppEmployer: number;
+
+  @Column({ name: 'rqap_employee', type: 'decimal', precision: 10, scale: 2, default: 0, comment: 'RQAP employé (QC)' })
+  rqapEmployee: number;
+
+  @Column({ name: 'rqap_employer', type: 'decimal', precision: 10, scale: 2, default: 0, comment: 'RQAP employeur (QC)' })
+  rqapEmployer: number;
+
+  @Column({ name: 'other_deductions', type: 'decimal', precision: 12, scale: 2, default: 0 })
+  otherDeductions: number;
+
+  @Column({ name: 'total_deductions', type: 'decimal', precision: 12, scale: 2 })
+  totalDeductions: number;
+
+  // ── Salaire net ───────────────────────────────────────────────────────────
+  @Column({ name: 'net_pay', type: 'decimal', precision: 12, scale: 2 })
+  netPay: number;
+
+  // ── Statut & Export ───────────────────────────────────────────────────────
+  @Column({ type: 'enum', enum: PayrollStatus, default: PayrollStatus.DRAFT })
+  status: PayrollStatus;
+
+  @Column({ name: 'nethris_export_id', nullable: true })
+  nethrisExportId?: string;
+
+  @Column({ name: 'exported_at', type: 'timestamptz', nullable: true })
+  exportedAt?: Date;
+
+  @Column({ name: 'pay_stub_url', nullable: true })
+  payStubUrl?: string;
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'employee_id' })
+  employee: Employee;
+
+  @Column({ name: 'employee_id' })
+  employeeId: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/position.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn,
+} from 'typeorm';
+import { Tenant } from './tenant.entity';
+import { Department } from './department.entity';
+
+@Entity('positions')
+export class Position {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  title: string;
+
+  @Column({ nullable: true })
+  description?: string;
+
+  @Column({ name: 'min_salary', type: 'decimal', precision: 12, scale: 2, nullable: true })
+  minSalary?: number;
+
+  @Column({ name: 'max_salary', type: 'decimal', precision: 12, scale: 2, nullable: true })
+  maxSalary?: number;
+
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+
+  @ManyToOne(() => Department, { nullable: true })
+  @JoinColumn({ name: 'department_id' })
+  department?: Department;
+
+  @Column({ name: 'department_id', nullable: true })
+  departmentId?: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/review.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, JoinColumn,
+} from 'typeorm';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+@Entity('reviews')
+export class Review {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'period_start', type: 'date' })
+  periodStart: Date;
+
+  @Column({ name: 'period_end', type: 'date' })
+  periodEnd: Date;
+
+  @Column({ name: 'overall_score', type: 'decimal', precision: 4, scale: 2, nullable: true })
+  overallScore?: number;  // 1.00 - 5.00
+
+  @Column({ name: 'strengths', type: 'text', nullable: true })
+  strengths?: string;
+
+  @Column({ name: 'areas_for_improvement', type: 'text', nullable: true })
+  areasForImprovement?: string;
+
+  @Column({ name: 'goals_for_next_period', type: 'text', nullable: true })
+  goalsForNextPeriod?: string;
+
+  @Column({ name: 'employee_comments', type: 'text', nullable: true })
+  employeeComments?: string;
+
+  @Column({ name: 'is_completed', default: false })
+  isCompleted: boolean;
+
+  @Column({ name: 'completed_at', type: 'timestamptz', nullable: true })
+  completedAt?: Date;
+
+  @Column({ type: 'jsonb', nullable: true })
+  criteria?: Record<string, number>;  // { "productivity": 4.5, "teamwork": 4.0, ... }
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'employee_id' })
+  employee: Employee;
+
+  @Column({ name: 'employee_id' })
+  employeeId: string;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'reviewer_id' })
+  reviewer?: Employee;
+
+  @Column({ name: 'reviewer_id', nullable: true })
+  reviewerId?: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+
+@Entity('goals')
+export class Goal {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  title: string;
+
+  @Column({ type: 'text', nullable: true })
+  description?: string;
+
+  @Column({ name: 'target_date', type: 'date', nullable: true })
+  targetDate?: Date;
+
+  @Column({ name: 'progress_percentage', type: 'int', default: 0 })
+  progressPercentage: number;  // 0-100
+
+  @Column({ name: 'is_completed', default: false })
+  isCompleted: boolean;
+
+  @Column({ name: 'completed_at', type: 'timestamptz', nullable: true })
+  completedAt?: Date;
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'employee_id' })
+  employee: Employee;
+
+  @Column({ name: 'employee_id' })
+  employeeId: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/shift.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, JoinColumn,
+} from 'typeorm';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+export enum ShiftStatus {
+  SCHEDULED = 'SCHEDULED',
+  IN_PROGRESS = 'IN_PROGRESS',
+  COMPLETED = 'COMPLETED',
+  ABSENT = 'ABSENT',
+  CANCELLED = 'CANCELLED',
+}
+
+@Entity('shifts')
+export class Shift {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'start_time', type: 'timestamptz' })
+  startTime: Date;
+
+  @Column({ name: 'end_time', type: 'timestamptz' })
+  endTime: Date;
+
+  @Column({ name: 'actual_start_time', type: 'timestamptz', nullable: true })
+  actualStartTime?: Date;
+
+  @Column({ name: 'actual_end_time', type: 'timestamptz', nullable: true })
+  actualEndTime?: Date;
+
+  @Column({ type: 'enum', enum: ShiftStatus, default: ShiftStatus.SCHEDULED })
+  status: ShiftStatus;
+
+  @Column({ nullable: true })
+  location?: string;
+
+  @Column({ name: 'location_lat', type: 'decimal', precision: 10, scale: 7, nullable: true })
+  locationLat?: number;
+
+  @Column({ name: 'location_lng', type: 'decimal', precision: 10, scale: 7, nullable: true })
+  locationLng?: number;
+
+  @Column({ nullable: true })
+  notes?: string;
+
+  @Column({ name: 'is_overtime', default: false })
+  isOvertime: boolean;
+
+  @Column({ name: 'overtime_rate', type: 'decimal', precision: 5, scale: 2, default: 1.5 })
+  overtimeRate: number;
+
+  @Column({ name: 'break_duration_minutes', default: 0 })
+  breakDurationMinutes: number;
+
+  @ManyToOne(() => Employee, (emp) => emp.shifts)
+  @JoinColumn({ name: 'employee_id' })
+  employee: Employee;
+
+  @Column({ name: 'employee_id' })
+  employeeId: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+
+  get durationHours(): number {
+    const ms = this.endTime.getTime() - this.startTime.getTime();
+    return ms / (1000 * 60 * 60);
+  }
+}
+</file>
+
+<file path="backend/src/domain/entities/tenant.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('tenants')
+export class Tenant {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ unique: true })
+  slug: string;       // ex: "acme-corp"
+
+  @Column()
+  name: string;       // ex: "Acme Corporation"
+
+  @Column({ nullable: true })
+  industry?: string;  // ex: "restauration", "retail", "santé"
+
+  @Column({ nullable: true })
+  logo?: string;
+
+  @Column({ nullable: true })
+  website?: string;
+
+  @Column({ name: 'contact_email', nullable: true })
+  contactEmail?: string;
+
+  @Column({ name: 'contact_phone', nullable: true })
+  contactPhone?: string;
+
+  @Column({ name: 'address', nullable: true })
+  address?: string;
+
+  @Column({ name: 'province', default: 'QC' })
+  province: string;   // Conformité légale québécoise/canadienne
+
+  @Column({ name: 'keycloak_realm', nullable: true })
+  keycloakRealm?: string;
+
+  @Column({ name: 'max_employees', default: 100 })
+  maxEmployees: number;
+
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+
+  @Column({ name: 'subscription_plan', default: 'starter' })
+  subscriptionPlan: string;  // 'starter', 'growth', 'enterprise'
+
+  @Column({ name: 'subscription_expires_at', type: 'timestamptz', nullable: true })
+  subscriptionExpiresAt?: Date;
+
+  @Column({ type: 'jsonb', nullable: true })
+  settings?: Record<string, any>;  // Paramètres personnalisables par tenant
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/training.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,
+  ManyToOne, ManyToMany, JoinTable, JoinColumn,
+} from 'typeorm';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+@Entity('trainings')
+export class Training {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  title: string;
+
+  @Column({ type: 'text', nullable: true })
+  description?: string;
+
+  @Column({ nullable: true })
+  provider?: string;
+
+  @Column({ nullable: true })
+  category?: string;  // ex: "sécurité", "compétences", "leadership"
+
+  @Column({ name: 'duration_hours', type: 'decimal', precision: 6, scale: 1, nullable: true })
+  durationHours?: number;
+
+  @Column({ name: 'start_date', type: 'date', nullable: true })
+  startDate?: Date;
+
+  @Column({ name: 'end_date', type: 'date', nullable: true })
+  endDate?: Date;
+
+  @Column({ name: 'is_mandatory', default: false })
+  isMandatory: boolean;
+
+  @Column({ name: 'certificate_validity_months', nullable: true })
+  certificateValidityMonths?: number;
+
+  @Column({ name: 'max_participants', nullable: true })
+  maxParticipants?: number;
+
+  @Column({ name: 'material_url', nullable: true })
+  materialUrl?: string;
+
+  @Column({ name: 'online_url', nullable: true })
+  onlineUrl?: string;
+
+  @ManyToMany(() => Employee)
+  @JoinTable({
+    name: 'training_enrollments',
+    joinColumn: { name: 'training_id' },
+    inverseJoinColumn: { name: 'employee_id' },
+  })
+  participants?: Employee[];
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
+}
+</file>
+
+<file path="backend/src/domain/entities/user.entity.ts">
+import {
+  Entity, PrimaryGeneratedColumn, Column, CreateDateColumn,
+  ManyToOne, JoinColumn,
+} from 'typeorm';
+import { Employee } from './employee.entity';
+import { Tenant } from './tenant.entity';
+
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ name: 'keycloak_id', unique: true, nullable: true })
+  keycloakId?: string;
+
+  @Column({ name: 'is_active', default: true })
+  isActive: boolean;
+
+  @Column({ name: 'last_login', type: 'timestamptz', nullable: true })
+  lastLogin?: Date;
+
+  @ManyToOne(() => Employee, { nullable: true })
+  @JoinColumn({ name: 'employee_id' })
+  employee?: Employee;
+
+  @Column({ name: 'employee_id', nullable: true })
+  employeeId?: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+}
+
+@Entity('time_entries')
+export class TimeEntry {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ name: 'clock_in', type: 'timestamptz' })
+  clockIn: Date;
+
+  @Column({ name: 'clock_out', type: 'timestamptz', nullable: true })
+  clockOut?: Date;
+
+  @Column({ name: 'clock_in_lat', type: 'decimal', precision: 10, scale: 7, nullable: true })
+  clockInLat?: number;
+
+  @Column({ name: 'clock_in_lng', type: 'decimal', precision: 10, scale: 7, nullable: true })
+  clockInLng?: number;
+
+  @Column({ name: 'clock_in_method', nullable: true })
+  clockInMethod?: string;  // 'mobile', 'qr_code', 'web', 'geolocation'
+
+  @Column({ name: 'is_manual', default: false })
+  isManual: boolean;
+
+  @Column({ nullable: true })
+  notes?: string;
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'employee_id' })
+  employee: Employee;
+
+  @Column({ name: 'employee_id' })
+  employeeId: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+}
+
+@Entity('messages')
+export class Message {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'text' })
+  content: string;
+
+  @Column({ name: 'is_read', default: false })
+  isRead: boolean;
+
+  @Column({ name: 'read_at', type: 'timestamptz', nullable: true })
+  readAt?: Date;
+
+  @Column({ name: 'attachment_url', nullable: true })
+  attachmentUrl?: string;
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'sender_id' })
+  sender: Employee;
+
+  @Column({ name: 'sender_id' })
+  senderId: string;
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'recipient_id' })
+  recipient: Employee;
+
+  @Column({ name: 'recipient_id' })
+  recipientId: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+}
+
+@Entity('announcements')
+export class Announcement {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  title: string;
+
+  @Column({ type: 'text' })
+  content: string;
+
+  @Column({ name: 'target_audience', default: 'ALL' })
+  targetAudience: string;  // 'ALL', 'MANAGERS', 'EMPLOYEES', department_id
+
+  @Column({ name: 'is_pinned', default: false })
+  isPinned: boolean;
+
+  @Column({ name: 'published_at', type: 'timestamptz', nullable: true })
+  publishedAt?: Date;
+
+  @Column({ name: 'expires_at', type: 'timestamptz', nullable: true })
+  expiresAt?: Date;
+
+  @ManyToOne(() => Employee)
+  @JoinColumn({ name: 'author_id' })
+  author: Employee;
+
+  @Column({ name: 'author_id' })
+  authorId: string;
+
+  @ManyToOne(() => Tenant)
+  @JoinColumn({ name: 'tenant_id' })
+  tenant: Tenant;
+
+  @Column({ name: 'tenant_id' })
+  tenantId: string;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+}
+</file>
+
+<file path="backend/src/infrastructure/realtime/websocket.gateway.ts">
+import {
+  WebSocketGateway,
+  WebSocketServer,
+  SubscribeMessage,
+  OnGatewayInit,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  MessageBody,
+  ConnectedSocket,
+} from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
+import { Logger, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { NotificationType } from '../../domain/entities/notification.entity';
+
+interface WsPayload {
+  tenantId: string;
+  employeeId: string;
+  type: NotificationType;
+  data: any;
+}
+
+/**
+ * HrmsWebSocketGateway — Gateway WebSocket temps réel
+ * Événements supportés:
+ * - shift:updated    → Changement de quart de travail
+ * - leave:reviewed   → Congé approuvé/rejeté
+ * - payroll:ready    → Bulletin de paie disponible
+ * - notification:new → Nouvelle notification générique
+ * - message:new      → Nouveau message interne
+ */
+@Injectable()
+@WebSocketGateway({
+  cors: {
+    origin: ['http://localhost:5173', 'http://localhost:3001'],
+    credentials: true,
+  },
+  namespace: '/hrms',
+})
+export class HrmsWebSocketGateway
+  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer()
+  server: Server;
+
+  private readonly logger = new Logger(HrmsWebSocketGateway.name);
+
+  // Map: employeeId → socketId[]
+  private connectedUsers = new Map<string, Set<string>>();
+
+  constructor(private readonly jwtService: JwtService) {}
+
+  afterInit(server: Server) {
+    this.logger.log('🔌 WebSocket Gateway initialisé');
+  }
+
+  async handleConnection(client: Socket) {
+    try {
+      const token = client.handshake.auth?.token || client.handshake.headers?.authorization?.split(' ')[1];
+
+      if (!token) {
+        client.disconnect();
+        return;
+      }
+
+      const payload = this.jwtService.verify(token);
+      client['user'] = payload;
+
+      // Joindre les rooms par tenant et par employé
+      client.join(`tenant:${payload.tenantId}`);
+      client.join(`employee:${payload.sub}`);
+
+      // Enregistrer la connexion
+      if (!this.connectedUsers.has(payload.sub)) {
+        this.connectedUsers.set(payload.sub, new Set());
+      }
+      this.connectedUsers.get(payload.sub)!.add(client.id);
+
+      this.logger.log(`✅ Client connecté: ${payload.email} (${client.id})`);
+      client.emit('connected', { message: 'Connecté au serveur HRMS', employeeId: payload.sub });
+    } catch {
+      this.logger.warn(`❌ Connexion refusée: token invalide (${client.id})`);
+      client.disconnect();
+    }
+  }
+
+  handleDisconnect(client: Socket) {
+    const user = client['user'];
+    if (user) {
+      this.connectedUsers.get(user.sub)?.delete(client.id);
+      this.logger.log(`👋 Client déconnecté: ${user.email}`);
+    }
+  }
+
+  // ── Méthodes d'émission (utilisées par les services) ──────────────────────
+
+  /** Envoie une notification à un employé spécifique */
+  sendToEmployee(employeeId: string, event: string, data: any) {
+    this.server.to(`employee:${employeeId}`).emit(event, data);
+  }
+
+  /** Envoie un événement à tous les membres d'un tenant */
+  sendToTenant(tenantId: string, event: string, data: any) {
+    this.server.to(`tenant:${tenantId}`).emit(event, data);
+  }
+
+  /** Envoie une notification générique */
+  sendNotification(employeeId: string, notification: any) {
+    this.sendToEmployee(employeeId, 'notification:new', notification);
+  }
+
+  // ── Gestionnaires de messages entrants ────────────────────────────────────
+
+  @SubscribeMessage('ping')
+  handlePing(@ConnectedSocket() client: Socket) {
+    client.emit('pong', { timestamp: new Date().toISOString() });
+  }
+
+  @SubscribeMessage('message:send')
+  handleMessage(@MessageBody() data: any, @ConnectedSocket() client: Socket) {
+    const user = client['user'];
+    // Relayer au destinataire
+    this.sendToEmployee(data.recipientId, 'message:new', {
+      ...data,
+      senderId: user.sub,
+      senderName: user.name,
+      timestamp: new Date().toISOString(),
+    });
+  }
+}
+</file>
+
+<file path="backend/src/infrastructure/realtime/websocket.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { HrmsWebSocketGateway } from '../../infrastructure/realtime/websocket.gateway';
+
+@Module({
+  imports: [
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get('JWT_SECRET'),
+        signOptions: { expiresIn: config.get('JWT_EXPIRES_IN', '1h') },
+      }),
+    }),
+  ],
+  providers: [HrmsWebSocketGateway],
+  exports: [HrmsWebSocketGateway, JwtModule],
+})
+export class WebSocketGatewayModule {}
+</file>
+
+<file path="backend/src/main.ts">
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+import { ValidationPipe, Logger } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
+import * as compression from 'compression';
+import helmet from 'helmet';
+
+async function bootstrap() {
+  const logger = new Logger('Bootstrap');
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+  });
+
+  const configService = app.get(ConfigService);
+  const port = configService.get<number>('PORT', 3000);
+  const nodeEnv = configService.get<string>('NODE_ENV', 'development');
+
+  // ── Sécurité ──────────────────────────────────────────────────────────────
+  app.use(helmet());
+  app.use(compression());
+
+  // ── CORS ──────────────────────────────────────────────────────────────────
+  app.enableCors({
+    origin: [
+      'http://localhost:5173', // Frontend Vite dev
+      'http://localhost:3001', // WebSocket
+    ],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-ID'],
+    credentials: true,
+  });
+
+  // ── Préfixe global API ────────────────────────────────────────────────────
+  app.setGlobalPrefix('api/v1');
+
+  // ── Validation globale ────────────────────────────────────────────────────
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
+
+  // ── Swagger (documentation API) ───────────────────────────────────────────
+  if (nodeEnv !== 'production') {
+    const swaggerConfig = new DocumentBuilder()
+      .setTitle('HRMS API')
+      .setDescription('Human Resource Management System — API REST Documentation')
+      .setVersion('1.0')
+      .addBearerAuth(
+        { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
+        'JWT',
+      )
+      .addApiKey({ type: 'apiKey', name: 'X-Tenant-ID', in: 'header' }, 'TenantID')
+      .addTag('Auth', 'Authentification et gestion des tokens')
+      .addTag('Employees', 'Gestion des employés')
+      .addTag('Departments', 'Gestion des départements')
+      .addTag('Shifts', 'Gestion des horaires et quarts de travail')
+      .addTag('Leaves', 'Gestion des congés et absences')
+      .addTag('Payroll', 'Gestion de la paie')
+      .addTag('Recruitment', 'Module de recrutement ATS')
+      .addTag('Performance', 'Évaluations et objectifs')
+      .addTag('Training', 'Formation et certifications')
+      .addTag('Notifications', 'Notifications et messagerie')
+      .addTag('Analytics', 'Rapports et analytiques')
+      .build();
+
+    const document = SwaggerModule.createDocument(app, swaggerConfig);
+    SwaggerModule.setup('api/docs', app, document, {
+      swaggerOptions: { persistAuthorization: true },
+    });
+
+    logger.log(`📚 Swagger disponible sur: http://localhost:${port}/api/docs`);
+  }
+
+  await app.listen(port);
+  logger.log(`🚀 HRMS Backend démarré sur: http://localhost:${port}/api/v1`);
+  logger.log(`🌍 Environnement: ${nodeEnv}`);
+}
+
+bootstrap();
+</file>
+
+<file path="backend/src/web/controllers/employees.controller.ts">
+import {
+  Controller, Get, Post, Put, Patch, Delete, Body, Param, Query,
+  UseGuards, HttpCode, HttpStatus, ParseUUIDPipe,
+} from '@nestjs/common';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+
+import { RolesGuard, Roles } from '../guards/roles.guard';
+import { UserRole } from '../../domain/entities/employee.entity';
+
+// Commands
+import { CreateEmployeeCommand } from '../../application/employees/commands/create-employee/create-employee.command';
+import { UpdateEmployeeCommand } from '../../application/employees/commands/update-employee/update-employee.command';
+import { DeleteEmployeeCommand } from '../../application/employees/commands/delete-employee/delete-employee.command';
+
+// Queries
+import { GetAllEmployeesQuery } from '../../application/employees/queries/get-all-employees/get-all-employees.query';
+import { GetEmployeeByIdQuery } from '../../application/employees/queries/get-employee-by-id/get-employee-by-id.query';
+
+// DTOs
+import { CreateEmployeeDto } from '../dtos/employees/create-employee.dto';
+import { UpdateEmployeeDto } from '../dtos/employees/update-employee.dto';
+import { EmployeeFilterDto } from '../dtos/employees/employee-filter.dto';
+
+@ApiTags('Employees')
+@ApiBearerAuth('JWT')
+@UseGuards(RolesGuard)
+@Controller('employees')
+export class EmployeesController {
+  constructor(
+    private readonly commandBus: CommandBus,
+    private readonly queryBus: QueryBus,
+  ) {}
+
+  @Get()
+  @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
+  @ApiOperation({ summary: 'Obtenir la liste des employés' })
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  @ApiQuery({ name: 'search', required: false, type: String })
+  @ApiQuery({ name: 'departmentId', required: false, type: String })
+  @ApiQuery({ name: 'status', required: false })
+  async findAll(@Query() filters: EmployeeFilterDto, @Param() req: any) {
+    return this.queryBus.execute(
+      new GetAllEmployeesQuery(req['tenantId'], filters),
+    );
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtenir un employé par ID' })
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param() req: any,
+  ) {
+    return this.queryBus.execute(new GetEmployeeByIdQuery(id, req['tenantId']));
+  }
+
+  @Post()
+  @Roles(UserRole.ADMIN, UserRole.HR)
+  @ApiOperation({ summary: 'Créer un nouvel employé' })
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: CreateEmployeeDto, @Param() req: any) {
+    return this.commandBus.execute(new CreateEmployeeCommand(dto, req['tenantId']));
+  }
+
+  @Put(':id')
+  @Roles(UserRole.ADMIN, UserRole.HR)
+  @ApiOperation({ summary: 'Mettre à jour un employé' })
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateEmployeeDto,
+    @Param() req: any,
+  ) {
+    return this.commandBus.execute(new UpdateEmployeeCommand(id, dto, req['tenantId']));
+  }
+
+  @Delete(':id')
+  @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Désactiver un employé (soft delete)' })
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param() req: any,
+  ) {
+    return this.commandBus.execute(new DeleteEmployeeCommand(id, req['tenantId']));
+  }
+
+  @Patch(':id/onboard')
+  @Roles(UserRole.ADMIN, UserRole.HR)
+  @ApiOperation({ summary: 'Onboarding — Activer et configurer un nouvel employé' })
+  async onboard(@Param('id', ParseUUIDPipe) id: string) {
+    // TODO: Implémenter l'onboarding
+    return { message: 'Onboarding initié', employeeId: id };
+  }
+
+  @Patch(':id/offboard')
+  @Roles(UserRole.ADMIN, UserRole.HR)
+  @ApiOperation({ summary: 'Offboarding — Procédure de départ d\'un employé' })
+  async offboard(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: { terminationDate: string; reason: string },
+  ) {
+    // TODO: Implémenter l'offboarding
+    return { message: 'Offboarding initié', employeeId: id };
+  }
+
+  @Get(':id/org-chart')
+  @ApiOperation({ summary: 'Obtenir l\'organigramme à partir d\'un employé' })
+  async getOrgChart(@Param('id', ParseUUIDPipe) id: string) {
+    // TODO: Retourner la hiérarchie
+    return { employeeId: id, subordinates: [] };
+  }
+}
+</file>
+
+<file path="backend/src/web/dtos/employees/create-employee.dto.ts">
+import { IsString, IsEmail, IsOptional, IsEnum, IsDateString, IsNumber, IsUUID, Min } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { EmployeeStatus, UserRole } from '../../../domain/entities/employee.entity';
+
+export class CreateEmployeeDto {
+  @ApiProperty({ example: 'Jean' })
+  @IsString()
+  firstName: string;
+
+  @ApiProperty({ example: 'Tremblay' })
+  @IsString()
+  lastName: string;
+
+  @ApiProperty({ example: 'jean.tremblay@entreprise.com' })
+  @IsEmail()
+  email: string;
+
+  @ApiPropertyOptional({ example: '+1-514-555-0100' })
+  @IsOptional()
+  @IsString()
+  phoneNumber?: string;
+
+  @ApiProperty({ example: '2024-01-15', description: 'Date d\'embauche (YYYY-MM-DD)' })
+  @IsDateString()
+  hireDate: string;
+
+  @ApiPropertyOptional({ enum: UserRole, default: UserRole.EMPLOYEE })
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
+
+  @ApiPropertyOptional({ description: 'UUID du département' })
+  @IsOptional()
+  @IsUUID()
+  departmentId?: string;
+
+  @ApiPropertyOptional({ description: 'UUID du poste' })
+  @IsOptional()
+  @IsUUID()
+  positionId?: string;
+
+  @ApiPropertyOptional({ description: 'UUID du manager direct' })
+  @IsOptional()
+  @IsUUID()
+  managerId?: string;
+
+  @ApiPropertyOptional({ example: 22.50 })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  hourlyRate?: number;
+
+  @ApiPropertyOptional({ example: 55000 })
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  annualSalary?: number;
+}
+
+export class UpdateEmployeeDto {
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  firstName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  lastName?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  phoneNumber?: string;
+
+  @ApiPropertyOptional({ enum: EmployeeStatus })
+  @IsOptional()
+  @IsEnum(EmployeeStatus)
+  status?: EmployeeStatus;
+
+  @ApiPropertyOptional({ enum: UserRole })
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  departmentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  positionId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  managerId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  hourlyRate?: number;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsNumber()
+  annualSalary?: number;
+}
+
+export class EmployeeFilterDto {
+  @ApiPropertyOptional({ default: 1 })
+  @IsOptional()
+  @IsNumber()
+  @Min(1)
+  page?: number = 1;
+
+  @ApiPropertyOptional({ default: 20 })
+  @IsOptional()
+  @IsNumber()
+  limit?: number = 20;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsString()
+  search?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  departmentId?: string;
+
+  @ApiPropertyOptional({ enum: EmployeeStatus })
+  @IsOptional()
+  @IsEnum(EmployeeStatus)
+  status?: EmployeeStatus;
+
+  @ApiPropertyOptional({ enum: UserRole })
+  @IsOptional()
+  @IsEnum(UserRole)
+  role?: UserRole;
+}
+</file>
+
+<file path="backend/src/web/dtos/employees/employee-filter.dto.ts">
+// ─── re-exports pour le DTO filter ──────────────────────────────────────────
+export { EmployeeFilterDto } from './create-employee.dto';
+</file>
+
+<file path="backend/src/web/dtos/employees/update-employee.dto.ts">
+// ─── re-exports pour le DTO update ──────────────────────────────────────────
+export { UpdateEmployeeDto } from './create-employee.dto';
+</file>
+
+<file path="backend/src/web/guards/roles.guard.ts">
+import {
+  Injectable, CanActivate, ExecutionContext, ForbiddenException,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { UserRole } from '../../domain/entities/employee.entity';
+
+export const ROLES_KEY = 'roles';
+
+/**
+ * Décorateur @Roles(...) — à placer sur les controllers/endpoints
+ * Exemple: @Roles(UserRole.ADMIN, UserRole.HR)
+ */
+export const Roles = (...roles: UserRole[]) => {
+  return (target: any, key?: string, descriptor?: any) => {
+    Reflect.defineMetadata(ROLES_KEY, roles, descriptor?.value || target);
+    return descriptor || target;
+  };
+};
+
+/**
+ * RolesGuard — Guard RBAC
+ * Vérifie que l'utilisateur connecté possède l'un des rôles requis.
+ * Hiérarchie: ADMIN > HR > MANAGER > EMPLOYEE
+ */
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  private readonly roleHierarchy: Record<UserRole, number> = {
+    [UserRole.ADMIN]: 4,
+    [UserRole.HR]: 3,
+    [UserRole.MANAGER]: 2,
+    [UserRole.EMPLOYEE]: 1,
+  };
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<UserRole[]>(ROLES_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    // Pas de restriction de rôle → accès libre (après auth)
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true;
+    }
+
+    const { user } = context.switchToHttp().getRequest();
+
+    if (!user?.role) {
+      throw new ForbiddenException('Utilisateur non authentifié ou rôle manquant');
+    }
+
+    const userRoleLevel = this.roleHierarchy[user.role as UserRole] ?? 0;
+
+    // L'utilisateur doit avoir un niveau de rôle >= au minimum requis
+    const minRequiredLevel = Math.min(
+      ...requiredRoles.map((r) => this.roleHierarchy[r] ?? 99),
+    );
+
+    if (userRoleLevel < minRequiredLevel) {
+      throw new ForbiddenException(
+        `Accès refusé. Rôle requis: ${requiredRoles.join(' ou ')}. Votre rôle: ${user.role}`,
+      );
+    }
+
+    return true;
+  }
+}
+</file>
+
+<file path="backend/src/web/middleware/tenant.middleware.ts">
+import { Injectable, NestMiddleware, BadRequestException, Logger } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Tenant } from '../../domain/entities/tenant.entity';
+
+/**
+ * TenantMiddleware — Middleware multi-tenant
+ *
+ * Extrait le tenant_id depuis :
+ * 1. Header X-Tenant-ID (API clients)
+ * 2. Sous-domaine (ex: acme.hrms.com → tenant = "acme")
+ * 3. JWT claim "tenant_id"
+ *
+ * Injecte le tenant résolu dans req['tenant']
+ */
+@Injectable()
+export class TenantMiddleware implements NestMiddleware {
+  private readonly logger = new Logger(TenantMiddleware.name);
+
+  constructor(
+    @InjectRepository(Tenant)
+    private readonly tenantRepository: Repository<Tenant>,
+  ) {}
+
+  async use(req: Request, res: Response, next: NextFunction) {
+    // Routes publiques qui n'ont pas besoin d'un tenant
+    const publicRoutes = ['/api/v1/health', '/api/docs', '/api/v1/auth/login'];
+    if (publicRoutes.some((route) => req.path.startsWith(route))) {
+      return next();
+    }
+
+    let tenantId: string | undefined;
+
+    // 1. Header X-Tenant-ID
+    if (req.headers['x-tenant-id']) {
+      tenantId = req.headers['x-tenant-id'] as string;
+    }
+
+    // 2. Sous-domaine
+    else if (req.hostname && req.hostname.includes('.')) {
+      const subdomain = req.hostname.split('.')[0];
+      if (subdomain && subdomain !== 'www' && subdomain !== 'api') {
+        const tenant = await this.tenantRepository.findOne({
+          where: { slug: subdomain, isActive: true },
+        });
+        if (tenant) {
+          req['tenant'] = tenant;
+          return next();
+        }
+      }
+    }
+
+    // 3. JWT claim (extrait par Passport avant ce middleware)
+    else if ((req['user'] as any)?.tenantId) {
+      tenantId = (req['user'] as any).tenantId;
+    }
+
+    // Fallback développement
+    else if (process.env.NODE_ENV === 'development') {
+      tenantId = process.env.DEFAULT_TENANT_ID || 'default';
+    }
+
+    if (!tenantId) {
+      throw new BadRequestException('X-Tenant-ID header is required');
+    }
+
+    // Résolution du tenant
+    const tenant = await this.tenantRepository.findOne({
+      where: { id: tenantId, isActive: true },
+    });
+
+    if (!tenant) {
+      throw new BadRequestException(`Tenant "${tenantId}" not found or inactive`);
+    }
+
+    req['tenant'] = tenant;
+    req['tenantId'] = tenant.id;
+
+    this.logger.debug(`Tenant resolved: ${tenant.name} (${tenant.id})`);
+    next();
+  }
+}
+</file>
+
+<file path="backend/src/web/modules/analytics.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Employee } from '../../domain/entities/employee.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Employee])], exports: [TypeOrmModule] })
+export class AnalyticsModule {}
+</file>
+
+<file path="backend/src/web/modules/auth.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { User } from '../../domain/entities/user.entity';
+import { Employee } from '../../domain/entities/employee.entity';
+
+// TODO: AuthController, AuthService, JwtStrategy, KeycloakStrategy
+
+@Module({
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([User, Employee]),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get('JWT_SECRET'),
+        signOptions: { expiresIn: config.get('JWT_EXPIRES_IN', '1h') },
+      }),
+    }),
+  ],
+  exports: [JwtModule],
+})
+export class AuthModule {}
+</file>
+
+<file path="backend/src/web/modules/departments.module.ts">
+// Stubs pour les modules restants — à implémenter en Phase 1 & 2
+
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Department } from '../../domain/entities/department.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Department])], exports: [TypeOrmModule] })
+export class DepartmentsModule {}
+</file>
+
+<file path="backend/src/web/modules/employees.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Employee } from '../../domain/entities/employee.entity';
+import { Tenant } from '../../domain/entities/tenant.entity';
+import { EmployeesController } from '../controllers/employees.controller';
+
+// Commands
+import { CreateEmployeeHandler } from '../../application/employees/commands/create-employee/create-employee.handler';
+import { UpdateEmployeeHandler } from '../../application/employees/commands/update-employee/update-employee.handler';
+import { DeleteEmployeeHandler } from '../../application/employees/commands/delete-employee/delete-employee.handler';
+
+// Queries
+import { GetAllEmployeesHandler } from '../../application/employees/queries/get-all-employees/get-all-employees.handler';
+import { GetEmployeeByIdHandler } from '../../application/employees/queries/get-employee-by-id/get-employee-by-id.handler';
+
+const CommandHandlers = [CreateEmployeeHandler, UpdateEmployeeHandler, DeleteEmployeeHandler];
+const QueryHandlers = [GetAllEmployeesHandler, GetEmployeeByIdHandler];
+
+@Module({
+  imports: [
+    CqrsModule,
+    TypeOrmModule.forFeature([Employee, Tenant]),
+  ],
+  controllers: [EmployeesController],
+  providers: [...CommandHandlers, ...QueryHandlers],
+  exports: [TypeOrmModule],
+})
+export class EmployeesModule {}
+</file>
+
+<file path="backend/src/web/modules/leaves.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Leave } from '../../domain/entities/leave.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Leave])], exports: [TypeOrmModule] })
+export class LeavesModule {}
+</file>
+
+<file path="backend/src/web/modules/notifications.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Notification } from '../../domain/entities/notification.entity';
+import { Message, Announcement } from '../../domain/entities/user.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Notification, Message, Announcement])], exports: [TypeOrmModule] })
+export class NotificationsModule {}
+</file>
+
+<file path="backend/src/web/modules/payroll.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Payroll } from '../../domain/entities/payroll.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Payroll])], exports: [TypeOrmModule] })
+export class PayrollModule {}
+</file>
+
+<file path="backend/src/web/modules/performance.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Review, Goal } from '../../domain/entities/review.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Review, Goal])], exports: [TypeOrmModule] })
+export class PerformanceModule {}
+</file>
+
+<file path="backend/src/web/modules/recruitment.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { JobPosting } from '../../domain/entities/job-posting.entity';
+import { JobApplication } from '../../domain/entities/job-application.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([JobPosting, JobApplication])], exports: [TypeOrmModule] })
+export class RecruitmentModule {}
+</file>
+
+<file path="backend/src/web/modules/shifts.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Shift } from '../../domain/entities/shift.entity';
+import { TimeEntry } from '../../domain/entities/user.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Shift, TimeEntry])], exports: [TypeOrmModule] })
+export class ShiftsModule {}
+</file>
+
+<file path="backend/src/web/modules/tenants.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Tenant } from '../../domain/entities/tenant.entity';
+
+// TODO: Ajouter TenantsController et handlers CQRS
+
+@Module({
+  imports: [CqrsModule, TypeOrmModule.forFeature([Tenant])],
+  exports: [TypeOrmModule],
+})
+export class TenantsModule {}
+</file>
+
+<file path="backend/src/web/modules/training.module.ts">
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { CqrsModule } from '@nestjs/cqrs';
+import { Training } from '../../domain/entities/training.entity';
+@Module({ imports: [CqrsModule, TypeOrmModule.forFeature([Training])], exports: [TypeOrmModule] })
+export class TrainingModule {}
+</file>
+
+<file path="backend/tsconfig.json">
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2021",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@domain/*": ["src/domain/*"],
+      "@application/*": ["src/application/*"],
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@persistence/*": ["src/persistence/*"],
+      "@web/*": ["src/web/*"],
+      "@shared/*": ["../shared/*"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+}
+</file>
+
+<file path="docker-compose.yml">
+version: '3.9'
+
+services:
+  # ─── Base de données PostgreSQL ───────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: hrms_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER:-hrms_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-hrms_password}
+      POSTGRES_DB: ${DB_NAME:-hrms_db}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-hrms_user}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hrms_network
+
+  # ─── Redis (cache & sessions) ──────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: hrms_redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_password}
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - hrms_network
+
+  # ─── Keycloak (Auth SSO + RBAC + multi-tenant) ────────────────────────────
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0
+    container_name: hrms_keycloak
+    restart: unless-stopped
+    command: start-dev
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin123}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${DB_NAME:-hrms_db}
+      KC_DB_USERNAME: ${DB_USER:-hrms_user}
+      KC_DB_PASSWORD: ${DB_PASSWORD:-hrms_password}
+      KC_HOSTNAME: localhost
+      KC_HTTP_ENABLED: 'true'
+    ports:
+      - '8080:8080'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - hrms_network
+
+  # ─── Backend NestJS ────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: hrms_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER:-hrms_user}
+      DB_PASSWORD: ${DB_PASSWORD:-hrms_password}
+      DB_NAME: ${DB_NAME:-hrms_db}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-redis_password}
+      KEYCLOAK_URL: http://keycloak:8080
+      JWT_SECRET: ${JWT_SECRET:-supersecretjwt}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_S3_BUCKET: ${AWS_S3_BUCKET:-hrms-files}
+      AWS_REGION: ${AWS_REGION:-ca-central-1}
+      SENDGRID_API_KEY: ${SENDGRID_API_KEY}
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - hrms_network
+
+  # ─── Frontend React + Vite ─────────────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: development
+    container_name: hrms_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:3000
+      VITE_KEYCLOAK_URL: http://localhost:8080
+      VITE_KEYCLOAK_REALM: hrms
+      VITE_KEYCLOAK_CLIENT_ID: hrms-frontend
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - hrms_network
+
+  # ─── MinIO (S3 local pour développement) ──────────────────────────────────
+  minio:
+    image: minio/minio:latest
+    container_name: hrms_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${AWS_ACCESS_KEY_ID:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${AWS_SECRET_ACCESS_KEY:-minioadmin123}
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - hrms_network
+
+# ─── Volumes persistants ────────────────────────────────────────────────────
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+
+# ─── Réseau interne ─────────────────────────────────────────────────────────
+networks:
+  hrms_network:
+    driver: bridge
+</file>
+
+<file path="frontend/index.html">
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/hrms-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="HRMS — Système d'Information des Ressources Humaines. Gérez vos employés, horaires, congés et paie en un seul endroit." />
+    <meta name="theme-color" content="#6366f1" />
+    <title>HRMS — Système RH</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="frontend/package.json">
+{
+  "name": "hrms-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@dnd-kit/core": "^6.1.0",
+    "@dnd-kit/sortable": "^8.0.0",
+    "@hookform/resolvers": "^3.3.4",
+    "@reduxjs/toolkit": "^2.2.3",
+    "axios": "^1.6.8",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.10",
+    "keycloak-js": "^23.0.7",
+    "lucide-react": "^0.378.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.51.3",
+    "react-hot-toast": "^2.4.1",
+    "react-redux": "^9.1.2",
+    "react-router-dom": "^6.23.0",
+    "recharts": "^2.12.5",
+    "socket.io-client": "^4.7.5",
+    "zod": "^3.23.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
+    "@vitejs/plugin-react": "^4.2.1",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.6",
+    "typescript": "^5.4.5",
+    "vite": "^8.0.13",
+    "vitest": "^4.1.6"
+  }
+}
+</file>
+
+<file path="frontend/src/App.tsx">
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { useAppSelector } from './hooks/useStore';
+import AppLayout from './components/layout/AppLayout';
+import LoginPage from './pages/auth/LoginPage';
+
+// Pages
+import DashboardPage from './pages/Dashboard';
+import EmployeesPage from './pages/employees/EmployeesPage';
+import ShiftsPage from './pages/shifts/ShiftsPage';
+import LeavesPage from './pages/leaves/LeavesPage';
+import PayrollPage from './pages/payroll/PayrollPage';
+import RecruitmentPage from './pages/recruitment/RecruitmentPage';
+import PerformancePage from './pages/performance/PerformancePage';
+import TrainingPage from './pages/training/TrainingPage';
+import MessagesPage from './pages/messages/MessagesPage';
+import AnalyticsPage from './pages/analytics/AnalyticsPage';
+import SettingsPage from './pages/settings/SettingsPage';
+import ProfilePage from './pages/profile/ProfilePage';
+import NotFoundPage from './pages/NotFoundPage';
+
+function PrivateRoute({ children }: { children: React.ReactNode }) {
+  const { isAuthenticated } = useAppSelector((state) => state.auth);
+  return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
+}
+
+export default function App() {
+  return (
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+
+      <Route
+        path="/"
+        element={
+          <PrivateRoute>
+            <AppLayout />
+          </PrivateRoute>
+        }
+      >
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="employees" element={<EmployeesPage />} />
+        <Route path="shifts" element={<ShiftsPage />} />
+        <Route path="leaves" element={<LeavesPage />} />
+        <Route path="payroll" element={<PayrollPage />} />
+        <Route path="recruitment" element={<RecruitmentPage />} />
+        <Route path="performance" element={<PerformancePage />} />
+        <Route path="training" element={<TrainingPage />} />
+        <Route path="messages" element={<MessagesPage />} />
+        <Route path="analytics" element={<AnalyticsPage />} />
+        <Route path="settings" element={<SettingsPage />} />
+        <Route path="profile" element={<ProfilePage />} />
+      </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+}
+</file>
+
+<file path="frontend/src/components/layout/AppLayout.module.css">
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--base);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: var(--sidebar-width);
+  transition: margin-left var(--transition-base);
+  min-height: 100vh;
+}
+
+.layout.collapsed .main {
+  margin-left: 72px;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+  padding-top: var(--header-height);
+}
+
+@media (max-width: 768px) {
+  .main { margin-left: 0; }
+}
+</file>
+
+<file path="frontend/src/components/layout/AppLayout.tsx">
+import { Outlet } from 'react-router-dom';
+import Sidebar from './Sidebar';
+import Header from './Header';
+import { useAppSelector } from '../../hooks/useStore';
+import styles from './AppLayout.module.css';
+
+export default function AppLayout() {
+  const { sidebarOpen } = useAppSelector((state) => state.ui);
+
+  return (
+    <div className={`${styles.layout} ${sidebarOpen ? '' : styles.collapsed}`}>
+      <Sidebar />
+      <div className={styles.main}>
+        <Header />
+        <main className={styles.content}>
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/components/layout/Header.module.css">
+.header {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: var(--sidebar-width);
+  height: var(--header-height);
+  background: rgba(24, 24, 37, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--surface0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-8);
+  z-index: 50;
+  transition: left var(--transition-base);
+}
+.pageTitle { font-size: 1rem; font-weight: 600; color: var(--subtext1); margin: 0; }
+.right { display: flex; align-items: center; gap: var(--space-2); }
+.iconBtn { position: relative; width: 36px; height: 36px; padding: 0; font-size: 1rem; }
+.badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  background: var(--red);
+  color: #fff;
+  font-size: 0.625rem;
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+</file>
+
+<file path="frontend/src/components/layout/Header.tsx">
+import { useAppSelector } from '../../hooks/useStore';
+import styles from './Header.module.css';
+
+export default function Header() {
+  const { user } = useAppSelector((s) => s.auth);
+  const { unreadCount } = useAppSelector((s) => s.notifications);
+
+  return (
+    <header className={styles.header}>
+      <div className={styles.left}>
+        <h2 className={styles.pageTitle}>Bienvenue, {user?.firstName} 👋</h2>
+      </div>
+      <div className={styles.right}>
+        <button className={`btn btn-ghost btn-sm ${styles.iconBtn}`} title="Notifications" aria-label="Notifications">
+          🔔
+          {unreadCount > 0 && (
+            <span className={styles.badge}>{unreadCount > 99 ? '99+' : unreadCount}</span>
+          )}
+        </button>
+        <button className={`btn btn-ghost btn-sm ${styles.iconBtn}`} title="Aide" aria-label="Aide">❓</button>
+        <div className={`avatar avatar-sm ${styles.avatar}`} title={`${user?.firstName} ${user?.lastName}`}>
+          {user?.firstName?.[0]}{user?.lastName?.[0]}
+        </div>
+      </div>
+    </header>
+  );
+}
+</file>
+
+<file path="frontend/src/components/layout/Sidebar.module.css">
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background: var(--mantle);
+  border-right: 1px solid var(--surface0);
+  display: flex;
+  flex-direction: column;
+  transition: width var(--transition-base);
+  z-index: 100;
+  overflow: hidden;
+}
+.sidebar.collapsed { width: 72px; }
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4);
+  border-bottom: 1px solid var(--surface0);
+  height: var(--header-height);
+  flex-shrink: 0;
+}
+.logoIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, var(--primary), var(--mauve));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: #fff;
+  font-size: 0.875rem;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-glow);
+}
+.logoText {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-light), var(--mauve));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  white-space: nowrap;
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: var(--space-3) var(--space-2);
+  overflow-y: auto;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--subtext1);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: 100%;
+  font-family: var(--font-sans);
+}
+.navItem:hover {
+  background: var(--surface0);
+  color: var(--text);
+}
+.navItem.active {
+  background: var(--primary-subtle);
+  color: var(--primary-light);
+  font-weight: 600;
+}
+.navIcon { font-size: 1.125rem; flex-shrink: 0; width: 24px; text-align: center; }
+.navLabel { flex: 1; }
+
+.footer {
+  border-top: 1px solid var(--surface0);
+  padding: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.userAvatar { flex-shrink: 0; }
+.userInfo { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.userName { font-size: 0.8125rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.userRole { font-size: 0.625rem; padding: 1px 6px; width: fit-content; }
+
+.logoutBtn { color: var(--red); }
+.logoutBtn:hover { background: rgba(243, 139, 168, 0.1); }
+
+.toggleBtn {
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--surface1);
+  border: 1px solid var(--surface0);
+  color: var(--subtext1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.625rem;
+  transition: all var(--transition-fast);
+  z-index: 10;
+}
+.toggleBtn:hover { background: var(--primary); color: #fff; }
+
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar:not(.collapsed) { transform: translateX(0); }
+}
+</file>
+
+<file path="frontend/src/components/layout/Sidebar.tsx">
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/useStore';
+import { toggleSidebar } from '../../store/slices/uiSlice';
+import { logout } from '../../store/slices/authSlice';
+import styles from './Sidebar.module.css';
+
+const navItems = [
+  { path: '/dashboard', icon: '📊', label: 'Tableau de bord' },
+  { path: '/employees', icon: '👥', label: 'Employés' },
+  { path: '/shifts', icon: '🗓️', label: 'Horaires' },
+  { path: '/leaves', icon: '🏖️', label: 'Congés' },
+  { path: '/payroll', icon: '💰', label: 'Paie' },
+  { path: '/recruitment', icon: '🔍', label: 'Recrutement' },
+  { path: '/performance', icon: '⭐', label: 'Performance' },
+  { path: '/training', icon: '📚', label: 'Formation' },
+  { path: '/messages', icon: '💬', label: 'Messages' },
+  { path: '/analytics', icon: '📈', label: 'Analytics' },
+];
+
+export default function Sidebar() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { sidebarOpen } = useAppSelector((s) => s.ui);
+  const { user } = useAppSelector((s) => s.auth);
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    navigate('/login');
+  };
+
+  return (
+    <aside className={`${styles.sidebar} ${sidebarOpen ? '' : styles.collapsed}`}>
+      {/* Logo */}
+      <div className={styles.logo}>
+        <div className={styles.logoIcon}>HR</div>
+        {sidebarOpen && <span className={styles.logoText}>HRMS</span>}
+      </div>
+
+      {/* Navigation */}
+      <nav className={styles.nav}>
+        {navItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) =>
+              `${styles.navItem} ${isActive ? styles.active : ''}`
+            }
+            title={!sidebarOpen ? item.label : undefined}
+          >
+            <span className={styles.navIcon}>{item.icon}</span>
+            {sidebarOpen && <span className={styles.navLabel}>{item.label}</span>}
+          </NavLink>
+        ))}
+      </nav>
+
+      {/* Footer */}
+      <div className={styles.footer}>
+        <NavLink to="/settings" className={styles.navItem} title="Paramètres">
+          <span className={styles.navIcon}>⚙️</span>
+          {sidebarOpen && <span className={styles.navLabel}>Paramètres</span>}
+        </NavLink>
+        <NavLink to="/profile" className={styles.navItem} title="Profil">
+          <div className={`avatar avatar-sm ${styles.userAvatar}`}>
+            {user?.firstName?.[0]}{user?.lastName?.[0]}
+          </div>
+          {sidebarOpen && (
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>{user?.firstName} {user?.lastName}</span>
+              <span className={`badge badge-primary ${styles.userRole}`}>{user?.role}</span>
+            </div>
+          )}
+        </NavLink>
+        <button className={`${styles.navItem} ${styles.logoutBtn}`} onClick={handleLogout} title="Déconnexion">
+          <span className={styles.navIcon}>🚪</span>
+          {sidebarOpen && <span className={styles.navLabel}>Déconnexion</span>}
+        </button>
+      </div>
+
+      {/* Toggle */}
+      <button
+        className={styles.toggleBtn}
+        onClick={() => dispatch(toggleSidebar())}
+        aria-label={sidebarOpen ? 'Réduire la sidebar' : 'Ouvrir la sidebar'}
+      >
+        {sidebarOpen ? '◀' : '▶'}
+      </button>
+    </aside>
+  );
+}
+</file>
+
+<file path="frontend/src/hooks/useStore.ts">
+import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
+import type { RootState, AppDispatch } from '../store';
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+</file>
+
+<file path="frontend/src/index.css">
+/* ─────────────────────────────────────────────────────────────────────────────
+   HRMS — Design System Global CSS
+   Palette: Dark mode inspiré Catppuccin Mocha + Accents Indigo/Violet
+   ───────────────────────────────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap');
+
+/* ── Design Tokens ─────────────────────────────────────────────────────────── */
+:root {
+  /* Couleurs de base */
+  --base: #1e1e2e;
+  --mantle: #181825;
+  --crust: #11111b;
+  --surface0: #313244;
+  --surface1: #45475a;
+  --surface2: #585b70;
+  --overlay0: #6c7086;
+  --overlay1: #7f849c;
+  --subtext0: #a6adc8;
+  --subtext1: #bac2de;
+  --text: #cdd6f4;
+
+  /* Couleurs d'accent */
+  --rosewater: #f5e0dc;
+  --flamingo: #f2cdcd;
+  --pink: #f5c2e7;
+  --mauve: #cba6f7;
+  --red: #f38ba8;
+  --maroon: #eba0ac;
+  --peach: #fab387;
+  --yellow: #f9e2af;
+  --green: #a6e3a1;
+  --teal: #94e2d5;
+  --sky: #89dceb;
+  --sapphire: #74c7ec;
+  --blue: #89b4fa;
+  --lavender: #b4befe;
+
+  /* Brand primaire */
+  --primary: #6366f1;
+  --primary-light: #818cf8;
+  --primary-dark: #4f46e5;
+  --primary-subtle: rgba(99, 102, 241, 0.15);
+
+  /* Sémantiques */
+  --success: #a6e3a1;
+  --warning: #f9e2af;
+  --error: #f38ba8;
+  --info: #89b4fa;
+
+  /* Typographie */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-display: 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* Espacements */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 24px rgba(99, 102, 241, 0.3);
+
+  /* Transitions */
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout */
+  --sidebar-width: 260px;
+  --header-height: 64px;
+  --content-max-width: 1440px;
+}
+
+/* ── Reset & Base ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--base);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Scrollbar personnalisée ───────────────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track { background: var(--mantle); }
+::-webkit-scrollbar-thumb {
+  background: var(--surface1);
+  border-radius: var(--radius-full);
+}
+::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+/* ── Typographie ───────────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--text);
+}
+
+h1 { font-size: 2.25rem; }
+h2 { font-size: 1.75rem; }
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.125rem; }
+
+p { color: var(--subtext1); }
+
+a {
+  color: var(--primary-light);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover { color: var(--lavender); }
+
+/* ── Composants UI ─────────────────────────────────────────────────────────── */
+
+/* Cartes */
+.card {
+  background: var(--mantle);
+  border: 1px solid var(--surface0);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+.card:hover {
+  border-color: var(--surface1);
+  box-shadow: var(--shadow-md);
+}
+.card-glass {
+  background: rgba(30, 30, 46, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Boutons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  text-decoration: none;
+}
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+.btn-primary:hover:not(:disabled) {
+  background: var(--primary-light);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: var(--surface0);
+  color: var(--text);
+}
+.btn-secondary:hover:not(:disabled) {
+  background: var(--surface1);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--subtext1);
+  border: 1px solid var(--surface0);
+}
+.btn-ghost:hover:not(:disabled) {
+  background: var(--surface0);
+  color: var(--text);
+}
+
+.btn-danger {
+  background: rgba(243, 139, 168, 0.15);
+  color: var(--red);
+  border: 1px solid rgba(243, 139, 168, 0.3);
+}
+.btn-danger:hover:not(:disabled) {
+  background: var(--red);
+  color: var(--crust);
+}
+
+.btn-sm {
+  padding: var(--space-1) var(--space-3);
+  font-size: 0.8125rem;
+}
+.btn-lg {
+  padding: var(--space-3) var(--space-6);
+  font-size: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface0);
+  border: 1px solid var(--surface1);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  outline: none;
+}
+.input::placeholder { color: var(--overlay0); }
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-subtle);
+}
+
+/* Badges / Pills */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+.badge-success { background: rgba(166, 227, 161, 0.15); color: var(--green); }
+.badge-warning { background: rgba(249, 226, 175, 0.15); color: var(--yellow); }
+.badge-error { background: rgba(243, 139, 168, 0.15); color: var(--red); }
+.badge-info { background: rgba(137, 180, 250, 0.15); color: var(--blue); }
+.badge-primary { background: var(--primary-subtle); color: var(--primary-light); }
+.badge-neutral { background: var(--surface0); color: var(--subtext1); }
+
+/* Tables */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--surface0);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead th {
+  padding: var(--space-3) var(--space-4);
+  background: var(--mantle);
+  color: var(--subtext0);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-align: left;
+  border-bottom: 1px solid var(--surface0);
+}
+tbody tr {
+  border-bottom: 1px solid var(--surface0);
+  transition: background-color var(--transition-fast);
+}
+tbody tr:hover { background: rgba(99, 102, 241, 0.05); }
+tbody tr:last-child { border-bottom: none; }
+tbody td {
+  padding: var(--space-3) var(--space-4);
+  font-size: 0.875rem;
+  color: var(--text);
+}
+
+/* Avatar */
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  font-weight: 700;
+  font-family: var(--font-display);
+  background: var(--primary-subtle);
+  color: var(--primary-light);
+  border: 2px solid var(--surface0);
+  flex-shrink: 0;
+}
+.avatar-sm { width: 32px; height: 32px; font-size: 0.75rem; }
+.avatar-md { width: 40px; height: 40px; font-size: 0.875rem; }
+.avatar-lg { width: 56px; height: 56px; font-size: 1.125rem; }
+.avatar-xl { width: 80px; height: 80px; font-size: 1.5rem; }
+
+/* KPI Card */
+.kpi-card {
+  background: var(--mantle);
+  border: 1px solid var(--surface0);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--primary);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+
+/* Layout helpers */
+.page {
+  padding: var(--space-8);
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  width: 100%;
+}
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-8);
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-6); }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-6); }
+
+@media (max-width: 1200px) {
+  .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 900px) {
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .page { padding: var(--space-4); }
+}
+@media (max-width: 600px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(99, 102, 241, 0.3); }
+  50% { box-shadow: 0 0 24px rgba(99, 102, 241, 0.6); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+.animate-slide-in { animation: slideIn 0.3s ease forwards; }
+.animate-pulse-glow { animation: pulse-glow 2s infinite; }
+.animate-spin { animation: spin 1s linear infinite; }
+
+/* Utilitaires */
+.text-primary { color: var(--primary-light); }
+.text-success { color: var(--green); }
+.text-warning { color: var(--yellow); }
+.text-error { color: var(--red); }
+.text-muted { color: var(--subtext0); }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: var(--space-2); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.w-full { width: 100%; }
+.mt-4 { margin-top: var(--space-4); }
+.mb-4 { margin-bottom: var(--space-4); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</file>
+
+<file path="frontend/src/main.tsx">
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import App from './App';
+import { store } from './store';
+import './index.css';
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <Provider store={store}>
+      <BrowserRouter>
+        <App />
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#1e1e2e',
+              color: '#cdd6f4',
+              border: '1px solid #313244',
+              borderRadius: '12px',
+              fontFamily: 'Inter, sans-serif',
+            },
+            success: { iconTheme: { primary: '#a6e3a1', secondary: '#1e1e2e' } },
+            error: { iconTheme: { primary: '#f38ba8', secondary: '#1e1e2e' } },
+          }}
+        />
+      </BrowserRouter>
+    </Provider>
+  </React.StrictMode>,
+);
+</file>
+
+<file path="frontend/src/pages/analytics/AnalyticsPage.tsx">
+export { AnalyticsPage as default } from '../payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/pages/auth/LoginPage.module.css">
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--base);
+  position: relative;
+  overflow: hidden;
+  padding: var(--space-4);
+}
+
+.card {
+  background: rgba(24, 24, 37, 0.85);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  border-radius: var(--radius-xl);
+  padding: var(--space-12) var(--space-8);
+  width: 100%;
+  max-width: 440px;
+  box-shadow: 0 32px 64px rgba(0, 0, 0, 0.6), var(--shadow-glow);
+  position: relative;
+  z-index: 10;
+  animation: fadeIn 0.5s ease;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+.logoIcon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-4);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--primary), var(--mauve));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: #fff;
+  font-size: 1.5rem;
+  box-shadow: var(--shadow-glow);
+  animation: pulse-glow 3s infinite;
+}
+.title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  background: linear-gradient(135deg, var(--primary-light), var(--mauve));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: var(--space-2);
+}
+.subtitle {
+  color: var(--subtext0);
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.form { display: flex; flex-direction: column; gap: var(--space-4); }
+.field { display: flex; flex-direction: column; gap: var(--space-2); }
+.label { font-size: 0.8125rem; font-weight: 600; color: var(--subtext1); }
+
+.errorMsg {
+  background: rgba(243, 139, 168, 0.1);
+  border: 1px solid rgba(243, 139, 168, 0.3);
+  border-radius: var(--radius-md);
+  padding: var(--space-3) var(--space-4);
+  color: var(--red);
+  font-size: 0.875rem;
+}
+
+.footer {
+  text-align: center;
+  margin-top: var(--space-8);
+  margin-bottom: 0;
+  font-size: 0.75rem;
+  color: var(--overlay0);
+}
+
+/* Blobs décoratifs */
+.bg { position: absolute; inset: 0; pointer-events: none; }
+.blob1, .blob2, .blob3 {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(80px);
+  opacity: 0.15;
+}
+.blob1 {
+  width: 400px; height: 400px;
+  background: var(--primary);
+  top: -100px; left: -100px;
+  animation: pulse-glow 6s infinite;
+}
+.blob2 {
+  width: 300px; height: 300px;
+  background: var(--mauve);
+  bottom: -80px; right: -80px;
+  animation: pulse-glow 8s infinite 2s;
+}
+.blob3 {
+  width: 200px; height: 200px;
+  background: var(--teal);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse-glow 10s infinite 4s;
+}
+</file>
+
+<file path="frontend/src/pages/auth/LoginPage.tsx">
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../hooks/useStore';
+import { login } from '../../store/slices/authSlice';
+import styles from './LoginPage.module.css';
+
+export default function LoginPage() {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { isLoading, error } = useAppSelector((s) => s.auth);
+  const [form, setForm] = useState({ email: '', password: '', tenantId: '' });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const result = await dispatch(login(form));
+    if (login.fulfilled.match(result)) navigate('/dashboard');
+  };
+
+  return (
+    <div className={styles.page}>
+      <div className={styles.card}>
+        {/* Logo */}
+        <div className={styles.logo}>
+          <div className={styles.logoIcon}>HR</div>
+          <h1 className={styles.title}>HRMS</h1>
+          <p className={styles.subtitle}>Système d'Information des Ressources Humaines</p>
+        </div>
+
+        <form onSubmit={handleSubmit} className={styles.form} noValidate>
+          <div className={styles.field}>
+            <label htmlFor="tenantId" className={styles.label}>Identifiant de l'entreprise</label>
+            <input
+              id="tenantId"
+              type="text"
+              className="input"
+              placeholder="ex: mon-entreprise"
+              value={form.tenantId}
+              onChange={(e) => setForm({ ...form, tenantId: e.target.value })}
+              required
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="email" className={styles.label}>Courriel</label>
+            <input
+              id="email"
+              type="email"
+              className="input"
+              placeholder="jean.tremblay@entreprise.com"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+              autoComplete="email"
+            />
+          </div>
+
+          <div className={styles.field}>
+            <label htmlFor="password" className={styles.label}>Mot de passe</label>
+            <input
+              id="password"
+              type="password"
+              className="input"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+              required
+              autoComplete="current-password"
+            />
+          </div>
+
+          {error && (
+            <div className={styles.errorMsg} role="alert">
+              ❌ {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg w-full"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <span className="animate-spin" style={{ display: 'inline-block' }}>⏳</span>
+            ) : '🔐 Se connecter'}
+          </button>
+        </form>
+
+        <p className={styles.footer}>
+          © 2026 HRMS — Conformité québécoise/canadienne native
+        </p>
+      </div>
+
+      {/* Arrière-plan décoratif */}
+      <div className={styles.bg} aria-hidden="true">
+        <div className={styles.blob1} />
+        <div className={styles.blob2} />
+        <div className={styles.blob3} />
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/pages/Dashboard.tsx">
+// ─── Pages stubs — à implémenter dans les phases suivantes ───────────────────
+// Dashboard.tsx
+export default function DashboardPage() {
+  return (
+    <div className="page animate-fade-in">
+      <div className="page-header">
+        <div>
+          <h1>Tableau de bord</h1>
+          <p>Vue d'ensemble de votre organisation</p>
+        </div>
+      </div>
+      <div className="grid-4">
+        {[
+          { label: 'Employés actifs', value: '—', icon: '👥', color: 'var(--blue)' },
+          { label: 'Absences aujourd\'hui', value: '—', icon: '🏖️', color: 'var(--yellow)' },
+          { label: 'Quarts à venir', value: '—', icon: '🗓️', color: 'var(--green)' },
+          { label: 'Coût masse salariale', value: '—', icon: '💰', color: 'var(--peach)' },
+        ].map((kpi) => (
+          <div key={kpi.label} className="kpi-card">
+            <div style={{ fontSize: '2rem' }}>{kpi.icon}</div>
+            <div>
+              <div style={{ fontSize: '1.75rem', fontWeight: 800, color: kpi.color }}>{kpi.value}</div>
+              <div className="text-muted text-sm">{kpi.label}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--subtext0)' }}>
+        <p>📊 Les graphiques et KPIs seront disponibles une fois le backend connecté.</p>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>Démarrez le backend et configurez votre tenant pour commencer.</p>
+      </div>
+    </div>
+  );
+}
+</file>
+
+<file path="frontend/src/pages/employees/EmployeesPage.tsx">
+const stub = (name: string, icon: string) => function Page() {
+  return (
+    <div className="page animate-fade-in">
+      <div className="page-header">
+        <h1>{icon} {name}</h1>
+      </div>
+      <div className="card" style={{ textAlign: 'center', padding: '4rem' }}>
+        <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{icon}</div>
+        <h3>Module {name}</h3>
+        <p style={{ marginTop: '0.5rem' }}>Ce module est en cours de développement (Phase 1).</p>
+      </div>
+    </div>
+  );
+};
+
+export default stub('Employés', '👥');
+</file>
+
+<file path="frontend/src/pages/leaves/LeavesPage.tsx">
+const stub = (n: string, i: string) => () => (<div className="page animate-fade-in"><div className="page-header"><h1>{i} {n}</h1></div><div className="card" style={{ textAlign: 'center', padding: '4rem' }}><div style={{ fontSize: '4rem' }}>{i}</div><h3>Module {n}</h3><p style={{ marginTop: '0.5rem' }}>En cours de développement.</p></div></div>);
+export default stub('Congés', '🏖️');
+</file>
+
+<file path="frontend/src/pages/messages/MessagesPage.tsx">
+export { MessagesPage as default } from '../payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/pages/NotFoundPage.tsx">
+export { NotFoundPage as default } from './payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/pages/payroll/PayrollPage.tsx">
+const s = (n: string, i: string) => () => (<div className="page animate-fade-in"><div className="page-header"><h1>{i} {n}</h1></div><div className="card" style={{ textAlign: 'center', padding: '4rem' }}><div style={{ fontSize: '4rem' }}>{i}</div><h3>{n}</h3><p style={{ marginTop: '0.5rem' }}>En cours de développement.</p></div></div>);
+export const PayrollPage = s('Paie', '💰');
+export const RecruitmentPage = s('Recrutement', '🔍');
+export const PerformancePage = s('Performance', '⭐');
+export const TrainingPage = s('Formation', '📚');
+export const MessagesPage = s('Messages', '💬');
+export const AnalyticsPage = s('Analytics', '📈');
+export const SettingsPage = s('Paramètres', '⚙️');
+export const ProfilePage = s('Profil', '👤');
+export const NotFoundPage = () => (<div className="page" style={{ textAlign: 'center', paddingTop: '8rem' }}><div style={{ fontSize: '6rem' }}>🔍</div><h1 style={{ marginTop: '1rem' }}>404 — Page introuvable</h1><p>Cette page n'existe pas.</p></div>);
+export default PayrollPage;
+</file>
+
+<file path="frontend/src/pages/performance/PerformancePage.tsx">
+export { PerformancePage as default } from '../payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/pages/profile/ProfilePage.tsx">
+export { ProfilePage as default } from '../payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/pages/recruitment/RecruitmentPage.tsx">
+export { RecruitmentPage as default } from '../payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/pages/settings/SettingsPage.tsx">
+export { SettingsPage as default } from '../payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/pages/shifts/ShiftsPage.tsx">
+const stub = (name: string, icon: string) => function Page() {
+  return (<div className="page animate-fade-in"><div className="page-header"><h1>{icon} {name}</h1></div><div className="card" style={{ textAlign: 'center', padding: '4rem' }}><div style={{ fontSize: '4rem', marginBottom: '1rem' }}>{icon}</div><h3>Module {name}</h3><p style={{ marginTop: '0.5rem' }}>En cours de développement.</p></div></div>);
+};
+export default stub('Horaires', '🗓️');
+</file>
+
+<file path="frontend/src/pages/training/TrainingPage.tsx">
+export { TrainingPage as default } from '../payroll/PayrollPage';
+</file>
+
+<file path="frontend/src/services/api.service.ts">
+import axios from 'axios';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+export const apiClient = axios.create({
+  baseURL: `${API_BASE_URL}/api/v1`,
+  headers: { 'Content-Type': 'application/json' },
+  timeout: 15000,
+});
+
+// ── Intercepteur Request — injecter le token & tenant ──────────────────────
+apiClient.interceptors.request.use((config) => {
+  const token = localStorage.getItem('hrms_token');
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+
+  const user = JSON.parse(localStorage.getItem('hrms_user') || 'null');
+  if (user?.tenantId) config.headers['X-Tenant-ID'] = user.tenantId;
+
+  return config;
+});
+
+// ── Intercepteur Response — gérer les erreurs globalement ─────────────────
+apiClient.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('hrms_token');
+      localStorage.removeItem('hrms_user');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  },
+);
+
+// ── Services API spécialisés ───────────────────────────────────────────────
+export const employeeApi = {
+  getAll: (params?: any) => apiClient.get('/employees', { params }),
+  getById: (id: string) => apiClient.get(`/employees/${id}`),
+  create: (data: any) => apiClient.post('/employees', data),
+  update: (id: string, data: any) => apiClient.put(`/employees/${id}`, data),
+  delete: (id: string) => apiClient.delete(`/employees/${id}`),
+  onboard: (id: string) => apiClient.patch(`/employees/${id}/onboard`),
+  offboard: (id: string, data: any) => apiClient.patch(`/employees/${id}/offboard`, data),
+};
+
+export const shiftApi = {
+  getAll: (params?: any) => apiClient.get('/shifts', { params }),
+  getByEmployee: (employeeId: string, params?: any) => apiClient.get(`/shifts/employee/${employeeId}`, { params }),
+  create: (data: any) => apiClient.post('/shifts', data),
+  update: (id: string, data: any) => apiClient.put(`/shifts/${id}`, data),
+  delete: (id: string) => apiClient.delete(`/shifts/${id}`),
+  clockIn: (id: string, data?: any) => apiClient.patch(`/shifts/${id}/clock-in`, data),
+  clockOut: (id: string, data?: any) => apiClient.patch(`/shifts/${id}/clock-out`, data),
+};
+
+export const leaveApi = {
+  getAll: (params?: any) => apiClient.get('/leaves', { params }),
+  getByEmployee: (employeeId: string) => apiClient.get(`/leaves/employee/${employeeId}`),
+  create: (data: any) => apiClient.post('/leaves', data),
+  approve: (id: string) => apiClient.patch(`/leaves/${id}/approve`),
+  reject: (id: string, data: any) => apiClient.patch(`/leaves/${id}/reject`, data),
+  cancel: (id: string) => apiClient.patch(`/leaves/${id}/cancel`),
+};
+
+export const payrollApi = {
+  getAll: (params?: any) => apiClient.get('/payroll', { params }),
+  generate: (data: any) => apiClient.post('/payroll/generate', data),
+  approve: (id: string) => apiClient.patch(`/payroll/${id}/approve`),
+  export: (id: string, format: 'nethris' | 'adp' | 'pdf') => apiClient.get(`/payroll/${id}/export/${format}`, { responseType: 'blob' }),
+};
+
+export const recruitmentApi = {
+  getPostings: (params?: any) => apiClient.get('/recruitment/postings', { params }),
+  createPosting: (data: any) => apiClient.post('/recruitment/postings', data),
+  getApplications: (postingId: string) => apiClient.get(`/recruitment/postings/${postingId}/applications`),
+  updateApplication: (id: string, data: any) => apiClient.patch(`/recruitment/applications/${id}`, data),
+};
+
+export const analyticsApi = {
+  getDashboard: () => apiClient.get('/analytics/dashboard'),
+  getHeadcount: (params?: any) => apiClient.get('/analytics/headcount', { params }),
+  getPayrollCosts: (params?: any) => apiClient.get('/analytics/payroll-costs', { params }),
+  getTurnover: (params?: any) => apiClient.get('/analytics/turnover', { params }),
+  exportReport: (type: string, format: 'pdf' | 'excel') => apiClient.get(`/analytics/export/${type}`, { params: { format }, responseType: 'blob' }),
+};
+</file>
+
+<file path="frontend/src/store/index.ts">
+import { configureStore } from '@reduxjs/toolkit';
+import authReducer from './slices/authSlice';
+import employeeReducer from './slices/employeeSlice';
+import shiftReducer from './slices/shiftSlice';
+import leaveReducer from './slices/leaveSlice';
+import notificationReducer from './slices/notificationSlice';
+import uiReducer from './slices/uiSlice';
+
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    employees: employeeReducer,
+    shifts: shiftReducer,
+    leaves: leaveReducer,
+    notifications: notificationReducer,
+    ui: uiReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+      },
+    }),
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+</file>
+
+<file path="frontend/src/store/slices/authSlice.ts">
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { apiClient } from '../../services/api.service';
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
+  tenantId: string;
+  avatarUrl?: string;
+}
+
+interface AuthState {
+  user: AuthUser | null;
+  token: string | null;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: AuthState = {
+  user: JSON.parse(localStorage.getItem('hrms_user') || 'null'),
+  token: localStorage.getItem('hrms_token'),
+  isAuthenticated: !!localStorage.getItem('hrms_token'),
+  isLoading: false,
+  error: null,
+};
+
+export const login = createAsyncThunk(
+  'auth/login',
+  async (credentials: { email: string; password: string; tenantId: string }, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.post('/auth/login', credentials);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Erreur de connexion');
+    }
+  },
+);
+
+export const logout = createAsyncThunk('auth/logout', async () => {
+  localStorage.removeItem('hrms_token');
+  localStorage.removeItem('hrms_user');
+});
+
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    setUser(state, action: PayloadAction<AuthUser>) {
+      state.user = action.payload;
+    },
+    clearError(state) {
+      state.error = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.user = action.payload.user;
+        state.token = action.payload.accessToken;
+        state.isAuthenticated = true;
+        localStorage.setItem('hrms_token', action.payload.accessToken);
+        localStorage.setItem('hrms_user', JSON.stringify(action.payload.user));
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(logout.fulfilled, (state) => {
+        state.user = null;
+        state.token = null;
+        state.isAuthenticated = false;
+      });
+  },
+});
+
+export const { setUser, clearError } = authSlice.actions;
+export default authSlice.reducer;
+</file>
+
+<file path="frontend/src/store/slices/employeeSlice.ts">
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { apiClient } from '../../services/api.service';
+
+export interface Employee {
+  id: string;
+  employeeNumber: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber?: string;
+  avatarUrl?: string;
+  status: 'ACTIVE' | 'INACTIVE' | 'ON_LEAVE' | 'TERMINATED';
+  role: 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
+  hireDate: string;
+  departmentId?: string;
+  positionId?: string;
+  managerId?: string;
+  hourlyRate?: number;
+  annualSalary?: number;
+  department?: { id: string; name: string };
+  position?: { id: string; title: string };
+  manager?: { id: string; firstName: string; lastName: string };
+  createdAt: string;
+}
+
+interface EmployeeState {
+  list: Employee[];
+  selected: Employee | null;
+  total: number;
+  totalPages: number;
+  currentPage: number;
+  isLoading: boolean;
+  error: string | null;
+}
+
+const initialState: EmployeeState = {
+  list: [],
+  selected: null,
+  total: 0,
+  totalPages: 0,
+  currentPage: 1,
+  isLoading: false,
+  error: null,
+};
+
+export const fetchEmployees = createAsyncThunk(
+  'employees/fetchAll',
+  async (params: { page?: number; limit?: number; search?: string; departmentId?: string; status?: string } = {}, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.get('/employees', { params });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Erreur de chargement');
+    }
+  },
+);
+
+export const fetchEmployeeById = createAsyncThunk(
+  'employees/fetchById',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.get(`/employees/${id}`);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Employé introuvable');
+    }
+  },
+);
+
+export const createEmployee = createAsyncThunk(
+  'employees/create',
+  async (data: Partial<Employee>, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.post('/employees', data);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Erreur de création');
+    }
+  },
+);
+
+export const updateEmployee = createAsyncThunk(
+  'employees/update',
+  async ({ id, data }: { id: string; data: Partial<Employee> }, { rejectWithValue }) => {
+    try {
+      const res = await apiClient.put(`/employees/${id}`, data);
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Erreur de mise à jour');
+    }
+  },
+);
+
+export const deleteEmployee = createAsyncThunk(
+  'employees/delete',
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await apiClient.delete(`/employees/${id}`);
+      return id;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || 'Erreur de suppression');
+    }
+  },
+);
+
+const employeeSlice = createSlice({
+  name: 'employees',
+  initialState,
+  reducers: {
+    setSelected(state, action: PayloadAction<Employee | null>) {
+      state.selected = action.payload;
+    },
+    clearError(state) {
+      state.error = null;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchEmployees.pending, (state) => { state.isLoading = true; })
+      .addCase(fetchEmployees.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.list = action.payload.data;
+        state.total = action.payload.meta.total;
+        state.totalPages = action.payload.meta.totalPages;
+        state.currentPage = action.payload.meta.page;
+      })
+      .addCase(fetchEmployees.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchEmployeeById.fulfilled, (state, action) => {
+        state.selected = action.payload;
+      })
+      .addCase(createEmployee.fulfilled, (state, action) => {
+        state.list.unshift(action.payload);
+        state.total++;
+      })
+      .addCase(updateEmployee.fulfilled, (state, action) => {
+        const idx = state.list.findIndex((e) => e.id === action.payload.id);
+        if (idx !== -1) state.list[idx] = action.payload;
+        if (state.selected?.id === action.payload.id) state.selected = action.payload;
+      })
+      .addCase(deleteEmployee.fulfilled, (state, action) => {
+        state.list = state.list.filter((e) => e.id !== action.payload);
+        state.total--;
+      });
+  },
+});
+
+export const { setSelected, clearError } = employeeSlice.actions;
+export default employeeSlice.reducer;
+</file>
+
+<file path="frontend/src/store/slices/leaveSlice.ts">
+import { createSlice } from '@reduxjs/toolkit';
+const leaveSlice = createSlice({ name: 'leaves', initialState: { list: [], isLoading: false, error: null }, reducers: {} });
+export default leaveSlice.reducer;
+</file>
+
+<file path="frontend/src/store/slices/notificationSlice.ts">
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface Notification { id: string; title: string; body: string; isRead: boolean; type: string; createdAt: string; }
+interface NotificationState { items: Notification[]; unreadCount: number; }
+
+const notificationSlice = createSlice({
+  name: 'notifications',
+  initialState: { items: [], unreadCount: 0 } as NotificationState,
+  reducers: {
+    addNotification(state, action: PayloadAction<Notification>) {
+      state.items.unshift(action.payload);
+      state.unreadCount++;
+    },
+    markAsRead(state, action: PayloadAction<string>) {
+      const n = state.items.find((n) => n.id === action.payload);
+      if (n && !n.isRead) { n.isRead = true; state.unreadCount = Math.max(0, state.unreadCount - 1); }
+    },
+    markAllAsRead(state) {
+      state.items.forEach((n) => { n.isRead = true; });
+      state.unreadCount = 0;
+    },
+  },
+});
+export const { addNotification, markAsRead, markAllAsRead } = notificationSlice.actions;
+export default notificationSlice.reducer;
+</file>
+
+<file path="frontend/src/store/slices/shiftSlice.ts">
+import { createSlice } from '@reduxjs/toolkit';
+
+// Stubs — à implémenter
+const shiftSlice = createSlice({ name: 'shifts', initialState: { list: [], isLoading: false, error: null }, reducers: {} });
+export default shiftSlice.reducer;
+</file>
+
+<file path="frontend/src/store/slices/uiSlice.ts">
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface UiState { sidebarOpen: boolean; theme: 'dark' | 'light'; }
+
+const uiSlice = createSlice({
+  name: 'ui',
+  initialState: { sidebarOpen: true, theme: 'dark' } as UiState,
+  reducers: {
+    toggleSidebar(state) { state.sidebarOpen = !state.sidebarOpen; },
+    setSidebarOpen(state, action: PayloadAction<boolean>) { state.sidebarOpen = action.payload; },
+  },
+});
+export const { toggleSidebar, setSidebarOpen } = uiSlice.actions;
+export default uiSlice.reducer;
+</file>
+
+<file path="frontend/tsconfig.json">
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@components/*": ["./src/components/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@store/*": ["./src/store/*"],
+      "@services/*": ["./src/services/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@types/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@shared/*": ["../shared/*"]
+    }
+  },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
+}
+</file>
+
+<file path="frontend/tsconfig.node.json">
+{
+  "compilerOptions": {
+    "composite": true,
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "strict": true
+  },
+  "include": ["vite.config.ts"]
+}
+</file>
+
+<file path="frontend/vite.config.ts">
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { resolve } from 'path';
+
+export default defineConfig({
+  plugins: [react()],
+  resolve: {
+    alias: {
+      '@': resolve(__dirname, './src'),
+      '@components': resolve(__dirname, './src/components'),
+      '@pages': resolve(__dirname, './src/pages'),
+      '@store': resolve(__dirname, './src/store'),
+      '@services': resolve(__dirname, './src/services'),
+      '@hooks': resolve(__dirname, './src/hooks'),
+      '@types': resolve(__dirname, './src/types'),
+      '@utils': resolve(__dirname, './src/utils'),
+      '@shared': resolve(__dirname, '../shared'),
+    },
+  },
+  server: {
+    port: 5173,
+    host: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+  },
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          redux: ['@reduxjs/toolkit', 'react-redux'],
+          charts: ['recharts'],
+        },
+      },
+    },
+  },
+});
+</file>
+
+<file path="mobile/package.json">
+{
+  "name": "hrms-mobile",
+  "version": "1.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "lint": "expo lint"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
+    "@react-navigation/bottom-tabs": "^6.5.20",
+    "@react-navigation/native": "^6.1.17",
+    "@react-navigation/stack": "^6.3.29",
+    "@reduxjs/toolkit": "^2.2.3",
+    "axios": "^1.6.8",
+    "expo": "~51.0.0",
+    "expo-barcode-scanner": "~13.0.0",
+    "expo-camera": "~15.0.0",
+    "expo-image-picker": "~15.0.0",
+    "expo-location": "~17.0.1",
+    "expo-notifications": "~0.28.0",
+    "expo-router": "~3.5.0",
+    "expo-secure-store": "~13.0.0",
+    "expo-status-bar": "~1.12.1",
+    "react": "18.2.0",
+    "react-native": "0.74.0",
+    "react-native-gesture-handler": "~2.16.0",
+    "react-native-reanimated": "~3.10.0",
+    "react-native-safe-area-context": "4.10.1",
+    "react-native-screens": "3.31.1",
+    "react-redux": "^9.1.2",
+    "socket.io-client": "^4.7.5"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@types/react": "~18.2.0",
+    "@types/react-native": "^0.73.0",
+    "typescript": "^5.4.0"
+  }
+}
+</file>
+
+<file path="package.json">
+{
+  "name": "hrms-sirh",
+  "version": "1.0.0",
+  "description": "HRMS — Human Resource Management System | Système d'Information des Ressources Humaines",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "mobile",
+    "shared"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm run install:backend && npm run install:frontend && npm run install:mobile",
+    "install:backend": "cd backend && npm install",
+    "install:frontend": "cd frontend && npm install",
+    "install:mobile": "cd mobile && npm install",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && npm run start:dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:mobile": "cd mobile && npx expo start",
+    "build": "npm run build:backend && npm run build:frontend",
+    "build:backend": "cd backend && npm run build",
+    "build:frontend": "cd frontend && npm run build",
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "cd backend && npm run test",
+    "test:frontend": "cd frontend && npm run test",
+    "lint": "npm run lint:backend && npm run lint:frontend",
+    "lint:backend": "cd backend && npm run lint",
+    "lint:frontend": "cd frontend && npm run lint",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "docker:logs": "docker-compose logs -f",
+    "db:migrate": "cd backend && npm run migration:run",
+    "db:seed": "cd backend && npm run seed",
+    "db:reset": "docker-compose down -v && docker-compose up -d postgres && timeout 5 && npm run db:migrate && npm run db:seed"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
+</file>
+
+<file path="README.md">
+# 🏢 HRMS — Human Resource Management System
+
+> Système d'Information des Ressources Humaines complet, multi-secteurs, multi-tenant avec conformité légale québécoise/canadienne native.
+
+[![NestJS](https://img.shields.io/badge/Backend-NestJS-e0234e?logo=nestjs)](https://nestjs.com)
+[![React](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61dafb?logo=react)](https://react.dev)
+[![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178c6?logo=typescript)](https://typescriptlang.org)
+[![PostgreSQL](https://img.shields.io/badge/Database-PostgreSQL-336791?logo=postgresql)](https://postgresql.org)
+[![Docker](https://img.shields.io/badge/Infra-Docker-2496ed?logo=docker)](https://docker.com)
+
+---
+
+## 📋 Table des matières
+
+- [Vue d'ensemble](#vue-densemble)
+- [Stack technique](#stack-technique)
+- [Architecture](#architecture)
+- [Prérequis](#prérequis)
+- [Installation rapide](#installation-rapide)
+- [Démarrage](#démarrage)
+- [Structure du projet](#structure-du-projet)
+- [Modules fonctionnels](#modules-fonctionnels)
+- [API Documentation](#api-documentation)
+- [Roadmap](#roadmap)
+
+---
+
+## 🌟 Vue d'ensemble
+
+HRMS couvre l'ensemble du cycle de vie RH :
+
+| Module | Description |
+|--------|-------------|
+| 👥 **Core RH** | Employés, organigramme, postes/départements, onboarding/offboarding, RBAC |
+| 🗓️ **Temps & Présences** | Horaires drag&drop, pointage mobile/QR/géo, congés/absences |
+| 💰 **Paie** | Calcul automatique, RRQ/RQAP/AE, export Nethris/ADP |
+| 🔍 **Recrutement (ATS)** | Offres, pipeline candidatures, LinkedIn/Indeed |
+| ⭐ **Performance** | Évaluations périodiques, objectifs & KPIs |
+| 📚 **Formation** | Modules en ligne, certifications, suivi |
+| 💬 **Communication** | Messagerie, annonces, notifications temps réel |
+| 📈 **Analytics** | Tableaux de bord, coûts, taux de roulement, exports PDF/Excel |
+
+---
+
+## 🛠️ Stack technique
+
+| Couche | Technologie |
+|--------|-------------|
+| **Frontend** | React 18 + TypeScript + Vite |
+| **Mobile** | React Native + Expo |
+| **Backend** | Node.js + NestJS + Clean Architecture + CQRS |
+| **Base de données** | PostgreSQL 16 |
+| **Cache** | Redis 7 |
+| **ORM** | TypeORM |
+| **Auth** | Keycloak (SSO, multi-tenant, RBAC) |
+| **Temps réel** | WebSockets (Socket.io / NestJS Gateway) |
+| **State** | Redux Toolkit |
+| **Email** | SendGrid / SMTP |
+| **Stockage** | AWS S3 (MinIO en développement) |
+| **Infra** | Docker + Kubernetes |
+
+---
+
+## 🏛️ Architecture
+
+```
+Clean Architecture (NestJS)
+├── Domain (src/domain/)          ← Entités, Enums, Exceptions, Interfaces
+├── Application (src/application/) ← CQRS Commands & Queries
+├── Infrastructure (src/infrastructure/) ← Auth, Email, S3, WebSockets
+├── Persistence (src/persistence/) ← TypeORM, Migrations, Repositories
+└── Web (src/web/)                ← Controllers, Guards, Middleware, DTOs
+```
+
+**Concepts clés :**
+- 🔄 **CQRS** — Commands (écriture) et Queries (lecture) strictement séparés
+- 🏢 **Multi-tenant** — `TenantMiddleware` injecte `tenant_id` dans chaque requête
+- 🔐 **RBAC** — 4 rôles hiérarchiques : `ADMIN > HR > MANAGER > EMPLOYEE`
+- 🌐 **WebSockets** — Notifications temps réel via NestJS Gateway
+- 📦 **Shared types** — Types TypeScript partagés frontend ↔ mobile
+
+---
+
+## 📋 Prérequis
+
+| Outil | Version minimale | Installation |
+|-------|-----------------|--------------|
+| Node.js | 18.0.0 | [nodejs.org](https://nodejs.org) |
+| npm | 9.0.0 | Inclus avec Node.js |
+| Docker Desktop | 4.0+ | [docker.com](https://docker.com/products/docker-desktop) |
+| Git | 2.0+ | [git-scm.com](https://git-scm.com) |
+
+---
+
+## ⚡ Installation rapide
+
+### Option 1 — Script automatique (recommandé)
+```powershell
+# Dans le dossier du projet
+.\scripts\setup.ps1
+```
+
+### Option 2 — Manuelle
+```powershell
+# 1. Copier les variables d'environnement
+Copy-Item .env.example .env
+
+# 2. Démarrer les services Docker
+docker-compose up -d postgres redis
+
+# 3. Installer les dépendances
+cd backend && npm install && cd ..
+cd frontend && npm install && cd ..
+
+# 4. (Optionnel) Application mobile
+cd mobile && npm install && cd ..
+```
+
+---
+
+## 🚀 Démarrage
+
+### Développement local
+
+```powershell
+# Terminal 1 — Backend NestJS
+cd backend
+npm run start:dev
+# → http://localhost:3000/api/v1
+# → http://localhost:3000/api/docs (Swagger)
+
+# Terminal 2 — Frontend React
+cd frontend
+npm run dev
+# → http://localhost:5173
+
+# Terminal 3 — Mobile (optionnel)
+cd mobile
+npx expo start
+```
+
+### Avec Docker (tous les services)
+```powershell
+docker-compose up
+```
+
+### URLs de développement
+
+| Service | URL | Identifiants |
+|---------|-----|-------------|
+| 🌐 Frontend | http://localhost:5173 | — |
+| 🔗 API | http://localhost:3000/api/v1 | — |
+| 📚 Swagger | http://localhost:3000/api/docs | — |
+| 🔐 Keycloak | http://localhost:8080 | admin / admin123 |
+| 💾 MinIO | http://localhost:9001 | minioadmin / minioadmin123 |
+| 🗄️ PostgreSQL | localhost:5432 | hrms_user / hrms_password |
+| ⚡ Redis | localhost:6379 | — |
+
+---
+
+## 📁 Structure du projet
+
+```
+f:/Projet/SIRH/
+├── backend/                    ← NestJS + Clean Architecture
+│   └── src/
+│       ├── domain/
+│       │   └── entities/       ← Employee, Shift, Leave, Payroll, ...
+│       ├── application/
+│       │   └── employees/      ← Commands + Queries (CQRS)
+│       ├── infrastructure/
+│       │   └── realtime/       ← WebSocket Gateway
+│       └── web/
+│           ├── controllers/    ← EmployeesController, ...
+│           ├── guards/         ← RolesGuard (RBAC)
+│           ├── middleware/     ← TenantMiddleware (multi-tenant)
+│           ├── dtos/           ← CreateEmployeeDto, ...
+│           └── modules/        ← EmployeesModule, AuthModule, ...
+│
+├── frontend/                   ← React + TypeScript + Vite
+│   └── src/
+│       ├── components/
+│       │   └── layout/         ← AppLayout, Sidebar, Header
+│       ├── pages/              ← Dashboard, Employees, Shifts, ...
+│       ├── store/
+│       │   └── slices/         ← authSlice, employeeSlice, ...
+│       ├── services/           ← api.service.ts (Axios)
+│       └── hooks/              ← useStore.ts
+│
+├── mobile/                     ← React Native + Expo
+│
+├── shared/
+│   ├── types/                  ← Types TypeScript partagés
+│   └── constants/              ← API endpoints, labels, taux légaux QC
+│
+├── scripts/
+│   ├── init.sql                ← Init PostgreSQL
+│   └── setup.ps1               ← Script d'installation
+│
+├── docker-compose.yml          ← PostgreSQL + Redis + Keycloak + MinIO
+├── .env.example                ← Variables d'environnement (template)
+└── README.md
+```
+
+---
+
+## 📊 Roadmap
+
+| Phase | Durée | Modules |
+|-------|-------|---------|
+| **Phase 1 — MVP** | 3-6 mois | Core RH + Horaires + Congés + Communication de base |
+| **Phase 2 — Croissance** | 6-12 mois | Paie + Analytics + Recrutement |
+| **Phase 3 — Maturité** | 12-18 mois | Formation + Performance + IA + Intégrations tierces |
+
+---
+
+## 🇨🇦 Conformité légale québécoise
+
+- **RRQ** (Régime de rentes du Québec) — taux annuels intégrés
+- **RQAP** (Régime québécois d'assurance parentale) — calcul employé + employeur
+- **Assurance-emploi** — taux fédéraux employé/employeur
+- **Types de congés** — Vacances, Maladie, Maternité, Paternité, Parental, Deuil, Compassion, Devoir de jury
+- **Heures supplémentaires** — seuil 40h/semaine, multiplicateur 1.5x
+
+---
+
+## 🤝 Contribution
+
+1. Créez une branche feature: `git checkout -b feature/nom-feature`
+2. Respectez la Clean Architecture (ne jamais importer de NestJS dans le Domain)
+3. Ajoutez des tests pour chaque Command et Query handler
+4. Documentez les endpoints avec les décorateurs Swagger
+
+---
+
+*Généré le 2026-05-18 — HRMS v1.0.0*
+</file>
+
+<file path="scripts/create-db.ps1">
+# HRMS - Creation de la base de donnees sur F:\ (C:\ plein)
+# Executer: .\scripts\create-db.ps1
+
+$psql = "C:\Program Files\PostgreSQL\17\bin\psql.exe"
+
+Write-Host ""
+Write-Host "HRMS - Creation de la base (tablespace F:\)" -ForegroundColor Cyan
+Write-Host "============================================" -ForegroundColor Cyan
+Write-Host ""
+
+$pgPassword = Read-Host "Mot de passe du superuser postgres" -AsSecureString
+$BSTR = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pgPassword)
+$plainPassword = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($BSTR)
+$env:PGPASSWORD = $plainPassword
+
+# Test connexion
+Write-Host "Connexion a PostgreSQL..." -ForegroundColor Yellow
+$test = & $psql -U postgres -c "SELECT 1;" 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "ERREUR: Mauvais mot de passe ou PostgreSQL non demarre" -ForegroundColor Red
+    $env:PGPASSWORD = ""
+    exit 1
+}
+Write-Host "OK - Connecte" -ForegroundColor Green
+Write-Host ""
+
+# Creer le dossier pour le tablespace sur F:\
+$tsPath = "F:\PostgreSQL\hrms_data"
+Write-Host "Creation du dossier tablespace: $tsPath" -ForegroundColor Yellow
+New-Item -ItemType Directory -Force -Path $tsPath | Out-Null
+
+# Donner les droits au service PostgreSQL sur ce dossier
+# Le service PostgreSQL tourne generalement sous "NT AUTHORITY\NetworkService" ou "NETWORK SERVICE"
+try {
+    $acl = Get-Acl $tsPath
+    $rule1 = New-Object System.Security.AccessControl.FileSystemAccessRule(
+        "NT AUTHORITY\NetworkService", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
+    )
+    $rule2 = New-Object System.Security.AccessControl.FileSystemAccessRule(
+        "NETWORK SERVICE", "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
+    )
+    $acl.SetAccessRule($rule1)
+    $acl.SetAccessRule($rule2)
+    Set-Acl $tsPath $acl
+    Write-Host "OK - Droits dossier configures" -ForegroundColor Green
+} catch {
+    Write-Host "INFO - Configuration des droits ignoree (peut fonctionner quand meme)" -ForegroundColor Yellow
+}
+
+# Verifier si hrms_user existe
+Write-Host "Verification hrms_user..." -ForegroundColor Yellow
+$userExists = & $psql -U postgres -tAc "SELECT 1 FROM pg_roles WHERE rolname='hrms_user';" 2>&1
+if ($userExists.Trim() -ne "1") {
+    & $psql -U postgres -c "CREATE USER hrms_user WITH PASSWORD 'hrms_password';" | Out-Null
+    Write-Host "OK - hrms_user cree" -ForegroundColor Green
+} else {
+    Write-Host "OK - hrms_user existe deja" -ForegroundColor Blue
+}
+
+# Supprimer l'ancien tablespace si existe
+Write-Host "Preparation du tablespace..." -ForegroundColor Yellow
+& $psql -U postgres -c "DROP TABLESPACE IF EXISTS hrms_space;" 2>&1 | Out-Null
+
+# Creer le tablespace sur F:\
+$tspathForward = $tsPath.Replace("\", "/")
+$createTS = "CREATE TABLESPACE hrms_space OWNER hrms_user LOCATION '$tspathForward';"
+Write-Host "Creation du tablespace sur F:\..." -ForegroundColor Yellow
+$tsResult = & $psql -U postgres -c $createTS 2>&1
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "AVERTISSEMENT tablespace: $tsResult" -ForegroundColor Yellow
+    Write-Host "Tentative sans tablespace (methode alternative)..." -ForegroundColor Yellow
+    
+    # Methode alternative: changer le data_directory de PostgreSQL
+    # On va essayer de creer la DB sans tablespace en liberant de la place d'abord
+    Write-Host ""
+    Write-Host "Nettoyage des fichiers temporaires PostgreSQL..." -ForegroundColor Yellow
+    $pgDataDir = & $psql -U postgres -tAc "SHOW data_directory;" 2>&1
+    Write-Host "Data directory PostgreSQL: $pgDataDir" -ForegroundColor White
+    
+    # Supprimer les vieux WAL logs si possible
+    $walDir = Join-Path $pgDataDir.Trim() "pg_wal"
+    Write-Host "Verification du dossier WAL: $walDir" -ForegroundColor Yellow
+    
+    $dbResult = & $psql -U postgres -c "CREATE DATABASE hrms_db OWNER hrms_user ENCODING 'UTF8';" 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host ""
+        Write-Host "ERREUR: Impossible de creer la base. Disque C:\ trop plein." -ForegroundColor Red
+        Write-Host ""
+        Write-Host "Solutions manuelles:" -ForegroundColor Yellow
+        Write-Host "  1. Liberer de l'espace sur C:\ (vider corbeille, fichiers temp)" -ForegroundColor White
+        Write-Host "  2. Executer: cleanmgr /d C:" -ForegroundColor White
+        Write-Host "  3. Ouvrir pgAdmin 4 manuellement et creer la DB depuis l'interface" -ForegroundColor White
+        $env:PGPASSWORD = ""
+        exit 1
+    }
+} else {
+    Write-Host "OK - Tablespace cree sur F:\" -ForegroundColor Green
+    
+    # Supprimer hrms_db si existe deja (echec precedent)
+    & $psql -U postgres -c "DROP DATABASE IF EXISTS hrms_db;" 2>&1 | Out-Null
+    
+    # Creer la DB sur le tablespace F:\
+    Write-Host "Creation de hrms_db sur F:\..." -ForegroundColor Yellow
+    $dbResult = & $psql -U postgres -c "CREATE DATABASE hrms_db OWNER hrms_user ENCODING 'UTF8' TABLESPACE hrms_space;" 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "ERREUR creation DB: $dbResult" -ForegroundColor Red
+        $env:PGPASSWORD = ""
+        exit 1
+    }
+    Write-Host "OK - hrms_db creee sur F:\" -ForegroundColor Green
+}
+
+# Donner les droits
+Write-Host "Attribution des droits..." -ForegroundColor Yellow
+& $psql -U postgres -c "GRANT ALL PRIVILEGES ON DATABASE hrms_db TO hrms_user;" 2>&1 | Out-Null
+& $psql -U postgres -d hrms_db -c "GRANT ALL ON SCHEMA public TO hrms_user;" 2>&1 | Out-Null
+& $psql -U postgres -d hrms_db -c "GRANT CREATE ON SCHEMA public TO hrms_user;" 2>&1 | Out-Null
+Write-Host "OK - Droits attribues" -ForegroundColor Green
+
+# Verifier que ca fonctionne
+Write-Host "Verification finale..." -ForegroundColor Yellow
+$env:PGPASSWORD = "hrms_password"
+$verif = & $psql -U hrms_user -d hrms_db -c "SELECT current_database(), current_user;" 2>&1
+if ($LASTEXITCODE -eq 0) {
+    Write-Host "OK - Connexion hrms_user -> hrms_db reussie!" -ForegroundColor Green
+} else {
+    Write-Host "AVERTISSEMENT: $verif" -ForegroundColor Yellow
+}
+
+$env:PGPASSWORD = ""
+
+Write-Host ""
+Write-Host "============================================" -ForegroundColor Green
+Write-Host "Base de donnees prete !" -ForegroundColor Green
+Write-Host "============================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "  Host     : localhost:5432" -ForegroundColor White
+Write-Host "  Database : hrms_db" -ForegroundColor White
+Write-Host "  User     : hrms_user / hrms_password" -ForegroundColor White
+Write-Host ""
+Write-Host "Redemarrez le backend: cd backend ; npm run start:dev" -ForegroundColor Cyan
+Write-Host ""
+</file>
+
+<file path="scripts/init.sql">
+-- ─────────────────────────────────────────────────────────────────────────────
+-- HRMS — Script d'initialisation de la base de données
+-- ─────────────────────────────────────────────────────────────────────────────
+
+-- Extension UUID
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pg_trgm";  -- Pour la recherche full-text
+
+-- Schéma multi-tenant (chaque tenant aura son schéma)
+-- Le schéma 'public' est utilisé pour les tables globales
+
+-- ─── Types Enum ────────────────────────────────────────────────────────────
+CREATE TYPE user_role AS ENUM ('ADMIN', 'HR', 'MANAGER', 'EMPLOYEE');
+CREATE TYPE employee_status AS ENUM ('ACTIVE', 'INACTIVE', 'ON_LEAVE', 'TERMINATED');
+CREATE TYPE leave_type AS ENUM ('VACATION', 'SICK', 'PERSONAL', 'MATERNITY', 'PATERNITY', 'BEREAVEMENT', 'UNPAID');
+CREATE TYPE leave_status AS ENUM ('PENDING', 'APPROVED', 'REJECTED', 'CANCELLED');
+CREATE TYPE shift_status AS ENUM ('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'ABSENT', 'CANCELLED');
+CREATE TYPE recruitment_status AS ENUM ('OPEN', 'IN_REVIEW', 'INTERVIEWING', 'OFFER_SENT', 'HIRED', 'CLOSED');
+CREATE TYPE application_status AS ENUM ('APPLIED', 'SCREENING', 'INTERVIEW', 'ASSESSMENT', 'OFFER', 'HIRED', 'REJECTED');
+CREATE TYPE notification_type AS ENUM ('SHIFT_CHANGE', 'LEAVE_APPROVED', 'LEAVE_REJECTED', 'PAYROLL_READY', 'ANNOUNCEMENT', 'TASK_ASSIGNED');
+
+-- ─── Message d'initialisation ───────────────────────────────────────────────
+DO $$
+BEGIN
+  RAISE NOTICE 'HRMS Database initialized successfully!';
+END $$;
+</file>
+
+<file path="scripts/setup.ps1">
+# HRMS - Script d'installation et demarrage
+# Executer: .\scripts\setup.ps1
+
+Write-Host ""
+Write-Host "HRMS - Installation et Configuration" -ForegroundColor Cyan
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Verification des prerequis
+Write-Host "Verification des prerequis..." -ForegroundColor Yellow
+
+$nodeVersion = node --version 2>$null
+if (-not $nodeVersion) {
+    Write-Host "  ERREUR: Node.js n'est pas installe." -ForegroundColor Red
+    Write-Host "  Telechargez Node.js sur: https://nodejs.org" -ForegroundColor Red
+    exit 1
+}
+Write-Host "  OK - Node.js: $nodeVersion" -ForegroundColor Green
+
+$npmVersion = npm --version 2>$null
+Write-Host "  OK - npm: $npmVersion" -ForegroundColor Green
+
+$dockerOk = $false
+$dockerTest = docker compose version 2>$null
+if ($LASTEXITCODE -eq 0) {
+    $dockerOk = $true
+    Write-Host "  OK - Docker Compose V2 detecte" -ForegroundColor Green
+} else {
+    Write-Host "  AVERTISSEMENT: Docker non detecte." -ForegroundColor Yellow
+    Write-Host "  Installez Docker Desktop: https://www.docker.com/products/docker-desktop" -ForegroundColor Yellow
+}
+
+Write-Host ""
+
+# Copie du .env
+Write-Host "Configuration de l'environnement..." -ForegroundColor Yellow
+if (-not (Test-Path ".env")) {
+    Copy-Item ".env.example" ".env"
+    Write-Host "  OK - Fichier .env cree depuis .env.example" -ForegroundColor Green
+    Write-Host "  N'oubliez pas de remplir les valeurs dans .env" -ForegroundColor Yellow
+} else {
+    Write-Host "  INFO - .env existe deja, aucune modification." -ForegroundColor Blue
+}
+
+Write-Host ""
+
+# Installation des dependances Backend
+Write-Host "Installation des dependances Backend..." -ForegroundColor Yellow
+Set-Location backend
+npm install
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "  ERREUR lors de l'installation du backend" -ForegroundColor Red
+    Set-Location ..
+    exit 1
+}
+Set-Location ..
+Write-Host "  OK - Backend installe" -ForegroundColor Green
+
+Write-Host ""
+
+# Installation des dependances Frontend
+Write-Host "Installation des dependances Frontend..." -ForegroundColor Yellow
+Set-Location frontend
+npm install
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "  ERREUR lors de l'installation du frontend" -ForegroundColor Red
+    Set-Location ..
+    exit 1
+}
+Set-Location ..
+Write-Host "  OK - Frontend installe" -ForegroundColor Green
+
+Write-Host ""
+
+# Demarrage Docker
+if ($dockerOk) {
+    Write-Host "Demarrage des services Docker (PostgreSQL + Redis)..." -ForegroundColor Yellow
+    docker compose up -d postgres redis
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "  OK - PostgreSQL et Redis demarres" -ForegroundColor Green
+        Write-Host "  INFO - Pour Keycloak et MinIO: docker compose up -d" -ForegroundColor Blue
+    } else {
+        Write-Host "  ERREUR lors du demarrage Docker" -ForegroundColor Red
+    }
+}
+
+Write-Host ""
+Write-Host "=====================================" -ForegroundColor Green
+Write-Host "Installation terminee !" -ForegroundColor Green
+Write-Host "=====================================" -ForegroundColor Green
+Write-Host ""
+Write-Host "Commandes pour demarrer:" -ForegroundColor Cyan
+Write-Host "  Backend  : cd backend ; npm run start:dev" -ForegroundColor White
+Write-Host "  Frontend : cd frontend ; npm run dev" -ForegroundColor White
+Write-Host "  Mobile   : cd mobile ; npx expo start" -ForegroundColor White
+Write-Host ""
+Write-Host "URLs de developpement:" -ForegroundColor Cyan
+Write-Host "  API Swagger : http://localhost:3000/api/docs" -ForegroundColor White
+Write-Host "  Frontend    : http://localhost:5173" -ForegroundColor White
+Write-Host "  Keycloak    : http://localhost:8080  admin/admin123" -ForegroundColor White
+Write-Host "  MinIO       : http://localhost:9001  minioadmin/minioadmin123" -ForegroundColor White
+Write-Host ""
+</file>
+
+<file path="shared/constants/api.constants.ts">
+// ─── Constantes API partagées ─────────────────────────────────────────────────
+export const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+export const WS_URL = process.env.EXPO_PUBLIC_WS_URL || 'ws://localhost:3000';
+
+export const API_ENDPOINTS = {
+  // Auth
+  LOGIN: '/auth/login',
+  LOGOUT: '/auth/logout',
+  REFRESH: '/auth/refresh',
+  PROFILE: '/auth/profile',
+
+  // Employees
+  EMPLOYEES: '/employees',
+  EMPLOYEE: (id: string) => `/employees/${id}`,
+  EMPLOYEE_ONBOARD: (id: string) => `/employees/${id}/onboard`,
+  EMPLOYEE_OFFBOARD: (id: string) => `/employees/${id}/offboard`,
+  ORG_CHART: (id: string) => `/employees/${id}/org-chart`,
+
+  // Departments
+  DEPARTMENTS: '/departments',
+  DEPARTMENT: (id: string) => `/departments/${id}`,
+
+  // Shifts
+  SHIFTS: '/shifts',
+  SHIFT: (id: string) => `/shifts/${id}`,
+  SHIFT_CLOCK_IN: (id: string) => `/shifts/${id}/clock-in`,
+  SHIFT_CLOCK_OUT: (id: string) => `/shifts/${id}/clock-out`,
+
+  // Leaves
+  LEAVES: '/leaves',
+  LEAVE: (id: string) => `/leaves/${id}`,
+  LEAVE_APPROVE: (id: string) => `/leaves/${id}/approve`,
+  LEAVE_REJECT: (id: string) => `/leaves/${id}/reject`,
+
+  // Payroll
+  PAYROLL: '/payroll',
+  PAYROLL_GENERATE: '/payroll/generate',
+  PAYROLL_ITEM: (id: string) => `/payroll/${id}`,
+  PAYROLL_EXPORT: (id: string, format: string) => `/payroll/${id}/export/${format}`,
+
+  // Recruitment
+  JOB_POSTINGS: '/recruitment/postings',
+  JOB_POSTING: (id: string) => `/recruitment/postings/${id}`,
+  JOB_APPLICATIONS: (postingId: string) => `/recruitment/postings/${postingId}/applications`,
+
+  // Analytics
+  ANALYTICS_DASHBOARD: '/analytics/dashboard',
+  ANALYTICS_HEADCOUNT: '/analytics/headcount',
+  ANALYTICS_PAYROLL_COSTS: '/analytics/payroll-costs',
+  ANALYTICS_TURNOVER: '/analytics/turnover',
+} as const;
+
+export const ROLES_LABELS: Record<string, string> = {
+  ADMIN: 'Administrateur',
+  HR: 'Ressources humaines',
+  MANAGER: 'Gestionnaire',
+  EMPLOYEE: 'Employé',
+};
+
+export const LEAVE_TYPE_LABELS: Record<string, string> = {
+  VACATION: 'Vacances',
+  SICK: 'Maladie',
+  PERSONAL: 'Personnel',
+  MATERNITY: 'Congé maternité',
+  PATERNITY: 'Congé paternité',
+  PARENTAL: 'Congé parental (RQAP)',
+  BEREAVEMENT: 'Deuil',
+  UNPAID: 'Sans solde',
+  JURY_DUTY: 'Devoir de jury',
+  COMPASSIONATE: 'Compassion',
+};
+
+export const SHIFT_STATUS_LABELS: Record<string, string> = {
+  SCHEDULED: 'Planifié',
+  IN_PROGRESS: 'En cours',
+  COMPLETED: 'Terminé',
+  ABSENT: 'Absent',
+  CANCELLED: 'Annulé',
+};
+
+// Taux légaux Québec 2024 (approximatifs — à mettre à jour annuellement)
+export const QC_TAX_RATES = {
+  FEDERAL_BASIC_EXEMPTION: 15705,
+  PROVINCIAL_BASIC_EXEMPTION: 17183,
+  EI_RATE_EMPLOYEE: 0.0166,         // 1.66%
+  EI_RATE_EMPLOYER: 0.0232,         // 2.32% (ratio 1.4x)
+  CPP_RATE: 0.0595,                  // 5.95% (RRQ)
+  RQAP_RATE_EMPLOYEE: 0.00494,      // 0.494%
+  RQAP_RATE_EMPLOYER: 0.00692,      // 0.692%
+  OVERTIME_THRESHOLD_HOURS: 40,     // Heures standard/semaine
+  OVERTIME_MULTIPLIER: 1.5,         // 1.5x
+} as const;
+</file>
+
+<file path="shared/types/index.ts">
+// ─────────────────────────────────────────────────────────────────────────────
+// HRMS — Types TypeScript partagés (frontend ↔ mobile)
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ── Rôles & Statuts ───────────────────────────────────────────────────────────
+export type UserRole = 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
+export type EmployeeStatus = 'ACTIVE' | 'INACTIVE' | 'ON_LEAVE' | 'TERMINATED';
+export type LeaveType = 'VACATION' | 'SICK' | 'PERSONAL' | 'MATERNITY' | 'PATERNITY' | 'BEREAVEMENT' | 'UNPAID' | 'PARENTAL' | 'JURY_DUTY' | 'COMPASSIONATE';
+export type LeaveStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
+export type ShiftStatus = 'SCHEDULED' | 'IN_PROGRESS' | 'COMPLETED' | 'ABSENT' | 'CANCELLED';
+export type RecruitmentStatus = 'OPEN' | 'IN_REVIEW' | 'INTERVIEWING' | 'OFFER_SENT' | 'HIRED' | 'CLOSED';
+export type ApplicationStatus = 'APPLIED' | 'SCREENING' | 'INTERVIEW' | 'ASSESSMENT' | 'OFFER' | 'HIRED' | 'REJECTED';
+export type NotificationType = 'SHIFT_CHANGE' | 'LEAVE_APPROVED' | 'LEAVE_REJECTED' | 'PAYROLL_READY' | 'ANNOUNCEMENT' | 'TASK_ASSIGNED' | 'REVIEW_DUE' | 'DOCUMENT_SHARED';
+export type EmploymentType = 'FULL_TIME' | 'PART_TIME' | 'CONTRACT' | 'TEMPORARY' | 'INTERNSHIP';
+
+// ── Entités ──────────────────────────────────────────────────────────────────
+export interface IEmployee {
+  id: string;
+  employeeNumber: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phoneNumber?: string;
+  avatarUrl?: string;
+  status: EmployeeStatus;
+  role: UserRole;
+  hireDate: string;
+  departmentId?: string;
+  positionId?: string;
+  managerId?: string;
+  hourlyRate?: number;
+  annualSalary?: number;
+  tenantId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface IDepartment {
+  id: string;
+  name: string;
+  description?: string;
+  code?: string;
+  managerId?: string;
+  parentDepartmentId?: string;
+  tenantId: string;
+}
+
+export interface IPosition {
+  id: string;
+  title: string;
+  description?: string;
+  minSalary?: number;
+  maxSalary?: number;
+  departmentId?: string;
+  tenantId: string;
+}
+
+export interface IShift {
+  id: string;
+  startTime: string;
+  endTime: string;
+  actualStartTime?: string;
+  actualEndTime?: string;
+  status: ShiftStatus;
+  location?: string;
+  locationLat?: number;
+  locationLng?: number;
+  notes?: string;
+  isOvertime: boolean;
+  breakDurationMinutes: number;
+  employeeId: string;
+  tenantId: string;
+  createdAt: string;
+}
+
+export interface ILeave {
+  id: string;
+  type: LeaveType;
+  status: LeaveStatus;
+  startDate: string;
+  endDate: string;
+  totalDays: number;
+  reason?: string;
+  rejectionReason?: string;
+  approvedAt?: string;
+  approvedById?: string;
+  employeeId: string;
+  tenantId: string;
+  createdAt: string;
+}
+
+export interface IPayroll {
+  id: string;
+  periodStart: string;
+  periodEnd: string;
+  regularHours: number;
+  overtimeHours: number;
+  grossPay: number;
+  federalTax: number;
+  provincialTax: number;
+  eiEmployee: number;
+  cppEmployee: number;
+  rqapEmployee: number;
+  totalDeductions: number;
+  netPay: number;
+  status: 'DRAFT' | 'PROCESSING' | 'APPROVED' | 'PAID' | 'ERROR';
+  employeeId: string;
+  tenantId: string;
+  createdAt: string;
+}
+
+export interface INotification {
+  id: string;
+  type: NotificationType;
+  title: string;
+  body: string;
+  isRead: boolean;
+  readAt?: string;
+  actionUrl?: string;
+  recipientId: string;
+  senderId?: string;
+  tenantId: string;
+  createdAt: string;
+}
+
+export interface ITenant {
+  id: string;
+  slug: string;
+  name: string;
+  industry?: string;
+  logo?: string;
+  province: string;
+  isActive: boolean;
+  subscriptionPlan: string;
+}
+
+// ── Réponses API génériques ──────────────────────────────────────────────────
+export interface ApiResponse<T> {
+  data: T;
+  meta?: {
+    total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
+  };
+}
+
+export interface ApiError {
+  message: string;
+  statusCode: number;
+  error?: string;
+}
+</file>
+
+</files>

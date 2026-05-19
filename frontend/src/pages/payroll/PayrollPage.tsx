@@ -1,0 +1,11 @@
+const s = (n: string, i: string) => () => (<div className="page animate-fade-in"><div className="page-header"><h1>{i} {n}</h1></div><div className="card" style={{ textAlign: 'center', padding: '4rem' }}><div style={{ fontSize: '4rem' }}>{i}</div><h3>{n}</h3><p style={{ marginTop: '0.5rem' }}>En cours de développement.</p></div></div>);
+export const PayrollPage = s('Paie', '💰');
+export const RecruitmentPage = s('Recrutement', '🔍');
+export const PerformancePage = s('Performance', '⭐');
+export const TrainingPage = s('Formation', '📚');
+export const MessagesPage = s('Messages', '💬');
+export const AnalyticsPage = s('Analytics', '📈');
+export const SettingsPage = s('Paramètres', '⚙️');
+export const ProfilePage = s('Profil', '👤');
+export const NotFoundPage = () => (<div className="page" style={{ textAlign: 'center', paddingTop: '8rem' }}><div style={{ fontSize: '6rem' }}>🔍</div><h1 style={{ marginTop: '1rem' }}>404 — Page introuvable</h1><p>Cette page n'existe pas.</p></div>);
+export default PayrollPage;

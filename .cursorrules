@@ -1,0 +1,47 @@
+# 🏢 Instructions de Contexte pour IA (HRMS Project)
+
+Ce fichier sert de guide et de règles de référence pour toutes les IA (ChatGPT, Claude, Cursor, Antigravity) travaillant sur ce projet.
+
+## 📋 Présentation du Projet
+* **Nom** : SIRH / HRMS (Human Resource Management System)
+* **Description** : Système d'Information des Ressources Humaines multi-tenant avec conformité canadienne/québécoise native.
+* **Type** : Monorépertoire (Monorepo)
+
+## 📁 Structure du Projet
+```text
+SIRH/
+├── backend/          # API NestJS (TypeORM, PostgreSQL)
+├── frontend/         # Application Web React + Vite (Redux Toolkit, TailwindCSS)
+├── mobile/           # Application Mobile Expo / React Native (Expo Router)
+├── shared/           # Types, validations et DTOs partagés
+└── scripts/          # Scripts SQL et Powershell d'initialisation/déploiement
+```
+
+## 🛠️ Stack Technique & Règles Clés par Service
+
+### 1. Backend (NestJS + TypeORM)
+* **Architecture** : Clean Architecture / DDD (Domain-Driven Design).
+  * `domain/` : Entités, interfaces de repositories, logique métier pure (sans dépendance externe).
+  * `infrastructure/` : Implémentations concrètes (TypeORM repositories, services externes).
+  * `persistence/` : Configurations de bases de données et migrations.
+  * `web/` : Contrôleurs, DTOs, guards, middlewares.
+* **Sécurité & Auth** : Intégration Keycloak pour la gestion d'identité et de rôles.
+* **Base de données** : PostgreSQL (`hrms_db` sur localhost:5432, utilisateur `hrms_user`).
+
+### 2. Frontend (React + Vite)
+* **Gestion d'état** : Redux Toolkit (`@reduxjs/toolkit` et `react-redux`).
+* **Design** : Interface soignée, moderne, CSS premium/Tailwind.
+* **Routes** : React Router DOM.
+* **Outils spéciaux** : Utilise le compilateur ultra-rapide Oxc (`vite:oxc`).
+
+### 3. Mobile (Expo + React Native)
+* **Framework** : Expo SDK 51.
+* **Version de Node recommandée** : Node 22/24. Note de compatibilité importante :
+  * Pour contourner les bugs d'exports CJS/ESM stricts de Node 24 avec Metro, des exports génériques `"./src/*": "./src/*.js"` ont été configurés dans les packages Metro dans `node_modules`.
+  * Le script de démarrage d'Expo en environnement réseau restreint se fait avec `npx expo start --offline`.
+
+## 📜 Règles de Développement pour l'IA
+1. **Toujours conserver les docstrings et commentaires existants** à moins d'une demande explicite de refactorisation.
+2. **Architecture Propre** : Respecter scrupuleusement la séparation des dossiers `domain/`, `infrastructure/` et `web/` dans le backend.
+3. **DRY & Types Partagés** : Ne pas recréer de types côté frontend ou mobile s'ils peuvent être définis dans `shared/` et importés de manière centralisée.
+4. **Design Premium** : Les interfaces web et mobiles doivent offrir un rendu moderne (effets de survol, micro-animations, palettes harmonieuses).
