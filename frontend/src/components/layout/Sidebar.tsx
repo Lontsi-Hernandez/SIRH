@@ -2,20 +2,21 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../hooks/useStore';
 import { toggleSidebar } from '../../store/slices/uiSlice';
 import { logout } from '../../store/slices/authSlice';
+import { useApp } from '../../context/AppContext';
 import styles from './Sidebar.module.css';
 
 const navItems = [
-  { path: '/dashboard', icon: '📊', label: 'Tableau de bord' },
-  { path: '/employees', icon: '👥', label: 'Employés' },
-  { path: '/shifts', icon: '🗓️', label: 'Horaires' },
-  { path: '/leaves', icon: '🏖️', label: 'Congés' },
-  { path: '/payroll', icon: '💰', label: 'Paie' },
-  { path: '/recruitment', icon: '🔍', label: 'Recrutement' },
-  { path: '/performance', icon: '⭐', label: 'Performance' },
-  { path: '/training', icon: '📚', label: 'Formation' },
-  { path: '/messages', icon: '💬', label: 'Messages' },
-  { path: '/analytics', icon: '📈', label: 'Analytics' },
-  { path: '/housings', icon: '🏠', label: 'Hébergements' },
+  { path: '/dashboard', icon: '📊', key: 'nav.dashboard' },
+  { path: '/employees', icon: '👥', key: 'nav.employees' },
+  { path: '/shifts', icon: '🗓️', key: 'nav.shifts' },
+  { path: '/leaves', icon: '🏖️', key: 'nav.leaves' },
+  { path: '/payroll', icon: '💰', key: 'nav.payroll' },
+  { path: '/recruitment', icon: '🔍', key: 'nav.recruitment' },
+  { path: '/performance', icon: '⭐', key: 'nav.performance' },
+  { path: '/training', icon: '📚', key: 'nav.training' },
+  { path: '/messages', icon: '💬', key: 'nav.messages' },
+  { path: '/analytics', icon: '📈', key: 'nav.analytics' },
+  { path: '/housings', icon: '🏠', key: 'nav.housings' },
 ];
 
 export default function Sidebar() {
@@ -23,6 +24,7 @@ export default function Sidebar() {
   const navigate = useNavigate();
   const { sidebarOpen } = useAppSelector((s) => s.ui);
   const { user } = useAppSelector((s) => s.auth);
+  const { t } = useApp();
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -46,21 +48,21 @@ export default function Sidebar() {
             className={({ isActive }) =>
               `${styles.navItem} ${isActive ? styles.active : ''}`
             }
-            title={!sidebarOpen ? item.label : undefined}
+            title={!sidebarOpen ? t(item.key) : undefined}
           >
             <span className={styles.navIcon}>{item.icon}</span>
-            {sidebarOpen && <span className={styles.navLabel}>{item.label}</span>}
+            {sidebarOpen && <span className={styles.navLabel}>{t(item.key)}</span>}
           </NavLink>
         ))}
       </nav>
 
       {/* Footer */}
       <div className={styles.footer}>
-        <NavLink to="/settings" className={styles.navItem} title="Paramètres">
+        <NavLink to="/settings" className={styles.navItem} title={t('nav.settings')}>
           <span className={styles.navIcon}>⚙️</span>
-          {sidebarOpen && <span className={styles.navLabel}>Paramètres</span>}
+          {sidebarOpen && <span className={styles.navLabel}>{t('nav.settings')}</span>}
         </NavLink>
-        <NavLink to="/profile" className={styles.navItem} title="Profil">
+        <NavLink to="/profile" className={styles.navItem} title={t('nav.profile')}>
           <div className={`avatar avatar-sm ${styles.userAvatar}`}>
             {user?.firstName?.[0]}{user?.lastName?.[0]}
           </div>
@@ -71,9 +73,9 @@ export default function Sidebar() {
             </div>
           )}
         </NavLink>
-        <button className={`${styles.navItem} ${styles.logoutBtn}`} onClick={handleLogout} title="Déconnexion">
+        <button className={`${styles.navItem} ${styles.logoutBtn}`} onClick={handleLogout} title={t('auth.logout')}>
           <span className={styles.navIcon}>🚪</span>
-          {sidebarOpen && <span className={styles.navLabel}>Déconnexion</span>}
+          {sidebarOpen && <span className={styles.navLabel}>{t('auth.logout')}</span>}
         </button>
       </div>
 

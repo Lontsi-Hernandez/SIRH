@@ -87,6 +87,56 @@
   --content-max-width: 1440px;
 }
 
+/* ── Thème Clair ────────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  /* Surfaces claires inspirées Catppuccin Latte */
+  --base: #eff1f5;
+  --mantle: #e6e9ef;
+  --crust: #dce0e8;
+  --surface0: #ccd0da;
+  --surface1: #bcc0cc;
+  --surface2: #acb0be;
+  --overlay0: #9ca0b0;
+  --overlay1: #8c8fa1;
+  --subtext0: #6c6f85;
+  --subtext1: #5c5f77;
+  --text: #4c4f69;
+
+  /* Accents recalibrés pour le mode clair */
+  --rosewater: #dc8a78;
+  --flamingo: #dd7878;
+  --pink: #ea76cb;
+  --mauve: #8839ef;
+  --red: #d20f39;
+  --maroon: #e64553;
+  --peach: #fe640b;
+  --yellow: #df8e1d;
+  --green: #40a02b;
+  --teal: #179299;
+  --sky: #04a5e5;
+  --sapphire: #209fb5;
+  --blue: #1e66f5;
+  --lavender: #7287fd;
+
+  /* Brand primaire (inchangé) */
+  --primary: #6366f1;
+  --primary-light: #4f46e5;
+  --primary-dark: #3730a3;
+  --primary-subtle: rgba(99, 102, 241, 0.12);
+
+  /* Sémantiques recalibrées */
+  --success: #40a02b;
+  --warning: #df8e1d;
+  --error: #d20f39;
+  --info: #1e66f5;
+
+  /* Shadows allégées pour le clair */
+  --shadow-sm: 0 1px 3px rgba(76, 79, 105, 0.15);
+  --shadow-md: 0 4px 16px rgba(76, 79, 105, 0.15);
+  --shadow-lg: 0 8px 32px rgba(76, 79, 105, 0.2);
+  --shadow-glow: 0 0 24px rgba(99, 102, 241, 0.25);
+}
+
 /* ── Reset & Base ──────────────────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -107,6 +157,7 @@ body {
   color: var(--text);
   line-height: 1.6;
   min-height: 100vh;
+  transition: background-color var(--transition-base), color var(--transition-base);
 }
 
 #root {

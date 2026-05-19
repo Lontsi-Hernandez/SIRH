@@ -1,0 +1,113 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* ── Groupe de langues ─────────────────────────────────────────────────────── */
+.localeGroup {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: var(--surface0);
+  border-radius: var(--radius-full);
+  padding: 3px;
+}
+
+.localeBtn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--subtext0);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  letter-spacing: 0.03em;
+}
+
+.localeBtn:hover {
+  color: var(--text);
+  background: var(--surface1);
+}
+
+.localeBtnActive {
+  background: var(--primary);
+  color: #fff;
+}
+
+.localeBtnActive:hover {
+  background: var(--primary-light);
+  color: #fff;
+}
+
+.flag {
+  font-size: 0.875rem;
+  line-height: 1;
+}
+
+.langCode {
+  font-size: 0.6875rem;
+}
+
+/* ── Bascule thème ─────────────────────────────────────────────────────────── */
+.themeToggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 56px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--surface0);
+  border: 1px solid var(--surface1);
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  transition: border-color var(--transition-fast);
+}
+
+.themeToggle:hover {
+  border-color: var(--primary);
+}
+
+.themeIcon {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+  z-index: 2;
+  color: var(--subtext1);
+}
+
+/* Icône de gauche (soleil) */
+.themeToggle .themeIcon:first-of-type {
+  left: 7px;
+}
+
+/* Icône de droite (lune) */
+.themeToggle .themeIcon:last-of-type {
+  right: 7px;
+}
+
+.themeIconVisible {
+  opacity: 1;
+}
+
+.themeIndicator {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  left: 2px;
+  top: 2px;
+  transition: transform var(--transition-base);
+  z-index: 1;
+}
