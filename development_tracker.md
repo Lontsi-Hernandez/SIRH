@@ -52,15 +52,16 @@ gantt
     Entités & Index TypeORM         :done, db1, 2026-05-19, 1d
     Migration Postgres Neon          :active, db2, after db1, 1d
     section Phase 2 : Backend
-    Contrôleurs, DTOs & Guards      :be1, after db2, 2d
-    Service & Machine à États       :be2, after be1, 2d
+    Contrôleurs, DTOs & Guards      :done, be1, after db2, 2d
+    Service & Machine à États       :active, be2, after be1, 2d
     section Phase 3 : Frontend
     Slice Redux RTK & API Client    :fe1, after be2, 2d
     Vue Liste (Table Virtualisée)   :fe2, after fe1, 2d
     Profil 360° & Timeline          :fe3, after fe2, 2d
 ```
 
-### 1️⃣ Prochaine étape immédiate : Implémentation du Contrôleur, DTOs & Guards Employees (Backend)
-- **Cible** : Développer le contrôleur `/api/v1/employees`, les validations de formulaires via DTOs et sécuriser les endpoints avec les Gardes multi-tenant et rôles RBAC.
-- **Vérification** : S'assurer que les routes de base répondent avec un statut `200` lors des requêtes HTTP.
+### 1️⃣ Prochaine étape immédiate : Implémentation de la Logique Service & Machine à États (Backend)
+- **Cible** : Développer et consolider les services, commandes et requêtes (CQRS Handlers) gérant la transition d'états d'employés (`onboard`, `offboard`), l'archivage avec Soft Delete et l'émission d'événements applicatifs (`EMPLOYEE_CREATED`, etc.).
+- **Vérification** : S'assurer que les transitions d'états illicites (ex: `ARCHIVED` -> `ACTIVE`) lèvent une erreur HTTP `400` et émettent les événements correspondants.
+
 

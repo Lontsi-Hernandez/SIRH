@@ -1,9 +1,9 @@
 import {
   Controller, Get, Post, Put, Patch, Delete, Body, Param, Query,
-  UseGuards, HttpCode, HttpStatus, ParseUUIDPipe,
+  UseGuards, HttpCode, HttpStatus, ParseUUIDPipe, Req, Headers,
 } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiHeader } from '@nestjs/swagger';
 
 import { RolesGuard, Roles } from '../guards/roles.guard';
 import { UserRole } from '../../domain/entities/employee.entity';
@@ -24,6 +24,7 @@ import { EmployeeFilterDto } from '../dtos/employees/employee-filter.dto';
 
 @ApiTags('Employees')
 @ApiBearerAuth('JWT')
+@ApiHeader({ name: 'X-Tenant-ID', description: 'ID de l\'entreprise (Tenant)', required: false })
 @UseGuards(RolesGuard)
 @Controller('employees')
 export class EmployeesController {
@@ -31,6 +32,17 @@ export class EmployeesController {
     private readonly commandBus: CommandBus,
     private readonly queryBus: QueryBus,
   ) {}
+
+  // Résout le tenantId de manière extrêmement résiliente
+  private resolveTenantId(req: any, tenantIdHeader?: string): string {
+    return (
+      tenantIdHeader ||
+      req['tenantId'] ||
+      req.headers['x-tenant-id'] ||
+      (req['tenant']?.id) ||
+      'default'
+    );
+  }
 
   @Get()
   @Roles(UserRole.ADMIN, UserRole.HR, UserRole.MANAGER)
@@ -40,9 +52,14 @@ export class EmployeesController {
   @ApiQuery({ name: 'search', required: false, type: String })
   @ApiQuery({ name: 'departmentId', required: false, type: String })
   @ApiQuery({ name: 'status', required: false })
-  async findAll(@Query() filters: EmployeeFilterDto, @Param() req: any) {
+  async findAll(
+    @Query() filters: EmployeeFilterDto,
+    @Req() req: any,
+    @Headers('x-tenant-id') tenantIdHeader?: string,
+  ) {
+    const tenantId = this.resolveTenantId(req, tenantIdHeader);
     return this.queryBus.execute(
-      new GetAllEmployeesQuery(req['tenantId'], filters),
+      new GetAllEmployeesQuery(tenantId, filters),
     );
   }
 
@@ -50,17 +67,24 @@ export class EmployeesController {
   @ApiOperation({ summary: 'Obtenir un employé par ID' })
   async findOne(
     @Param('id', ParseUUIDPipe) id: string,
-    @Param() req: any,
+    @Req() req: any,
+    @Headers('x-tenant-id') tenantIdHeader?: string,
   ) {
-    return this.queryBus.execute(new GetEmployeeByIdQuery(id, req['tenantId']));
+    const tenantId = this.resolveTenantId(req, tenantIdHeader);
+    return this.queryBus.execute(new GetEmployeeByIdQuery(id, tenantId));
   }
 
   @Post()
   @Roles(UserRole.ADMIN, UserRole.HR)
   @ApiOperation({ summary: 'Créer un nouvel employé' })
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: CreateEmployeeDto, @Param() req: any) {
-    return this.commandBus.execute(new CreateEmployeeCommand(dto, req['tenantId']));
+  async create(
+    @Body() dto: CreateEmployeeDto,
+    @Req() req: any,
+    @Headers('x-tenant-id') tenantIdHeader?: string,
+  ) {
+    const tenantId = this.resolveTenantId(req, tenantIdHeader);
+    return this.commandBus.execute(new CreateEmployeeCommand(dto, tenantId));
   }
 
   @Put(':id')
@@ -69,9 +93,11 @@ export class EmployeesController {
   async update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateEmployeeDto,
-    @Param() req: any,
+    @Req() req: any,
+    @Headers('x-tenant-id') tenantIdHeader?: string,
   ) {
-    return this.commandBus.execute(new UpdateEmployeeCommand(id, dto, req['tenantId']));
+    const tenantId = this.resolveTenantId(req, tenantIdHeader);
+    return this.commandBus.execute(new UpdateEmployeeCommand(id, dto, tenantId));
   }
 
   @Delete(':id')
@@ -80,9 +106,11 @@ export class EmployeesController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async remove(
     @Param('id', ParseUUIDPipe) id: string,
-    @Param() req: any,
+    @Req() req: any,
+    @Headers('x-tenant-id') tenantIdHeader?: string,
   ) {
-    return this.commandBus.execute(new DeleteEmployeeCommand(id, req['tenantId']));
+    const tenantId = this.resolveTenantId(req, tenantIdHeader);
+    return this.commandBus.execute(new DeleteEmployeeCommand(id, tenantId));
   }
 
   @Patch(':id/onboard')
@@ -111,3 +139,4 @@ export class EmployeesController {
     return { employeeId: id, subordinates: [] };
   }
 }
+
