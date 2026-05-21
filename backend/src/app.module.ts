@@ -10,6 +10,7 @@ import { seedDatabase } from './persistence/seeds/database-seeder';
 // ── Feature Modules ────────────────────────────────────────────────────────
 import { AuthModule } from './web/modules/auth.module';
 import { EmployeesModule } from './web/modules/employees.module';
+import { BranchesModule } from './web/modules/branches.module';
 import { DepartmentsModule } from './web/modules/departments.module';
 import { ShiftsModule } from './web/modules/shifts.module';
 import { LeavesModule } from './web/modules/leaves.module';
@@ -20,7 +21,6 @@ import { TrainingModule } from './web/modules/training.module';
 import { NotificationsModule } from './web/modules/notifications.module';
 import { AnalyticsModule } from './web/modules/analytics.module';
 import { TenantsModule } from './web/modules/tenants.module';
-import { HousingModule } from './web/modules/housing.module';
 
 // ── Infrastructure ─────────────────────────────────────────────────────────
 import { WebSocketGatewayModule } from './infrastructure/realtime/websocket.module';
@@ -28,6 +28,7 @@ import { WebSocketGatewayModule } from './infrastructure/realtime/websocket.modu
 // ── Domain Entities ────────────────────────────────────────────────────────
 import { Employee } from './domain/entities/employee.entity';
 import { Department } from './domain/entities/department.entity';
+import { Branch } from './domain/entities/branch.entity';
 import { Position } from './domain/entities/position.entity';
 import { Shift } from './domain/entities/shift.entity';
 import { Leave } from './domain/entities/leave.entity';
@@ -46,7 +47,7 @@ import { Housing, HousingAssignment } from './domain/entities/housing.entity';
     // ── Configuration ──────────────────────────────────────────────────────
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env'],
+      envFilePath: ['../.env.local', '../.env', '.env.local', '.env'],
     }),
 
     // ── Base de données TypeORM ────────────────────────────────────────────
@@ -60,6 +61,7 @@ import { Housing, HousingAssignment } from './domain/entities/housing.entity';
         password: config.get('DB_PASSWORD', 'hrms_password'),
         database: config.get('DB_NAME', 'hrms_db'),
         entities: [
+          Branch,
           Employee,
           Department,
           Position,
@@ -127,9 +129,9 @@ import { Housing, HousingAssignment } from './domain/entities/housing.entity';
 
     // ── Modules fonctionnels ───────────────────────────────────────────────
     TenantsModule,
-    HousingModule,
     AuthModule,
     EmployeesModule,
+    BranchesModule,
     DepartmentsModule,
     ShiftsModule,
     LeavesModule,

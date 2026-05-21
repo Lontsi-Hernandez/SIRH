@@ -33,6 +33,7 @@
     "docker:logs": "docker-compose logs -f",
     "db:migrate": "cd backend && npm run migration:run",
     "db:seed": "cd backend && npm run seed",
+    "db:clean": "cd backend && npm run db:clean",
     "db:reset": "docker-compose down -v && docker-compose up -d postgres && timeout 5 && npm run db:migrate && npm run db:seed"
   },
   "devDependencies": {

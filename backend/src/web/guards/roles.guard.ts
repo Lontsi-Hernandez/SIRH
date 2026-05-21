@@ -27,6 +27,8 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   private readonly roleHierarchy: Record<UserRole, number> = {
+    [UserRole.PLATFORM_ADMIN]: 6,
+    [UserRole.SUPER_ADMIN]: 5,
     [UserRole.ADMIN]: 4,
     [UserRole.HR]: 3,
     [UserRole.MANAGER]: 2,

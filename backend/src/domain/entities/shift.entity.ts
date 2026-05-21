@@ -6,6 +6,7 @@ import { Employee } from './employee.entity';
 import { Tenant } from './tenant.entity';
 
 export enum ShiftStatus {
+  DRAFT = 'DRAFT',
   SCHEDULED = 'SCHEDULED',
   IN_PROGRESS = 'IN_PROGRESS',
   COMPLETED = 'COMPLETED',
@@ -29,6 +30,12 @@ export class Shift {
 
   @Column({ name: 'actual_end_time', type: 'timestamptz', nullable: true })
   actualEndTime?: Date;
+
+  @Column({ name: 'break_start_time', type: 'timestamptz', nullable: true })
+  breakStartTime?: Date;
+
+  @Column({ name: 'break_end_time', type: 'timestamptz', nullable: true })
+  breakEndTime?: Date;
 
   @Column({ type: 'enum', enum: ShiftStatus, default: ShiftStatus.SCHEDULED })
   status: ShiftStatus;

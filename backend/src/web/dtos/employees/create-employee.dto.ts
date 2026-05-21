@@ -44,6 +44,11 @@ export class CreateEmployeeDto {
   @IsUUID()
   managerId?: string;
 
+  @ApiPropertyOptional({ description: 'UUID de la succursale' })
+  @IsOptional()
+  @IsUUID()
+  branchId?: string;
+
   @ApiPropertyOptional({ example: 22.50 })
   @IsOptional()
   @IsNumber()
@@ -55,6 +60,10 @@ export class CreateEmployeeDto {
   @IsNumber()
   @Min(0)
   annualSalary?: number;
+
+  @ApiPropertyOptional({ example: {}, description: 'Attributs personnalisés dynamiques' })
+  @IsOptional()
+  customAttributes?: Record<string, any>;
 }
 
 export class UpdateEmployeeDto {
@@ -105,6 +114,11 @@ export class UpdateEmployeeDto {
 
   @ApiPropertyOptional()
   @IsOptional()
+  @IsUUID()
+  branchId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
   @IsNumber()
   hourlyRate?: number;
 
@@ -112,6 +126,10 @@ export class UpdateEmployeeDto {
   @IsOptional()
   @IsNumber()
   annualSalary?: number;
+
+  @ApiPropertyOptional({ example: {}, description: 'Attributs personnalisés dynamiques' })
+  @IsOptional()
+  customAttributes?: Record<string, any>;
 }
 
 export class EmployeeFilterDto {
@@ -135,6 +153,11 @@ export class EmployeeFilterDto {
   @IsOptional()
   @IsUUID()
   departmentId?: string;
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  @IsUUID()
+  branchId?: string;
 
   @ApiPropertyOptional({ enum: EmployeeStatus })
   @IsOptional()

@@ -58,17 +58,28 @@ export class TenantMiddleware implements NestMiddleware {
 
     // Fallback développement
     else if (process.env.NODE_ENV === 'development') {
-      tenantId = process.env.DEFAULT_TENANT_ID || 'default';
+      tenantId = process.env.DEFAULT_TENANT_ID || 'quebec-inc';
     }
 
     if (!tenantId) {
       throw new BadRequestException('X-Tenant-ID header is required');
     }
 
-    // Résolution du tenant
-    const tenant = await this.tenantRepository.findOne({
-      where: { id: tenantId, isActive: true },
+    // Résolution du tenant (par ID ou par son Slug/code entreprise)
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(tenantId);
+    let tenant = await this.tenantRepository.findOne({
+      where: isUuid
+        ? { id: tenantId, isActive: true }
+        : { slug: tenantId, isActive: true },
     });
+
+    // Fallback résilient en développement : récupérer le tout premier tenant si aucun n'est trouvé
+    if (!tenant && process.env.NODE_ENV === 'development') {
+      tenant = await this.tenantRepository.findOne({ where: { isActive: true } });
+      if (tenant) {
+        this.logger.warn(`Tenant "${tenantId}" non trouvé. Fallback sur le premier tenant actif : "${tenant.name}"`);
+      }
+    }
 
     if (!tenant) {
       throw new BadRequestException(`Tenant "${tenantId}" not found or inactive`);

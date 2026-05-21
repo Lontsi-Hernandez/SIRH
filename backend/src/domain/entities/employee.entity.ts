@@ -15,6 +15,7 @@ import { Position } from './position.entity';
 import { Shift } from './shift.entity';
 import { Leave } from './leave.entity';
 import { Tenant } from './tenant.entity';
+import { Branch } from './branch.entity';
 
 export enum EmployeeStatus {
   DRAFT = 'DRAFT',
@@ -25,6 +26,8 @@ export enum EmployeeStatus {
 }
 
 export enum UserRole {
+  PLATFORM_ADMIN = 'PLATFORM_ADMIN',
+  SUPER_ADMIN = 'SUPER_ADMIN',
   ADMIN = 'ADMIN',
   HR = 'HR',
   MANAGER = 'MANAGER',
@@ -119,12 +122,19 @@ export class Employee {
   customAttributes: Record<string, any>;
 
   // ── Relations ─────────────────────────────────────────────────────────────
-  @ManyToOne(() => Department, { nullable: true, eager: false })
+  @ManyToOne(() => Department, { nullable: true })
   @JoinColumn({ name: 'department_id' })
   department?: Department;
 
   @Column({ name: 'department_id', nullable: true })
   departmentId?: string;
+
+  @ManyToOne(() => Branch, { nullable: true })
+  @JoinColumn({ name: 'branch_id' })
+  branch?: Branch;
+
+  @Column({ name: 'branch_id', nullable: true })
+  branchId?: string;
 
   @ManyToOne(() => Position, { nullable: true, eager: false })
   @JoinColumn({ name: 'position_id' })

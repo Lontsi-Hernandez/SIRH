@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CqrsModule } from '@nestjs/cqrs';
 import { Employee } from '../../domain/entities/employee.entity';
 import { Tenant } from '../../domain/entities/tenant.entity';
+import { User } from '../../domain/entities/user.entity';
 import { EmployeesController } from '../controllers/employees.controller';
 
 // Commands
@@ -28,7 +29,7 @@ const QueryHandlers = [GetAllEmployeesHandler, GetEmployeeByIdHandler];
 @Module({
   imports: [
     CqrsModule,
-    TypeOrmModule.forFeature([Employee, Tenant]),
+    TypeOrmModule.forFeature([Employee, Tenant, User]),
   ],
   controllers: [EmployeesController],
   providers: [...CommandHandlers, ...QueryHandlers],

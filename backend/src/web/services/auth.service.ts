@@ -44,7 +44,7 @@ export class AuthService {
       // 2. Recherche de l'utilisateur dans PostgreSQL
       const user = await this.userRepository.findOne({
         where: { email: email.toLowerCase().trim(), tenantId: tenant.id },
-        relations: ['employee'],
+        relations: ['employee', 'employee.branch'],
       });
 
       if (!user || !user.isActive) {
@@ -107,6 +107,10 @@ export class AuthService {
           lastName: user.employee?.lastName || '',
           role: user.employee?.role || 'EMPLOYEE',
           tenantId: tenant.id, // Requis au format UUID par le middleware TenantMiddleware
+          tenantName: tenant.name,
+          tenantSlug: tenant.slug,
+          branchId: user.employee?.branchId || '',
+          branchName: user.employee?.branch?.name || '',
         },
       };
     } catch (error: any) {

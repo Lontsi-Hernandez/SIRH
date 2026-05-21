@@ -39,6 +39,14 @@ Ce document est le **compas officiel de développement** du SIRH. Il recense l'h
 ### 3. 📂 Structuration Documentaire & Spécifications `/07-features/`
 - [x] **Module Authentification (Auth)** : Création de **11 fichiers d'architecture** sous `/07-features/auth/` détaillant la sécurité, le schéma DB, les tests Jest/E2E, les interfaces UI, et la cartographie des 18 solutions concurrentielles.
 - [x] **Module Employés (Employees)** : Création de **13 fichiers de spécification** sous `/07-features/employees/` modélisant l'intégralité du futur Employee Hub (schéma DB Postgres, index, machine à états Mermaid de cycle de vie, permissions RBAC, etc.).
+- [x] **Module Horaires (Shifts)** : Création de **13 fichiers d'architecture et spécifications** sous `/07-features/shifts/` modélisant les pointages géolocalisés, le moteur d'heures supplémentaires de conformité québécoise, les index PostgreSQL, la machine à états de planification, et le plan de tests Jest/E2E.
+
+### 4. 🗓️ Implémentation Complète du Module Horaires & Présences (Shifts)
+- [x] **Base de Données & Modélisation (ORM)** : Intégration de l'entité `Shift` dans NestJS avec support multi-tenant strict (`tenantId`), indexation optimisée et relation directe avec `Employee`.
+- [x] **Moteur Métier Backend (NestJS)** : Développement du `ShiftsService` avec calcul de distance géodésique (Formule de Haversine) pour interdire le pointage à plus de 200m du lieu de travail. Implémentation du moteur d'heures supplémentaires (seuil de 40h/semaine majoré à 1.5x selon la loi du Québec).
+- [x] **Endpoints API & Contrôleur** : Création du `ShiftsController` sécurisé par guards RBAC, gérant la planification, les réassignations, ainsi que le pointage d'arrivée (`clock-in`) et de départ (`clock-out`).
+- [x] **Slice Redux RTK & API Client** : Développement du slice Redux `shiftSlice` et mise à jour de `api.service.ts` pour gérer l'état en temps réel et les requêtes asynchrones.
+- [x] **Interface Utilisateur Premium (React)** : Création de la page `ShiftsPage.tsx` avec une grille de calendrier hebdomadaire drag-and-drop interactive pour les gestionnaires, et un widget de pointage avec simulateur GPS pour les employés sur le terrain.
 
 ---
 
@@ -50,22 +58,15 @@ gantt
     dateFormat  YYYY-MM-DD
     section Phase 1 : Database
     Entités & Index TypeORM         :done, db1, 2026-05-19, 1d
-    Migration Postgres Neon          :active, db2, after db1, 1d
+    Migration Postgres Neon          :done, db2, after db1, 1d
     section Phase 2 : Backend
     Contrôleurs, DTOs & Guards      :done, be1, after db2, 2d
     Service & Machine à États       :done, be2, after be1, 2d
     section Phase 3 : Frontend
     Slice Redux RTK & API Client    :done, fe1, after be2, 2d
-    Vue Liste (Table Virtualisée)   :done, fe2, after fe1, 2d
-    Profil 360° & Timeline          :done, fe3, after fe2, 2d
+    Grille & Pointage Interactif    :done, fe2, after fe1, 2d
 ```
 
-### 1️⃣ Prochaine étape immédiate : Démo & Showcase Complet du Module Employees
-- **Cible** : Effectuer une démonstration de bout en bout du module avec création de brouillons (`DRAFT`), validation (`ACTIVE`), suspension temporaire (`SUSPENDED`), procédure de départ avec motif (`TERMINATED`), et archivage RGPD (`ARCHIVED`).
-- **Vérification** : Valider l'intégrité globale et la réactivité du système pour le client final.
-
-
-
-
-
-
+### 1️⃣ Prochaine étape immédiate : Déploiement et Phase de Tests E2E du Module Shifts
+- **Cible** : Lancer des tests E2E pour valider la tolérance aux pannes du pointage GPS et la validation des conflits de plannings.
+- **Suivi** : Intégrer les notifications temps réel via WebSocket pour prévenir les gestionnaires en cas de pointage en retard ou hors-zone.

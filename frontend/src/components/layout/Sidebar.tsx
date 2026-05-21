@@ -7,16 +7,18 @@ import styles from './Sidebar.module.css';
 
 const navItems = [
   { path: '/dashboard', icon: '📊', key: 'nav.dashboard' },
-  { path: '/employees', icon: '👥', key: 'nav.employees' },
+  { path: '/tenants', icon: '🌐', key: 'nav.tenants', roles: ['PLATFORM_ADMIN'] },
+  { path: '/branches', icon: '📍', key: 'nav.branches', roles: ['SUPER_ADMIN'] },
+  { path: '/employees', icon: '👥', key: 'nav.employees', roles: ['ADMIN', 'HR', 'MANAGER'] },
+  { path: '/departments', icon: '🏢', key: 'nav.departments', roles: ['ADMIN', 'HR'] },
   { path: '/shifts', icon: '🗓️', key: 'nav.shifts' },
   { path: '/leaves', icon: '🏖️', key: 'nav.leaves' },
-  { path: '/payroll', icon: '💰', key: 'nav.payroll' },
-  { path: '/recruitment', icon: '🔍', key: 'nav.recruitment' },
+  { path: '/payroll', icon: '💰', key: 'nav.payroll', roles: ['ADMIN', 'HR'] },
+  { path: '/recruitment', icon: '🔍', key: 'nav.recruitment', roles: ['ADMIN', 'HR', 'MANAGER'] },
   { path: '/performance', icon: '⭐', key: 'nav.performance' },
   { path: '/training', icon: '📚', key: 'nav.training' },
   { path: '/messages', icon: '💬', key: 'nav.messages' },
-  { path: '/analytics', icon: '📈', key: 'nav.analytics' },
-  { path: '/housings', icon: '🏠', key: 'nav.housings' },
+  { path: '/analytics', icon: '📈', key: 'nav.analytics', roles: ['ADMIN', 'HR', 'MANAGER'] },
 ];
 
 export default function Sidebar() {
@@ -33,27 +35,51 @@ export default function Sidebar() {
 
   return (
     <aside className={`${styles.sidebar} ${sidebarOpen ? '' : styles.collapsed}`}>
-      {/* Logo */}
+      {/* Logo & Tenant Info */}
       <div className={styles.logo}>
         <div className={styles.logoIcon}>HR</div>
-        {sidebarOpen && <span className={styles.logoText}>HRMS</span>}
+        {sidebarOpen && (
+          <div style={{ display: 'flex', flexDirection: 'column', marginLeft: '0.5rem', textAlign: 'left', lineHeight: '1.2' }}>
+            <span className={styles.logoText}>HRMS</span>
+            {user?.tenantName && (
+              <span style={{ fontSize: '0.7rem', color: 'var(--peach)', fontWeight: 600, marginTop: '2px' }} title={user.tenantName}>
+                🏢 {user.tenantName.length > 20 ? user.tenantName.substring(0, 18) + '...' : user.tenantName}
+              </span>
+            )}
+            {user?.branchName && (
+              <span style={{ fontSize: '0.65rem', color: 'var(--blue)', fontWeight: 500, marginTop: '1px' }} title={user.branchName}>
+                📍 {user.branchName}
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Navigation */}
       <nav className={styles.nav}>
-        {navItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.active : ''}`
+        {navItems
+          .filter((item) => {
+            if (user?.role === 'PLATFORM_ADMIN') {
+              return item.path === '/dashboard' || item.path === '/tenants';
             }
-            title={!sidebarOpen ? t(item.key) : undefined}
-          >
-            <span className={styles.navIcon}>{item.icon}</span>
-            {sidebarOpen && <span className={styles.navLabel}>{t(item.key)}</span>}
-          </NavLink>
-        ))}
+            if (item.path === '/tenants') {
+              return false;
+            }
+            return !item.roles || user?.role === 'SUPER_ADMIN' || (user?.role && item.roles.includes(user.role));
+          })
+          .map((item) => (
+            <NavLink
+              key={item.path}
+              to={item.path}
+              className={({ isActive }) =>
+                `${styles.navItem} ${isActive ? styles.active : ''}`
+              }
+              title={!sidebarOpen ? (item.key === 'nav.tenants' ? 'Entreprises (Tenants)' : t(item.key)) : undefined}
+            >
+              <span className={styles.navIcon}>{item.icon}</span>
+              {sidebarOpen && <span className={styles.navLabel}>{item.key === 'nav.tenants' ? 'Entreprises' : t(item.key)}</span>}
+            </NavLink>
+          ))}
       </nav>
 
       {/* Footer */}

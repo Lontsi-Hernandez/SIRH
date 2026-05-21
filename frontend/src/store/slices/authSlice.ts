@@ -6,8 +6,12 @@ export interface AuthUser {
   email: string;
   firstName: string;
   lastName: string;
-  role: 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
   tenantId: string;
+  tenantName?: string;
+  tenantSlug?: string;
+  branchId?: string;
+  branchName?: string;
   avatarUrl?: string;
 }
 

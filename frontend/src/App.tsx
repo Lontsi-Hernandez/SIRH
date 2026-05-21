@@ -5,7 +5,10 @@ import LoginPage from './pages/auth/LoginPage';
 
 // Pages
 import DashboardPage from './pages/Dashboard';
+import TenantsPage from './pages/tenants/TenantsPage';
 import EmployeesPage from './pages/employees/EmployeesPage';
+import BranchesPage from './pages/branches/BranchesPage';
+import DepartmentsPage from './pages/departments/DepartmentsPage';
 import ShiftsPage from './pages/shifts/ShiftsPage';
 import LeavesPage from './pages/leaves/LeavesPage';
 import PayrollPage from './pages/payroll/PayrollPage';
@@ -16,7 +19,6 @@ import MessagesPage from './pages/messages/MessagesPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import SettingsPage from './pages/settings/SettingsPage';
 import ProfilePage from './pages/profile/ProfilePage';
-import HousingsPage from './pages/housing/HousingsPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -25,6 +27,9 @@ function PrivateRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { user } = useAppSelector((state) => state.auth);
+  const userRole = user?.role;
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage />} />
@@ -39,16 +44,81 @@ export default function App() {
       >
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<DashboardPage />} />
-        <Route path="employees" element={<EmployeesPage />} />
+        <Route
+          path="tenants"
+          element={
+            userRole === 'PLATFORM_ADMIN' ? (
+              <TenantsPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+        <Route
+          path="branches"
+          element={
+            userRole === 'SUPER_ADMIN' ? (
+              <BranchesPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+        <Route
+          path="employees"
+          element={
+            userRole && (userRole === 'SUPER_ADMIN' || ['ADMIN', 'HR', 'MANAGER'].includes(userRole)) ? (
+              <EmployeesPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+        <Route
+          path="departments"
+          element={
+            userRole && (userRole === 'SUPER_ADMIN' || ['ADMIN', 'HR'].includes(userRole)) ? (
+              <DepartmentsPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
         <Route path="shifts" element={<ShiftsPage />} />
         <Route path="leaves" element={<LeavesPage />} />
-        <Route path="payroll" element={<PayrollPage />} />
-        <Route path="recruitment" element={<RecruitmentPage />} />
+        <Route
+          path="payroll"
+          element={
+            userRole && (userRole === 'SUPER_ADMIN' || ['ADMIN', 'HR'].includes(userRole)) ? (
+              <PayrollPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+        <Route
+          path="recruitment"
+          element={
+            userRole && (userRole === 'SUPER_ADMIN' || ['ADMIN', 'HR', 'MANAGER'].includes(userRole)) ? (
+              <RecruitmentPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
         <Route path="performance" element={<PerformancePage />} />
         <Route path="training" element={<TrainingPage />} />
         <Route path="messages" element={<MessagesPage />} />
-        <Route path="analytics" element={<AnalyticsPage />} />
-        <Route path="housings" element={<HousingsPage />} />
+        <Route
+          path="analytics"
+          element={
+            userRole && (userRole === 'SUPER_ADMIN' || ['ADMIN', 'HR', 'MANAGER'].includes(userRole)) ? (
+              <AnalyticsPage />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
         <Route path="settings" element={<SettingsPage />} />
         <Route path="profile" element={<ProfilePage />} />
       </Route>

@@ -5,6 +5,8 @@ import shiftReducer from './slices/shiftSlice';
 import leaveReducer from './slices/leaveSlice';
 import notificationReducer from './slices/notificationSlice';
 import uiReducer from './slices/uiSlice';
+import departmentReducer from './slices/departmentSlice';
+import branchReducer from './slices/branchSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +16,8 @@ export const store = configureStore({
     leaves: leaveReducer,
     notifications: notificationReducer,
     ui: uiReducer,
+    departments: departmentReducer,
+    branches: branchReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

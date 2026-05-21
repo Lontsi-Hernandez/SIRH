@@ -22,9 +22,14 @@ import {
   Save,
   Clock,
   Sparkles,
-  Info
+  Info,
+  Upload,
+  Download,
+  HelpCircle
 } from 'lucide-react';
+import { apiClient } from '../../services/api.service';
 import { RootState, AppDispatch } from '../../store';
+import { useApp } from '../../context/AppContext';
 import {
   fetchEmployees,
   createEmployee,
@@ -38,10 +43,13 @@ import {
 } from '../../store/slices/employeeSlice';
 
 export default function EmployeesPage() {
+  const { t } = useApp();
   const dispatch = useDispatch<AppDispatch>();
   const { list, selected, total, totalPages, currentPage, isLoading, error } = useSelector(
     (state: RootState) => state.employees
   );
+  const { user } = useSelector((state: RootState) => state.auth);
+  const currentUserRole = user?.role;
 
   // Filtres
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,6 +61,246 @@ export default function EmployeesPage() {
   const [showAddDrawer, setShowAddDrawer] = useState(false);
   const [showOffboardModal, setShowOffboardModal] = useState(false);
   const [offboardTarget, setOffboardTarget] = useState<Employee | null>(null);
+
+  // Import Modal State
+  const [showImportModal, setShowImportModal] = useState(false);
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
+  const [csvRows, setCsvRows] = useState<string[][]>([]);
+  const [importMappings, setImportMappings] = useState<Record<string, string>>({});
+  const [isImporting, setIsImporting] = useState(false);
+
+  // CSV Parser
+  const parseCSV = (text: string): string[][] => {
+    const lines = [];
+    let row = [];
+    let cell = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+      const char = text[i];
+      const nextChar = text[i + 1];
+
+      if (char === '"') {
+        if (inQuotes && nextChar === '"') {
+          cell += '"';
+          i++;
+        } else {
+          inQuotes = !inQuotes;
+        }
+      } else if (char === ',' && !inQuotes) {
+        row.push(cell.trim());
+        cell = '';
+      } else if ((char === '\r' || char === '\n') && !inQuotes) {
+        if (char === '\r' && nextChar === '\n') {
+          i++;
+        }
+        row.push(cell.trim());
+        lines.push(row);
+        row = [];
+        cell = '';
+      } else {
+        cell += char;
+      }
+    }
+    if (cell || row.length > 0) {
+      row.push(cell.trim());
+      lines.push(row);
+    }
+    return lines.filter(r => r.length > 0 && r.some(c => c !== ''));
+  };
+
+  const guessMapping = (targetField: string, headers: string[]): string => {
+    const synonyms: Record<string, string[]> = {
+      firstName: ['prenom', 'prénom', 'firstname', 'first_name', 'fname', 'first', 'givenname', 'given', 'prenom1', 'prenom2'],
+      lastName: ['nom', 'lastname', 'last_name', 'lname', 'last', 'familyname', 'family', 'nomdefamille', 'surname', 'nom1', 'nom2'],
+      email: ['email', 'courriel', 'mail', 'e-mail', 'adressemail', 'address'],
+      phoneNumber: ['phone', 'telephone', 'téléphone', 'tel', 'cell', 'mobile', 'portable', 'phone_number', 'phonenumber'],
+      role: ['role', 'rôle', 'poste', 'position', 'statutsystème', 'rôlesystème'],
+      hireDate: ['hiredate', 'hire_date', 'date', 'embauche', 'dateembauche', 'date_embauche', 'datesign', 'sign', 'date_d_embauche'],
+      annualSalary: ['salary', 'salaire', 'annual_salary', 'annualsalary', 'remuneration', 'rémunération', 'paye', 'salaire_annuel', 'salaryannual'],
+      hourlyRate: ['hourlyrate', 'hourly_rate', 'taux', 'tauxhoraire', 'rate', 'horaire', 'taux_horaire']
+    };
+
+    const targets = synonyms[targetField] || [];
+    
+    for (const header of headers) {
+      const cleanHeader = header.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, '');
+      for (const target of targets) {
+        if (cleanHeader.includes(target) || target.includes(cleanHeader)) {
+          return header;
+        }
+      }
+    }
+    return '';
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const text = event.target?.result as string;
+      parseUploadedCSV(text);
+    };
+    reader.readAsText(file);
+  };
+
+  const parseUploadedCSV = (text: string) => {
+    try {
+      const parsed = parseCSV(text);
+      if (parsed.length < 2) {
+        toast.error("Le fichier CSV doit contenir au moins une ligne d'en-tête et une ligne de données.");
+        return;
+      }
+
+      const headers = parsed[0];
+      const rows = parsed.slice(1);
+
+      setCsvHeaders(headers);
+      setCsvRows(rows);
+
+      const targetFields = [
+        'firstName',
+        'lastName',
+        'email',
+        'phoneNumber',
+        'role',
+        'hireDate',
+        'annualSalary',
+        'hourlyRate'
+      ];
+
+      const initialMappings: Record<string, string> = {};
+      targetFields.forEach(field => {
+        initialMappings[field] = guessMapping(field, headers);
+      });
+
+      setImportMappings(initialMappings);
+      toast.success("Fichier CSV chargé avec succès ! 📂");
+    } catch (e) {
+      toast.error("Erreur lors de la lecture du fichier CSV.");
+    }
+  };
+
+  const handleLaunchImport = async () => {
+    if (!importMappings.firstName || !importMappings.lastName || !importMappings.email) {
+      toast.error("Veuillez associer les colonnes obligatoires : Prénom, Nom de famille et Email.");
+      return;
+    }
+
+    setIsImporting(true);
+    const loadingToast = toast.loading("Importation des collaborateurs en cours...");
+
+    const employeesToImport = csvRows.map(row => {
+      const getVal = (field: string) => {
+        const header = importMappings[field];
+        if (!header) return undefined;
+        const idx = csvHeaders.indexOf(header);
+        return idx !== -1 ? row[idx] : undefined;
+      };
+
+      const firstName = getVal('firstName') || '';
+      const lastName = getVal('lastName') || '';
+      const email = getVal('email') || '';
+      const phoneNumber = getVal('phoneNumber');
+      
+      const rawRole = getVal('role');
+      let role = 'EMPLOYEE';
+      if (rawRole) {
+        const cleanRole = rawRole.toUpperCase().trim();
+        if (cleanRole.includes('ADMIN')) role = 'ADMIN';
+        else if (cleanRole.includes('RH') || cleanRole.includes('HR')) role = 'HR';
+        else if (cleanRole.includes('GERANT') || cleanRole.includes('MANAGE')) role = 'MANAGER';
+      }
+
+      const rawSalary = getVal('annualSalary');
+      const annualSalary = rawSalary ? Number(rawSalary.replace(/[^0-9.]/g, '')) : 50000;
+
+      const rawRate = getVal('hourlyRate');
+      const hourlyRate = rawRate ? Number(rawRate.replace(/[^0-9.]/g, '')) : 25;
+
+      const rawDate = getVal('hireDate');
+      const hireDate = rawDate ? new Date(rawDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0];
+
+      return {
+        firstName,
+        lastName,
+        email,
+        phoneNumber,
+        role,
+        annualSalary,
+        hourlyRate,
+        hireDate
+      };
+    });
+
+    try {
+      const res = await apiClient.post('/employees/bulk', { employees: employeesToImport });
+      const { imported, errors } = res.data;
+      
+      toast.success(`${imported} collaborateur(s) importé(s) avec succès ! 🎉`);
+      
+      if (errors && errors.length > 0) {
+        console.warn("Erreurs d'importation:", errors);
+        toast.error(`${errors.length} ligne(s) ont échoué lors de l'import (voir console).`);
+      }
+
+      setShowImportModal(false);
+      setCsvHeaders([]);
+      setCsvRows([]);
+      setImportMappings({});
+      dispatch(fetchEmployees({ page }));
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Erreur lors de l'importation.");
+    } finally {
+      toast.dismiss(loadingToast);
+      setIsImporting(false);
+    }
+  };
+
+  const handleExportCSV = () => {
+    if (list.length === 0) {
+      toast.error("Aucune donnée à exporter.");
+      return;
+    }
+
+    const headers = [
+      'employeeNumber',
+      'firstName',
+      'lastName',
+      'email',
+      'phoneNumber',
+      'role',
+      'status',
+      'hireDate',
+      'annualSalary',
+      'hourlyRate'
+    ];
+
+    const csvRows = [];
+    csvRows.push(headers.join(','));
+
+    for (const emp of list) {
+      const values = headers.map(header => {
+        const val = emp[header as keyof Employee] ?? '';
+        const escaped = String(val).replace(/"/g, '""');
+        return `"${escaped}"`;
+      });
+      csvRows.push(values.join(','));
+    }
+
+    const csvContent = "\ufeff" + csvRows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `employees_export_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Données exportées au format CSV avec succès ! 📥");
+  };
 
   // Form States
   const [newEmployee, setNewEmployee] = useState({
@@ -291,8 +539,8 @@ export default function EmployeesPage() {
     // 1. Brouillon
     if (emp.createdAt) {
       events.push({
-        title: 'Création de la fiche',
-        description: 'Fiche collaborateur initialisée en statut DRAFT (Brouillon RH).',
+        title: t('employees.sidebarTimelineCreated'),
+        description: t('employees.sidebarTimelineCreatedDesc'),
         date: new Date(emp.createdAt).toLocaleDateString('fr-CA'),
         icon: <Clock size={12} />,
         color: '#f59e0b'
@@ -302,8 +550,8 @@ export default function EmployeesPage() {
     // 2. Onboarding (Entrée en service)
     if (emp.status !== 'DRAFT') {
       events.push({
-        title: 'Validation & Onboarding',
-        description: 'Contrat validé et actif. Droits applicatifs ouverts.',
+        title: t('employees.sidebarTimelineOnboard'),
+        description: t('employees.sidebarTimelineOnboardDesc'),
         date: new Date(emp.hireDate || emp.createdAt).toLocaleDateString('fr-CA'),
         icon: <UserCheck size={12} />,
         color: '#10b981'
@@ -313,8 +561,8 @@ export default function EmployeesPage() {
     // 3. Pause (Suspension temporaire)
     if (emp.status === 'SUSPENDED') {
       events.push({
-        title: 'Suspension de contrat',
-        description: 'Contrat temporairement suspendu (Absence, congé sabbatique).',
+        title: t('employees.sidebarTimelineSuspended'),
+        description: t('employees.sidebarTimelineSuspendedDesc'),
         date: new Date().toLocaleDateString('fr-CA'),
         icon: <Pause size={12} />,
         color: '#f97316'
@@ -324,8 +572,8 @@ export default function EmployeesPage() {
     // 4. Fin de contrat (Offboarding)
     if (emp.status === 'TERMINATED' || emp.status === 'ARCHIVED') {
       events.push({
-        title: 'Rupture de contrat (Offboarding)',
-        description: `Procédure de départ finalisée. Motif : ${emp.customAttributes?.offboardingReason || 'Départ standard/Autre'}`,
+        title: t('employees.sidebarTimelineTerminated'),
+        description: t('employees.sidebarTimelineTerminatedDesc', { reason: emp.customAttributes?.offboardingReason || 'Départ standard/Autre' }),
         date: new Date().toLocaleDateString('fr-CA'),
         icon: <UserX size={12} />,
         color: '#ef4444'
@@ -335,8 +583,8 @@ export default function EmployeesPage() {
     // 5. Archivage (Soft delete)
     if (emp.status === 'ARCHIVED') {
       events.push({
-        title: 'Archivage RGPD',
-        description: 'Dossier archivé et sécurisé. Données masquées des listes actives.',
+        title: t('employees.sidebarTimelineArchived'),
+        description: t('employees.sidebarTimelineArchivedDesc'),
         date: new Date().toLocaleDateString('fr-CA'),
         icon: <Archive size={12} />,
         color: '#64748b'
@@ -351,13 +599,21 @@ export default function EmployeesPage() {
       {/* Page Header */}
       <div className="page-header">
         <div>
-          <h1>👥 Employee Hub</h1>
-          <p className="text-muted">Gerez le cycle de vie, les statuts contractuels, et la traçabilité des profils collaborateurs.</p>
+          <h1>{t('employees.hubTitle')}</h1>
+          <p className="text-muted">{t('employees.hubSubtitle')}</p>
         </div>
         <div className="flex gap-3">
+          <button className="btn btn-secondary" onClick={() => setShowImportModal(true)} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <Upload size={16} />
+            Importer
+          </button>
+          <button className="btn btn-secondary" onClick={handleExportCSV} style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <Download size={16} />
+            Exporter
+          </button>
           <button className="btn btn-primary" onClick={() => setShowAddDrawer(true)}>
             <Plus size={18} />
-            Créer un collaborateur
+            {t('employees.createEmployeeBtn')}
           </button>
         </div>
       </div>
@@ -366,38 +622,38 @@ export default function EmployeesPage() {
       <div className="grid-4 mb-4">
         <div className="kpi-card">
           <div className="flex justify-between items-center">
-            <span className="text-muted font-semibold">Total Employés</span>
+            <span className="text-muted font-semibold">{t('dashboard.totalEmployees')}</span>
             <div style={{ color: 'var(--blue)' }}><Users size={24} /></div>
           </div>
           <h2>{total}</h2>
-          <span className="text-xs text-muted">Profils enregistrés</span>
+          <span className="text-xs text-muted">{t('employees.profilesRegistered')}</span>
         </div>
 
         <div className="kpi-card text-success">
           <div className="flex justify-between items-center">
-            <span className="text-muted font-semibold">Effectifs Actifs</span>
+            <span className="text-muted font-semibold">{t('employees.activeStaff')}</span>
             <div style={{ color: 'var(--green)' }}><UserCheck size={24} /></div>
           </div>
           <h2>{list.filter(e => e.status === 'ACTIVE').length}</h2>
-          <span className="text-xs text-muted">Contrats actifs sur ce tenant</span>
+          <span className="text-xs text-muted">{t('employees.activeStaffSub')}</span>
         </div>
 
         <div className="kpi-card text-amber">
           <div className="flex justify-between items-center">
-            <span className="text-muted font-semibold">Fiches Brouillons</span>
+            <span className="text-muted font-semibold">{t('employees.draftProfiles')}</span>
             <div style={{ color: 'var(--yellow)' }}><Clock size={24} /></div>
           </div>
           <h2>{list.filter(e => e.status === 'DRAFT').length}</h2>
-          <span className="text-xs text-muted">Profils en attente d'onboarding</span>
+          <span className="text-xs text-muted">{t('employees.draftProfilesSub')}</span>
         </div>
 
         <div className="kpi-card">
           <div className="flex justify-between items-center">
-            <span className="text-muted font-semibold">Dossiers Archivés</span>
+            <span className="text-muted font-semibold">{t('employees.archivedProfiles')}</span>
             <div style={{ color: 'var(--mauve)' }}><Archive size={24} /></div>
           </div>
           <h2>{list.filter(e => e.status === 'ARCHIVED').length}</h2>
-          <span className="text-xs text-muted">Anciens contrats sécurisés</span>
+          <span className="text-xs text-muted">{t('employees.archivedProfilesSub')}</span>
         </div>
       </div>
 
@@ -409,7 +665,7 @@ export default function EmployeesPage() {
             type="text"
             className="input w-full"
             style={{ paddingLeft: '2.5rem' }}
-            placeholder="Rechercher par nom, matricule ou email..."
+            placeholder={t('employees.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -422,12 +678,12 @@ export default function EmployeesPage() {
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
-            <option value="">Tous les statuts</option>
-            <option value="DRAFT">Brouillon (DRAFT)</option>
-            <option value="ACTIVE">Actif (ACTIVE)</option>
-            <option value="SUSPENDED">Suspendu (SUSPENDED)</option>
-            <option value="TERMINATED">Terminé (TERMINATED)</option>
-            <option value="ARCHIVED">Archivé (ARCHIVED)</option>
+            <option value="">{t('employees.allStatuses')}</option>
+            <option value="DRAFT">{t('employees.statuses.DRAFT')}</option>
+            <option value="ACTIVE">{t('employees.statuses.ACTIVE')}</option>
+            <option value="SUSPENDED">{t('employees.statuses.SUSPENDED')}</option>
+            <option value="TERMINATED">{t('employees.statuses.TERMINATED')}</option>
+            <option value="ARCHIVED">{t('employees.statuses.ARCHIVED')}</option>
           </select>
 
           <select
@@ -435,11 +691,11 @@ export default function EmployeesPage() {
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
           >
-            <option value="">Tous les rôles</option>
-            <option value="ADMIN">Administrateur</option>
-            <option value="HR">Ressources Humaines</option>
-            <option value="MANAGER">Manager</option>
-            <option value="EMPLOYEE">Employé</option>
+            <option value="">{t('employees.allRoles')}</option>
+            <option value="ADMIN">{t('employees.roles.ADMIN')}</option>
+            <option value="HR">{t('employees.roles.HR')}</option>
+            <option value="MANAGER">{t('employees.roles.MANAGER')}</option>
+            <option value="EMPLOYEE">{t('employees.roles.EMPLOYEE')}</option>
           </select>
         </div>
       </div>
@@ -468,19 +724,18 @@ export default function EmployeesPage() {
           ) : list.length === 0 ? (
             <div className="p-8 text-center" style={{ color: 'var(--overlay0)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👥</div>
-              <h4>Aucun collaborateur trouvé</h4>
-              <p className="text-muted text-sm mt-1">Ajustez vos filtres ou créez une nouvelle fiche.</p>
+              <h4>{t('employees.noEmployees')}</h4>
             </div>
           ) : (
             <div className="table-wrapper">
               <table>
                 <thead>
                   <tr>
-                    <th>Employé</th>
-                    <th>Matricule</th>
-                    <th>Rôle</th>
-                    <th>Statut</th>
-                    <th>Actions Rapides</th>
+                    <th>{t('employees.columnEmployee')}</th>
+                    <th>{t('employees.columnId')}</th>
+                    <th>{t('employees.columnRole')}</th>
+                    <th>{t('employees.columnStatus')}</th>
+                    <th>{t('employees.columnActions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -522,12 +777,12 @@ export default function EmployeesPage() {
                       </td>
                       <td>
                         <span className={`badge ${getRoleBadgeClass(emp.role)}`}>
-                          {emp.role}
+                          {t(`employees.roles.${emp.role}`)}
                         </span>
                       </td>
                       <td>
                         <span className={`badge ${getStatusBadgeClass(emp.status)}`}>
-                          ● {emp.status}
+                          ● {t(`employees.statuses.${emp.status}`)}
                         </span>
                       </td>
                       <td onClick={(e) => e.stopPropagation()}>
@@ -539,7 +794,7 @@ export default function EmployeesPage() {
                               title="Valider et Onboarder"
                             >
                               <UserCheck size={12} />
-                              Onboard
+                              {t('employees.btnOnboard')}
                             </button>
                           )}
                           {emp.status === 'ACTIVE' && (
@@ -579,7 +834,7 @@ export default function EmployeesPage() {
                               title="Archiver le dossier"
                             >
                               <Archive size={12} />
-                              Archiver
+                              {t('employees.btnArchive')}
                             </button>
                           )}
                         </div>
@@ -594,7 +849,7 @@ export default function EmployeesPage() {
           {/* Pagination */}
           <div className="flex justify-between items-center p-4" style={{ borderTop: '1px solid var(--surface0)' }}>
             <span className="text-xs text-muted">
-              Page {currentPage} sur {totalPages || 1}
+              {t('employees.pageIndicator', { current: currentPage, total: totalPages || 1 })}
             </span>
             <div className="flex gap-2">
               <button
@@ -602,14 +857,14 @@ export default function EmployeesPage() {
                 disabled={currentPage <= 1}
                 onClick={() => setPage(prev => prev - 1)}
               >
-                Précédent
+                {t('employees.btnPrevious')}
               </button>
               <button
                 className="btn btn-secondary btn-sm"
                 disabled={currentPage >= totalPages}
                 onClick={() => setPage(prev => prev + 1)}
               >
-                Suivant
+                {t('employees.btnNext')}
               </button>
             </div>
           </div>
@@ -648,7 +903,7 @@ export default function EmployeesPage() {
                 {selected.firstName[0]}{selected.lastName[0]}
               </div>
               <div>
-                <span className="text-xs text-primary font-bold uppercase tracking-wider block">Fiche Collaborateur</span>
+                <span className="text-xs text-primary font-bold uppercase tracking-wider block">{t('employees.sidebarHeader')}</span>
                 <h3 className="font-bold text-lg leading-tight">{selected.firstName} {selected.lastName}</h3>
                 <span className="font-mono text-xs text-muted">{selected.employeeNumber}</span>
               </div>
@@ -656,7 +911,7 @@ export default function EmployeesPage() {
 
             {/* FSM Status Ribbon */}
             <div className={`p-3 rounded-lg flex items-center justify-between ${getStatusBadgeClass(selected.status)}`} style={{ opacity: 0.9 }}>
-              <span className="text-xs font-semibold">Statut actuel : {selected.status}</span>
+              <span className="text-xs font-semibold">{t('common.status')} : {t(`employees.statuses.${selected.status}`)}</span>
               <div className="flex gap-2">
                 {selected.status === 'DRAFT' && (
                   <button className="btn btn-primary btn-xs bg-white text-primary font-bold" onClick={() => handleOnboard(selected.id)}>
@@ -675,29 +930,29 @@ export default function EmployeesPage() {
             <div className="flex flex-col gap-3" style={{ borderTop: '1px solid var(--surface0)', paddingTop: '1rem' }}>
               <h4 className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-2">
                 <FileText size={14} />
-                Informations administratives
+                {t('employees.sidebarAdminInfo')}
               </h4>
               <div className="grid-2 text-sm">
                 <div className="flex flex-col gap-1">
-                  <span className="text-xs text-muted">Email</span>
+                  <span className="text-xs text-muted">{t('common.email')}</span>
                   <span className="font-medium flex items-center gap-2">
                     <Mail size={14} className="text-primary" />
                     {selected.email}
                   </span>
                 </div>
                 <div className="flex flex-col gap-1">
-                  <span className="text-xs text-muted">Téléphone</span>
+                  <span className="text-xs text-muted">{t('employees.sidebarPhone')}</span>
                   <span className="font-medium flex items-center gap-2">
                     <Phone size={14} className="text-primary" />
-                    {selected.phoneNumber || 'Non renseigné'}
+                    {selected.phoneNumber || t('employees.sidebarPhoneEmpty')}
                   </span>
                 </div>
                 <div className="flex flex-col gap-1 mt-2">
-                  <span className="text-xs text-muted">Rôle système</span>
-                  <span className="font-bold text-primary">{selected.role}</span>
+                  <span className="text-xs text-muted">{t('employees.sidebarRole')}</span>
+                  <span className="font-bold text-primary">{t(`employees.roles.${selected.role}`)}</span>
                 </div>
                 <div className="flex flex-col gap-1 mt-2">
-                  <span className="text-xs text-muted">Date d'embauche</span>
+                  <span className="text-xs text-muted">{t('employees.hireDate')}</span>
                   <span className="font-medium flex items-center gap-2">
                     <Calendar size={14} className="text-primary" />
                     {new Date(selected.hireDate).toLocaleDateString('fr-CA')}
@@ -710,15 +965,15 @@ export default function EmployeesPage() {
             <div className="flex flex-col gap-3" style={{ borderTop: '1px solid var(--surface0)', paddingTop: '1rem' }}>
               <h4 className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-2">
                 <DollarSign size={14} />
-                Paramètres de Paie
+                {t('nav.payroll')}
               </h4>
               <div className="grid-2 text-sm bg-surface0 p-3 rounded-lg">
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted">Salaire annuel</span>
+                  <span className="text-xs text-muted">{t('employees.sidebarSalary')}</span>
                   <span className="font-bold text-lg text-green">{selected.annualSalary?.toFixed(2) || '0.00'} $</span>
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-xs text-muted">Taux horaire</span>
+                  <span className="text-xs text-muted">{t('employees.sidebarHourly')}</span>
                   <span className="font-bold text-lg text-primary">{selected.hourlyRate?.toFixed(2) || '0.00'} $/h</span>
                 </div>
               </div>
@@ -728,7 +983,7 @@ export default function EmployeesPage() {
             <div className="flex flex-col gap-3" style={{ borderTop: '1px solid var(--surface0)', paddingTop: '1rem' }}>
               <h4 className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-2">
                 <Sparkles size={14} />
-                Attributs personnalisés (JSONB)
+                {t('employees.sidebarCustomAttrs')}
               </h4>
               {selected.customAttributes && Object.keys(selected.customAttributes).length > 0 ? (
                 <div className="flex flex-wrap gap-2">
@@ -739,7 +994,7 @@ export default function EmployeesPage() {
                   ))}
                 </div>
               ) : (
-                <span className="text-xs text-muted italic">Aucun attribut personnalisé défini.</span>
+                <span className="text-xs text-muted italic">{t('employees.sidebarCustomAttrsEmpty')}</span>
               )}
             </div>
 
@@ -747,7 +1002,7 @@ export default function EmployeesPage() {
             <div className="flex flex-col gap-3" style={{ borderTop: '1px solid var(--surface0)', paddingTop: '1rem' }}>
               <h4 className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-2">
                 <Clock size={14} />
-                Historique des Contrats (Timeline)
+                {t('employees.sidebarTimeline')}
               </h4>
               <div className="flex flex-col gap-4 mt-2">
                 {getTimelineEvents(selected).map((evt, idx) => (
@@ -930,12 +1185,14 @@ export default function EmployeesPage() {
                 <select
                   className="input w-full"
                   value={newEmployee.role}
-                  onChange={(e) => handleInputChange('role', e.target.value)}
+                  onChange={(e) => handleInputChange('role', e.target.value as any)}
                 >
                   <option value="EMPLOYEE">Employé</option>
-                  <option value="MANAGER">Manager</option>
+                  <option value="MANAGER">Manager (Assistant-Gérant)</option>
                   <option value="HR">Ressources Humaines</option>
-                  <option value="ADMIN">Administrateur</option>
+                  {currentUserRole === 'SUPER_ADMIN' && (
+                    <option value="ADMIN">Administrateur</option>
+                  )}
                 </select>
               </div>
 
@@ -1066,6 +1323,188 @@ export default function EmployeesPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* MODAL : IMPORT PROCESS FROM CSV */}
+      {showImportModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'rgba(17, 17, 27, 0.85)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div className="card animate-fade-in" style={{ width: '90%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', position: 'relative', padding: '2rem' }}>
+            <button
+              style={{
+                position: 'absolute',
+                top: '1.5rem',
+                right: '1.5rem',
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text)',
+                cursor: 'pointer'
+              }}
+              onClick={() => {
+                setShowImportModal(false);
+                setCsvHeaders([]);
+                setCsvRows([]);
+                setImportMappings({});
+              }}
+            >
+              <X size={20} />
+            </button>
+
+            <h3 className="mb-2">📥 Importer des collaborateurs</h3>
+            <p className="text-xs text-muted mb-4">
+              Importez vos employés en masse à partir d'un fichier CSV. Le système associera automatiquement les colonnes.
+            </p>
+
+            {csvHeaders.length === 0 ? (
+              /* Étape 1 : Choisir le fichier */
+              <div className="flex flex-col items-center justify-center p-8 bg-surface0" style={{ border: '2px dashed var(--surface1)', borderRadius: '12px' }}>
+                <Upload size={48} className="text-primary mb-3" />
+                <h4 className="mb-1 text-sm font-bold">Sélectionnez votre fichier CSV</h4>
+                <p className="text-xs text-muted mb-4 text-center">Supporte tous formats de colonnes (synonymes détectés automatiquement)</p>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileChange}
+                  className="hidden"
+                  id="csv-file-input"
+                />
+                <label htmlFor="csv-file-input" className="btn btn-primary" style={{ cursor: 'pointer' }}>
+                  Parcourir les fichiers
+                </label>
+              </div>
+            ) : (
+              /* Étape 2 : Mapper les colonnes & Aperçu */
+              <div className="flex flex-col gap-4">
+                <div className="bg-surface0 p-3 rounded-lg flex items-center gap-2 text-xs text-primary">
+                  <Info size={16} />
+                  <span><strong>Astuce :</strong> Le système a déduit les colonnes. Ajustez-les si nécessaire. Les champs avec (*) sont requis.</span>
+                </div>
+
+                <div className="grid-2 gap-4" style={{ borderBottom: '1px solid var(--surface0)', paddingBottom: '1.5rem' }}>
+                  {/* Liste des correspondances */}
+                  <div className="flex flex-col gap-3">
+                    <h4 className="text-xs font-bold text-muted uppercase">Association des colonnes</h4>
+                    
+                    <div className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: '300px', paddingRight: '0.5rem' }}>
+                      {[
+                        { key: 'firstName', label: 'Prénom *' },
+                        { key: 'lastName', label: 'Nom de famille *' },
+                        { key: 'email', label: 'Adresse Email *' },
+                        { key: 'phoneNumber', label: 'Téléphone' },
+                        { key: 'role', label: 'Rôle Système' },
+                        { key: 'hireDate', label: "Date d'embauche" },
+                        { key: 'annualSalary', label: 'Salaire Annuel' },
+                        { key: 'hourlyRate', label: 'Taux Horaire' }
+                      ].map((field) => (
+                        <div key={field.key} className="flex justify-between items-center bg-surface0 p-2 rounded" style={{ fontSize: '0.8rem' }}>
+                          <span className="font-semibold">{field.label}</span>
+                          <select
+                            className="input text-xs"
+                            style={{ width: '180px', padding: '0.2rem' }}
+                            value={importMappings[field.key] || ''}
+                            onChange={(e) => setImportMappings(prev => ({ ...prev, [field.key]: e.target.value }))}
+                          >
+                            <option value="">[ Ignorer ce champ ]</option>
+                            {csvHeaders.map(h => (
+                              <option key={h} value={h}>{h}</option>
+                            ))}
+                          </select>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Aperçu en temps réel */}
+                  <div className="flex flex-col gap-3">
+                    <h4 className="text-xs font-bold text-muted uppercase">Aperçu des données (3 premières lignes)</h4>
+                    <div className="table-wrapper overflow-x-auto" style={{ maxHeight: '300px', border: '1px solid var(--surface0)', borderRadius: '6px' }}>
+                      <table style={{ fontSize: '0.75rem' }}>
+                        <thead>
+                          <tr>
+                            <th>Prénom</th>
+                            <th>Nom</th>
+                            <th>Email</th>
+                            <th>Téléphone</th>
+                            <th>Rôle</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {csvRows.slice(0, 3).map((row, idx) => {
+                            const getRowVal = (field: string) => {
+                              const header = importMappings[field];
+                              if (!header) return '-';
+                              const colIdx = csvHeaders.indexOf(header);
+                              return colIdx !== -1 ? row[colIdx] : '-';
+                            };
+                            return (
+                              <tr key={idx}>
+                                <td>{getRowVal('firstName')}</td>
+                                <td>{getRowVal('lastName')}</td>
+                                <td>{getRowVal('email')}</td>
+                                <td>{getRowVal('phoneNumber')}</td>
+                                <td>{getRowVal('role')}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Boutons d'action Étape 2 */}
+                <div className="flex justify-between items-center mt-2">
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => {
+                      setCsvHeaders([]);
+                      setCsvRows([]);
+                      setImportMappings({});
+                    }}
+                    disabled={isImporting}
+                  >
+                    Changer de fichier
+                  </button>
+
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => {
+                        setShowImportModal(false);
+                        setCsvHeaders([]);
+                        setCsvRows([]);
+                        setImportMappings({});
+                      }}
+                      disabled={isImporting}
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={handleLaunchImport}
+                      disabled={isImporting || !importMappings.firstName || !importMappings.lastName || !importMappings.email}
+                    >
+                      {isImporting ? 'Importation...' : `Lancer l'importation (${csvRows.length} lignes)`}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

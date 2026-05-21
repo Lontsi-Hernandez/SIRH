@@ -1,20 +1,22 @@
-// ─── Pages stubs — à implémenter dans les phases suivantes ───────────────────
-// Dashboard.tsx
+import { useApp } from '../context/AppContext';
+
 export default function DashboardPage() {
+  const { t } = useApp();
+
   return (
     <div className="page animate-fade-in">
       <div className="page-header">
         <div>
-          <h1>Tableau de bord</h1>
-          <p>Vue d'ensemble de votre organisation</p>
+          <h1>{t('dashboard.title')}</h1>
+          <p>{t('dashboard.subtitle')}</p>
         </div>
       </div>
       <div className="grid-4">
         {[
-          { label: 'Employés actifs', value: '—', icon: '👥', color: 'var(--blue)' },
-          { label: 'Absences aujourd\'hui', value: '—', icon: '🏖️', color: 'var(--yellow)' },
-          { label: 'Quarts à venir', value: '—', icon: '🗓️', color: 'var(--green)' },
-          { label: 'Coût masse salariale', value: '—', icon: '💰', color: 'var(--peach)' },
+          { label: t('dashboard.activeEmployees'), value: '—', icon: '👥', color: 'var(--blue)' },
+          { label: t('dashboard.absencesToday'), value: '—', icon: '🏖️', color: 'var(--yellow)' },
+          { label: t('dashboard.upcomingShifts'), value: '—', icon: '🗓️', color: 'var(--green)' },
+          { label: t('dashboard.payrollCost'), value: '—', icon: '💰', color: 'var(--peach)' },
         ].map((kpi) => (
           <div key={kpi.label} className="kpi-card">
             <div style={{ fontSize: '2rem' }}>{kpi.icon}</div>
@@ -26,8 +28,8 @@ export default function DashboardPage() {
         ))}
       </div>
       <div style={{ textAlign: 'center', padding: '4rem', color: 'var(--subtext0)' }}>
-        <p>📊 Les graphiques et KPIs seront disponibles une fois le backend connecté.</p>
-        <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>Démarrez le backend et configurez votre tenant pour commencer.</p>
+        <p>{t('dashboard.kpisFooter')}</p>
+        <p style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>{t('dashboard.kpisSubFooter')}</p>
       </div>
     </div>
   );

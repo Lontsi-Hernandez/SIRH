@@ -7,6 +7,10 @@ async function run() {
     await AppDataSource.initialize();
     console.log('✅ Base de données connectée !');
 
+    console.log('⚙️ Synchronisation du schéma de la base de données (Auto-creation of tables)...');
+    await AppDataSource.synchronize();
+    console.log('✅ Schéma synchronisé avec succès !');
+
     await seedDatabase(AppDataSource);
 
     console.log('🔌 Fermeture de la connexion...');

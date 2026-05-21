@@ -10,9 +10,10 @@ export interface Employee {
   phoneNumber?: string;
   avatarUrl?: string;
   status: 'DRAFT' | 'ACTIVE' | 'SUSPENDED' | 'TERMINATED' | 'ARCHIVED';
-  role: 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
+  role: 'SUPER_ADMIN' | 'ADMIN' | 'HR' | 'MANAGER' | 'EMPLOYEE';
   hireDate: string;
   departmentId?: string;
+  branchId?: string;
   positionId?: string;
   managerId?: string;
   hourlyRate?: number;
@@ -46,12 +47,24 @@ const initialState: EmployeeState = {
 
 export const fetchEmployees = createAsyncThunk(
   'employees/fetchAll',
-  async (params: { page?: number; limit?: number; search?: string; departmentId?: string; status?: string } = {}, { rejectWithValue }) => {
+  async (
+    filters: { page?: number; limit?: number; search?: string; departmentId?: string; branchId?: string; status?: string; role?: string } | undefined,
+    { rejectWithValue },
+  ) => {
     try {
-      const res = await apiClient.get('/employees', { params });
+      const params = new URLSearchParams();
+      if (filters?.page) params.append('page', filters.page.toString());
+      if (filters?.limit) params.append('limit', filters.limit.toString());
+      if (filters?.search) params.append('search', filters.search);
+      if (filters?.departmentId) params.append('departmentId', filters.departmentId);
+      if (filters?.branchId) params.append('branchId', filters.branchId);
+      if (filters?.status) params.append('status', filters.status);
+      if (filters?.role) params.append('role', filters.role);
+
+      const res = await apiClient.get(`/employees?${params.toString()}`);
       return res.data;
     } catch (err: any) {
-      return rejectWithValue(err.response?.data?.message || 'Erreur de chargement');
+      return rejectWithValue(err.response?.data?.message || 'Erreur de chargement des employés');
     }
   },
 );

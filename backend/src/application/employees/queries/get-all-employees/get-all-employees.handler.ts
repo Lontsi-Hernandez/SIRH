@@ -13,13 +13,14 @@ export class GetAllEmployeesHandler implements IQueryHandler<GetAllEmployeesQuer
 
   async execute(query: GetAllEmployeesQuery) {
     const { tenantId, filters } = query;
-    const { page = 1, limit = 20, search, departmentId, status, role } = filters;
+    const { page = 1, limit = 20, search, departmentId, branchId, status, role } = filters;
 
     const where: any = { tenantId };
 
     if (status) where.status = status;
     if (role) where.role = role;
     if (departmentId) where.departmentId = departmentId;
+    if (branchId) where.branchId = branchId;
 
     const options: FindManyOptions<Employee> = {
       where: search

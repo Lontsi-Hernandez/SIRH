@@ -19,7 +19,8 @@
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/persistence/data-source.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/persistence/data-source.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/persistence/data-source.ts",
-    "seed": "ts-node src/persistence/seeds/run-seeds.ts"
+    "seed": "ts-node src/persistence/seeds/run-seeds.ts",
+    "db:clean": "ts-node src/persistence/seeds/clear-db.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.3.0",

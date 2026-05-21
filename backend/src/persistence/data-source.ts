@@ -13,8 +13,12 @@ import { Training } from '../domain/entities/training.entity';
 import { Notification } from '../domain/entities/notification.entity';
 import { Tenant } from '../domain/entities/tenant.entity';
 import { User, TimeEntry, Message, Announcement } from '../domain/entities/user.entity';
+import { Branch } from '../domain/entities/branch.entity';
+import { Housing, HousingAssignment } from '../domain/entities/housing.entity';
 
-dotenv.config();
+import * as path from 'path';
+
+dotenv.config({ path: path.resolve(__dirname, '../../../.env') });
 
 export const AppDataSource = new DataSource({
   type: 'postgres',
@@ -41,6 +45,9 @@ export const AppDataSource = new DataSource({
     TimeEntry,
     Message,
     Announcement,
+    Branch,
+    Housing,
+    HousingAssignment,
   ],
   migrations: ['src/persistence/migrations/*.ts'],
   synchronize: false,

@@ -4,6 +4,7 @@ import {
 } from 'typeorm';
 import { Tenant } from './tenant.entity';
 import { Employee } from './employee.entity';
+import { Branch } from './branch.entity';
 
 @Entity('departments')
 export class Department {
@@ -26,6 +27,10 @@ export class Department {
   @Column({ name: 'manager_id', nullable: true })
   managerId?: string;
 
+  /** IDs des assistants-gérants (max 2) — stocké en JSON */
+  @Column({ name: 'assistant_manager_ids', type: 'simple-json', nullable: true, default: '[]' })
+  assistantManagerIds?: string[];
+
   @ManyToOne(() => Department, { nullable: true })
   @JoinColumn({ name: 'parent_department_id' })
   parentDepartment?: Department;
@@ -42,6 +47,13 @@ export class Department {
 
   @Column({ name: 'tenant_id' })
   tenantId: string;
+
+  @ManyToOne(() => Branch, { nullable: true })
+  @JoinColumn({ name: 'branch_id' })
+  branch?: Branch;
+
+  @Column({ name: 'branch_id', nullable: true })
+  branchId?: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -1,23 +1,27 @@
-import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs';
+import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ConflictException } from '@nestjs/common';
 import { CreateEmployeeCommand } from './create-employee.command';
 import { Employee, EmployeeStatus, UserRole } from '../../../../domain/entities/employee.entity';
+import { User } from '../../../../domain/entities/user.entity';
 
 @CommandHandler(CreateEmployeeCommand)
 export class CreateEmployeeHandler implements ICommandHandler<CreateEmployeeCommand> {
   constructor(
     @InjectRepository(Employee)
     private readonly employeeRepository: Repository<Employee>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async execute(command: CreateEmployeeCommand): Promise<Employee> {
     const { dto, tenantId } = command;
 
     // Vérifier l'unicité de l'email dans ce tenant
+    const normalizedEmail = dto.email.toLowerCase().trim();
     const existing = await this.employeeRepository.findOne({
-      where: { email: dto.email, tenantId },
+      where: { email: normalizedEmail, tenantId },
     });
 
     if (existing) {
@@ -30,6 +34,7 @@ export class CreateEmployeeHandler implements ICommandHandler<CreateEmployeeComm
 
     const employee = this.employeeRepository.create({
       ...dto,
+      email: normalizedEmail,
       employeeNumber,
       tenantId,
       status: EmployeeStatus.DRAFT,
@@ -37,6 +42,17 @@ export class CreateEmployeeHandler implements ICommandHandler<CreateEmployeeComm
       hireDate: new Date(dto.hireDate),
     });
 
-    return this.employeeRepository.save(employee);
+    const savedEmployee = await this.employeeRepository.save(employee);
+
+    // Créer automatiquement le compte utilisateur lié pour l'authentification locale
+    const user = this.userRepository.create({
+      email: savedEmployee.email.toLowerCase().trim(),
+      isActive: true,
+      employeeId: savedEmployee.id,
+      tenantId,
+    });
+    await this.userRepository.save(user);
+
+    return savedEmployee;
   }
 }

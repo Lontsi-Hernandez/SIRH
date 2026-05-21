@@ -45,12 +45,15 @@ export const employeeApi = {
 
 export const shiftApi = {
   getAll: (params?: any) => apiClient.get('/shifts', { params }),
-  getByEmployee: (employeeId: string, params?: any) => apiClient.get(`/shifts/employee/${employeeId}`, { params }),
   create: (data: any) => apiClient.post('/shifts', data),
   update: (id: string, data: any) => apiClient.put(`/shifts/${id}`, data),
   delete: (id: string) => apiClient.delete(`/shifts/${id}`),
-  clockIn: (id: string, data?: any) => apiClient.patch(`/shifts/${id}/clock-in`, data),
-  clockOut: (id: string, data?: any) => apiClient.patch(`/shifts/${id}/clock-out`, data),
+  clockIn: (data: any) => apiClient.post('/shifts/clock-in', data),
+  clockOut: (data: any) => apiClient.post('/shifts/clock-out', data),
+  getQrCode: () => apiClient.get('/shifts/qr-code'),
+  startBreak: (id: string) => apiClient.post(`/shifts/${id}/start-break`),
+  endBreak: (id: string) => apiClient.post(`/shifts/${id}/end-break`),
+  publish: (startDate: string, endDate: string) => apiClient.post('/shifts/publish', { startDate, endDate }),
 };
 
 export const leaveApi = {
@@ -82,15 +85,5 @@ export const analyticsApi = {
   getPayrollCosts: (params?: any) => apiClient.get('/analytics/payroll-costs', { params }),
   getTurnover: (params?: any) => apiClient.get('/analytics/turnover', { params }),
   exportReport: (type: string, format: 'pdf' | 'excel') => apiClient.get(`/analytics/export/${type}`, { params: { format }, responseType: 'blob' }),
-};
-
-export const housingApi = {
-  getAll: () => apiClient.get('/housings'),
-  getById: (id: string) => apiClient.get(`/housings/${id}`),
-  create: (data: any) => apiClient.post('/housings', data),
-  update: (id: string, data: any) => apiClient.put(`/housings/${id}`, data),
-  delete: (id: string) => apiClient.delete(`/housings/${id}`),
-  assign: (id: string, data: any) => apiClient.post(`/housings/${id}/assign`, data),
-  terminate: (assignmentId: string, data?: any) => apiClient.post(`/housings/assignments/${assignmentId}/terminate`, data || {}),
 };
 
