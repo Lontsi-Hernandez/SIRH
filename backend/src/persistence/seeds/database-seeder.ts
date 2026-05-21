@@ -16,9 +16,69 @@ export async function seedDatabase(dataSource: DataSource): Promise<void> {
   const userRepo = dataSource.getRepository(User);
   const shiftRepo = dataSource.getRepository(Shift);
 
-  // Check if seeding is already done
+  // 👑 S'assurer que le tenant système admin et son Platform Admin existent TOUJOURS
+  let systemTenant = await tenantRepo.findOne({ where: { slug: 'system-admin' } });
+  if (!systemTenant) {
+    console.log('🌱 Création du tenant système global absent...');
+    systemTenant = tenantRepo.create({
+      name: 'HRMS SaaS Global Administration',
+      slug: 'system-admin',
+      industry: 'Administration',
+      website: 'https://admin.sirh.ca',
+      contactEmail: 'admin@hrms.com',
+      province: 'QC',
+      maxEmployees: 10,
+      isActive: true,
+      subscriptionPlan: 'enterprise',
+    });
+    await tenantRepo.save(systemTenant);
+    console.log(`👑 Tenant Système créé : ${systemTenant.name}`);
+  }
+
+  let systemBranch = await branchRepo.findOne({ where: { tenantId: systemTenant.id, code: 'SYS' } });
+  if (!systemBranch) {
+    systemBranch = branchRepo.create({
+      name: 'Administration Générale',
+      code: 'SYS',
+      address: 'Siège social SaaS, Montréal, QC',
+      tenantId: systemTenant.id,
+    });
+    await branchRepo.save(systemBranch);
+  }
+
+  let empSysAdmin = await employeeRepo.findOne({ where: { email: 'admin@hrms.com', tenantId: systemTenant.id } });
+  if (!empSysAdmin) {
+    empSysAdmin = employeeRepo.create({
+      employeeNumber: 'EMP-SYS-001',
+      firstName: 'Global',
+      lastName: 'Administrator',
+      email: 'admin@hrms.com',
+      phoneNumber: '+1-800-555-0100',
+      status: EmployeeStatus.ACTIVE,
+      role: UserRole.PLATFORM_ADMIN,
+      hireDate: new Date('2024-01-01'),
+      annualSalary: 200000,
+      branchId: systemBranch.id,
+      tenantId: systemTenant.id,
+    });
+    await employeeRepo.save(empSysAdmin);
+  }
+
+  let userSysAdmin = await userRepo.findOne({ where: { email: empSysAdmin.email, tenantId: systemTenant.id } });
+  if (!userSysAdmin) {
+    userSysAdmin = userRepo.create({
+      email: empSysAdmin.email,
+      isActive: true,
+      employeeId: empSysAdmin.id,
+      tenantId: systemTenant.id,
+    });
+    await userRepo.save(userSysAdmin);
+    console.log('👑 Compte de Platform Admin créé : admin@hrms.com');
+  }
+
+  // Check if demo seeding should be done
   const tenantCount = await tenantRepo.count();
-  if (tenantCount > 0) {
+  if (tenantCount > 1) {
     // Forcer la mise à jour du rôle du CEO de Québec Inc
     const ceo = await employeeRepo.findOne({ where: { email: 'ceo@quebec-inc.com' } });
     if (ceo && ceo.role !== UserRole.SUPER_ADMIN) {
@@ -26,60 +86,11 @@ export async function seedDatabase(dataSource: DataSource): Promise<void> {
       await employeeRepo.save(ceo);
       console.log('✅ CEO mis à jour en SUPER_ADMIN.');
     }
-    console.log('✅ Base de données déjà initialisée. Skipping seeding...');
+    console.log('✅ Base de données déjà initialisée avec d\'autres entreprises. Skipping seeding of demo data...');
     return;
   }
 
-  console.log('🌱 Début du peuplement de la base de données (Seeding)...');
-
-  // ==========================================
-  // 👑 0. CRÉATION DU TENANT SYSTÈME & PLATFORM ADMIN
-  // ==========================================
-  const systemTenant = tenantRepo.create({
-    name: 'HRMS SaaS Global Administration',
-    slug: 'system-admin',
-    industry: 'Administration',
-    website: 'https://admin.sirh.ca',
-    contactEmail: 'admin@hrms.com',
-    province: 'QC',
-    maxEmployees: 10,
-    isActive: true,
-    subscriptionPlan: 'enterprise',
-  });
-  await tenantRepo.save(systemTenant);
-  console.log(`👑 Tenant Système créé : ${systemTenant.name}`);
-
-  const systemBranch = branchRepo.create({
-    name: 'Administration Générale',
-    code: 'SYS',
-    address: 'Siège social SaaS, Montréal, QC',
-    tenantId: systemTenant.id,
-  });
-  await branchRepo.save(systemBranch);
-
-  const empSysAdmin = employeeRepo.create({
-    employeeNumber: 'EMP-SYS-001',
-    firstName: 'Global',
-    lastName: 'Administrator',
-    email: 'admin@hrms.com',
-    phoneNumber: '+1-800-555-0100',
-    status: EmployeeStatus.ACTIVE,
-    role: UserRole.PLATFORM_ADMIN,
-    hireDate: new Date('2024-01-01'),
-    annualSalary: 200000,
-    branchId: systemBranch.id,
-    tenantId: systemTenant.id,
-  });
-  await employeeRepo.save(empSysAdmin);
-
-  const userSysAdmin = userRepo.create({
-    email: empSysAdmin.email,
-    isActive: true,
-    employeeId: empSysAdmin.id,
-    tenantId: systemTenant.id,
-  });
-  await userRepo.save(userSysAdmin);
-  console.log('👑 Compte de Platform Admin créé : admin@hrms.com');
+  console.log('🌱 Début du peuplement de la base de données démo (Seeding)...');
 
   // ==========================================
   // 🏢 1. CRÉATION DU TENANT 1 : SIRH Québec Inc.
